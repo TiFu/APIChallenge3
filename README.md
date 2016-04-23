@@ -21,3 +21,12 @@
 	* high vs high mastery normal points
 * friends can form groups and track their 1v1s (not with the tournament api because generally you don't want to wait 15 min to finish the game)
 * if time permits extend 1v1 matches to multiple games (e.g. BestOfX series)
+* maybe some event stream for friends group
+* membership in multiple groups eventually
+
+## Tech
+* Node?
+* Angular2
+* mysql (pls no mongo..)
+* Typescript or VanillaJS?
+	* typescript has typing which is useful, but can be circumvented with type "any" which then refers to standard js type checking (aka none)
