@@ -20,4 +20,4 @@
 	* higher champion mastery vs. low champion mastery give more points
 	* high vs high mastery normal points
 * friends can form groups and track their 1v1s (not with the tournament api because generally you don't want to wait 15 min to finish the game)
-
+* if time permits extend 1v1 matches to multiple games (e.g. BestOfX series)
