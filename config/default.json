@@ -1,0 +1,14 @@
+{
+  "database": {
+    "password": "root",
+    "username": "root",
+    "host": "localhost",
+    "name": "apichallenge3",
+    "tables": {
+      "temperature": "temperature",
+    }
+  },
+  "port": 1337,
+  "logfile": "logs/raspberrystatus.log",
+  "endpointsDir": "./endpoints/",
+}
