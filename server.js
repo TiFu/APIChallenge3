@@ -2,13 +2,17 @@ var express = require("express")
 var bodyParser = require('body-parser');
 var morgan = require("morgan")
 var db = require("./database");
-var config = require("config")
+var config = require("config");
+var util = require("./util");
 var fs = require("fs");
 var winston = require("winston");
 var formatter = require("./formatter").formatter;
 var WinstonContext = require("winston-context");
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
+var passport = require('passport');
+var expressSession = require('express-session');
+var authentication = require("./authentication")
 
 // set up winston logging to file & console
 winston.remove(winston.transports.Console);
@@ -29,7 +33,7 @@ winston.add(winston.transports.File, {
   json: false,
 });
 
-// api endpoints
+// array containing available endpoints
 var modules = [];
 var app = express();
 app.use(bodyParser.json({
@@ -41,10 +45,15 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(morgan('dev'));
+// add session
+app.use(expressSession({secret: 'iae45iae45iae45', resave: true, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // init database
 // add endpoint for list of registered modules
 db.init(new WinstonContext(winston, "[Database]")).then(() => {
+  authentication.initPassportWithMysql(passport, db.CONNECTION); // init passport
   return loadModules();
 }).then(() => {
   addAPIEndpoint("/modules", util.createEndpointFromFunc(() => Promise.resolve(modules.map((f) => {
@@ -68,17 +77,16 @@ function listen() {
 
 function loadModules() {
   var mainObject = {
-    execCommand: execCommand,
     addAPIEndpoint: addAPIEndpoint,
+    addLoginEndpoint: addLoginEndpoint,
     database: db.CONNECTION,
     config: config,
-    sendMail: (subject, body) => {
-      return execCommand("echo \"" + body + "\" | mutt -s \"" + subject + "\" " + config.get("mail"));
-    },
+    passport: passport
   }
   var files = fs.readdirSync(config.get("endpointsDir"))
   var promises = [];
-  for (var i = 0; i < files.endpointsength; i++) {
+  serverLogger.info("Start loading modules: " + files.length);
+  for (var i = 0; i < files.length; i++) {
     serverLogger.info("Loading module: " + files[i].replace(".js", ""))
     var modul = require(config.get("endpointsDir") + files[i].replace(".js", ""));
     modules.push({
@@ -101,10 +109,24 @@ function loadModules() {
       }))
     }(i));
   }
-
   return Promise.all(promises);
 }
 
+// if an endpoint should only be available to logged in users
+function addAuthenticatedEndpoint(route, func) {
+  app.post("/api" + route, (req, res, next) => {
+    if (req.isAuthenticated()) {
+      next();
+    } else {
+      res.status(401).send("Unauthorized");
+    }
+  })
+}
+
+// endpoint only for logging in!
+function addLoginEndpoint(route, func) {
+    app.post("/api" + route, passport.authenticate("local"), func);
+}
 function addAPIEndpoint(route, func) {
   app.post("/api" + route, func);
 }

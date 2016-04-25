@@ -23,7 +23,10 @@
 * if time permits extend 1v1 matches to multiple games (e.g. BestOfX series)
 * maybe some event stream for friends group
 * membership in multiple groups eventually
-
+* maybe use current game? => does it update the kda?
+	* if not MAYBE use spectator stream to do that..
+	* but the documentation of that is outdated
+	
 ## Tech
 * Node?
 * Angular2
