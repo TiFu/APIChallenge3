@@ -9,7 +9,7 @@ exports.initPassportWithMysql = function(passport, con) {
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-    con.query("select id, username from users where id = " + id).then((rows) => {
+    con.query("select id, username, summoner_id, region, authenticated from users where id = " + id).then((rows) => {
       done(null, rows[0]);
     });
   });
@@ -39,9 +39,9 @@ exports.initPassportWithMysql = function(passport, con) {
 
 // Returns true if registration was successfull
 // expects a unique index on username!
-exports.registerUser = (username, password, conn) => {
+exports.registerUser = (username, password, summonerId, region, conn) => {
   var hashedPW = hashPassword(password);
-  return conn.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPW]).then((res) => {
+  return conn.query("INSERT INTO users (username, password, summoner_id, region) VALUES (?, ?, ?, ?)", [username, hashedPW, summonerId, region]).then((res) => {
       return true;
   }).catch((err) => {
       console.log("Error inserting user: " + err);

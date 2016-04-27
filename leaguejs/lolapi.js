@@ -49,7 +49,7 @@
             'euw': 'Europe West',
             'eune': 'Europe Nordic and East'
         };
-        return util.makeStaticRequest(error, regions);
+        return util.makeStaticRequest(null, regions);
     };
 
     League.getPlatformId = function (region, callback) {

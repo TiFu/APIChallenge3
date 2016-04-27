@@ -15,6 +15,7 @@ var expressSession = require('express-session');
 var authentication = require("./authentication")
 var League = require("./leaguejs/lolapi");
 
+// init League
 League.init(process.env.API_KEY, process.env.API_REGION);
 League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 
@@ -85,7 +86,8 @@ function loadModules() {
     addLoginEndpoint: addLoginEndpoint,
     database: db.CONNECTION,
     config: config,
-    passport: passport
+    passport: passport,
+    League: League,
   }
   var files = fs.readdirSync(config.get("endpointsDir"))
   var promises = [];
