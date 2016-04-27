@@ -13,6 +13,10 @@ var serverLogger = new WinstonContext(winston, "[Server]");
 var passport = require('passport');
 var expressSession = require('express-session');
 var authentication = require("./authentication")
+var League = require("./leaguejs/lolapi");
+
+League.init(process.env.API_KEY, process.env.API_REGION);
+League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 
 // set up winston logging to file & console
 winston.remove(winston.transports.Console);

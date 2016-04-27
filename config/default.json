@@ -12,5 +12,7 @@
 	"min-username-length": 4,
 	"port": 1337,
 	"logfile": "logs/raspberrystatus.log",
-	"endpointsDir": "./endpoints/"
+	"endpointsDir": "./endpoints/",
+	"limitPer10s": 10,
+	"limitPer10min": 500
 }
