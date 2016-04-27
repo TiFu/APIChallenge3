@@ -84,6 +84,7 @@ function loadModules() {
   var mainObject = {
     addAPIEndpoint: addAPIEndpoint,
     addLoginEndpoint: addLoginEndpoint,
+    addAuthenticatedEndpoint: addAuthenticatedEndpoint,
     database: db.CONNECTION,
     config: config,
     passport: passport,
@@ -126,7 +127,7 @@ function addAuthenticatedEndpoint(route, func) {
     } else {
       res.status(401).send("Unauthorized");
     }
-  })
+  }, func);
 }
 
 // endpoint only for logging in!

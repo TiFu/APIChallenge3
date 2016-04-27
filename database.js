@@ -13,7 +13,7 @@ exports.init = function(log) {
     }).then(function(conn) {
       exports.CONNECTION = conn;
       return createDatabase();
-    }).then(createUsersTable);
+    }).then(createUsersTable).then(createAuthTable);
 }
 
 function createDatabase() {
@@ -31,5 +31,11 @@ function createDatabase() {
 function createUsersTable() {
   return exports.CONNECTION.query("CREATE TABLE IF NOT EXISTS " + config.get("database.tables.users") + " (id int NOT NULL AUTO_INCREMENT, username varchar(25) NOT NULL, password BINARY(60) NOT NULL,summoner_id int, region varchar(3), authenticated boolean default false, PRIMARY KEY(id), CONSTRAINT unique_username UNIQUE(username))").then((res) => {
     logger.info("Created Table " + config.get("database.tables.users"));
+  })
+}
+
+function createAuthTable() {
+  return exports.CONNECTION.query("CREATE TABLE IF NOT EXISTS " + config.get("database.tables.authentication") + " (user_id int NOT NULL, authkey varchar(100) NOT NULL, PRIMARY KEY(user_id, authkey), CONSTRAINT unique_user UNIQUE(user_id), FOREIGN KEY(user_id) REFERENCES users(id))").then((res) => {
+    logger.info("Created Table " + config.get("database.tables.authentication"));
   })
 }

@@ -5,7 +5,8 @@
 		"host": "localhost",
 		"name": "apichallenge3",
 		"tables": {
-			"users": "users"
+			"users": "users",
+			"authentication": "auth"
 		}
 	},
 	"min-password-length": 8,
