@@ -3,7 +3,7 @@ var authentication = require("../authentication");
 var randomstring = require("randomstring");
 
 exports.name = "Authentication";
-exports.description = "Authentication Endpoint";
+exports.description = "Authentication Endpoints";
 exports.reason = undefined;
 var mainApp;
 
@@ -19,8 +19,6 @@ exports.init = (main) => {
   main.addAPIEndpoint("/auth/logout", logoutEndpoint);
   main.addAuthenticatedEndpoint("/auth/getAuthString", getAuthStringEndpoint);
   main.addAuthenticatedEndpoint("/auth/authenticate", authenticateEndpoint);
-
-  return Promise.resolve(true);
 }
 
 function getAuthStringEndpoint(req, res) {
@@ -56,7 +54,7 @@ function authenticateEndpoint(req, res) {
     if (!result) {
       throw new Error("KEY_NOT_FOUND");
     }
-    return mainApp.database.query("UPDATE " + mainApp.config.get("database.tables.users") + " SET authenticated = 1 WHERE id = ?", [req.user.id]);
+    return mainApp.database.query("UPDATE " + mainApp.config.get("database.tables.users") + " SET validated = 1 WHERE id = ?", [req.user.id]);
   }).then((r) => {
     res.status(200).send({success: true});
     return mainApp.database.query("DELETE FROM " + mainApp.config.get("database.tables.authentication") + " WHERE user_id = ?", [req.user.id]);

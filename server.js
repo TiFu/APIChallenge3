@@ -56,12 +56,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // init database
-// add endpoint for list of registered modules
+// add endpoint for list of registered apiEndpoints
 db.init(new WinstonContext(winston, "[Database]")).then(() => {
   authentication.initPassportWithMysql(passport, db.CONNECTION); // init passport
   return loadModules();
 }).then(() => {
-  addAPIEndpoint("/modules", util.createEndpointFromFunc(() => Promise.resolve(modules.map((f) => {
+  addAPIEndpoint("/modules", util.createEndpointFromFunc(() => Promise.resolve(apiEndpoints.map((f) => {
     return {
       "name": f.name,
       "description": f.description,
@@ -80,19 +80,28 @@ function listen() {
   });
 }
 
+/**
+ * Loads all modules from endpointsDir (@see config/default.json)
+ * and initializes them with a mainObject containing:
+ * - function to add APIEndpoints (endpoint, loginEndpoint, authenticatedEndpoint, validatedEndpoint)
+ * - database connection
+ * - config to retrive config information (@see config/default.json)
+ * - logger instance with a module defined prefix ([Module module.name])
+ */
 function loadModules() {
   var mainObject = {
     addAPIEndpoint: addAPIEndpoint,
     addLoginEndpoint: addLoginEndpoint,
     addAuthenticatedEndpoint: addAuthenticatedEndpoint,
+    addValidatedEndpoint: addValidatedEndpoint,
     database: db.CONNECTION,
     config: config,
-    passport: passport,
     League: League,
+    logger: null,
   }
   var files = fs.readdirSync(config.get("endpointsDir"))
   var promises = [];
-  serverLogger.info("Start loading modules: " + files.length);
+  serverLogger.info("Started loading Endpoints: " + files.length);
   for (var i = 0; i < files.length; i++) {
     serverLogger.info("Loading module: " + files[i].replace(".js", ""))
     var modul = require(config.get("endpointsDir") + files[i].replace(".js", ""));
@@ -100,26 +109,36 @@ function loadModules() {
       module: modul,
       name: modul.name,
       description: modul.description,
-      loaded: false,
-      reason: modul.reason
+      loaded: true,
     });
-    // race condition
-    (function(i) {
-      var moduleCtx = new WinstonContext(winston, "[Module " + modules[i].name +"]");
-      mainObject.logger = moduleCtx;
-      promises.push(modul.init(mainObject).then((success) => {
-        if (!success) {
-          moduleCtx.warn("Failed to init module. " + modules[i].reason);
-        }
-        modules[i].loaded = success;
-        modules[i].reason = modules[i].module.reason;
-      }))
-    }(i));
+    // init logger for module
+    var moduleCtx = new WinstonContext(winston, "[Module " + modules[i].name +"]");
+    mainObject.logger = moduleCtx;
+    // init module
+    modul.init(mainObject);
   }
-  return Promise.all(promises);
+  return Promise.resolve(true);
 }
 
-// if an endpoint should only be available to logged in users
+/**
+ * Adds an endpoint at /api/route which only validated & authenticated users
+ * can access.
+ * @param route route string
+ * @param func (req, res, next) => {do stuff}
+ */
+function addValidatedEndpoint(route, func) {
+  addAuthenticatedEndpoint(route, (req, res, next) => {
+    if (!req.user.validated) {
+      res.status(401).send("Unauthorized");
+    } else {
+      func(req, res, next);
+    }
+  });
+}
+
+/**
+ * add an endpoint only accessible by logged in users
+ */
 function addAuthenticatedEndpoint(route, func) {
   app.post("/api" + route, (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -130,10 +149,16 @@ function addAuthenticatedEndpoint(route, func) {
   }, func);
 }
 
-// endpoint only for logging in!
+/**
+ * endpoint for logging in (needs passport.authenticate)
+ */
 function addLoginEndpoint(route, func) {
     app.post("/api" + route, passport.authenticate("local"), func);
 }
+
+/**
+ * adds an api endpoint accessible by everyone
+ */
 function addAPIEndpoint(route, func) {
   app.post("/api" + route, func);
 }

@@ -9,7 +9,7 @@ exports.initPassportWithMysql = function(passport, con) {
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-    con.query("select id, username, summoner_id, region, authenticated from users where id = " + id).then((rows) => {
+    con.query("select id, username, summoner_id, region, validated from users where id = " + id).then((rows) => {
       done(null, rows[0]);
     });
   });
