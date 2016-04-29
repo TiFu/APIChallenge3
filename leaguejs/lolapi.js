@@ -19,7 +19,8 @@
         gameUrl = '/v1.3/game/by-summoner',
         leagueUrl = {
             summoner: '/v2.5/league/by-summoner',
-            team: '/v2.5/league/by-team'
+            team: '/v2.5/league/by-team',
+            challenger: '/v2.5/league/challenger?type=RANKED_SOLO_5x5',
         },
         statsUrl = '/v1.3/stats/by-summoner',
         summonerUrl = '/v1.4/summoner',
@@ -167,22 +168,23 @@
             regionAndFunc = util.getCallbackAndRegion(regionOrFunction, region, callback),
             historyOptions = '';
         if(options) {
-            if (options.championIds) {
+            if (options.championIds != undefined) {
                 historyOptions += '&championIds=' + options.championIds.join();
             }
-            if (options.rankedQueues) {
+            if (options.rankedQueues != undefined) {
                 historyOptions += '&rankedQueues=' + options.rankedQueues.join();
             }
-            if (options.beginIndex) {
+            if (options.beginIndex != undefined) {
                 historyOptions += '&beginIndex=' + options.beginIndex;
             }
-            if (options.endIndex) {
+
+            if (options.endIndex != undefined) {
                 historyOptions += '&endIndex=' + options.endIndex;
             }
-            if (options.beginTime) {
+            if (options.beginTime  != undefined) {
                 historyOptions += '&beginTime=' + options.beginTime;
             }
-            if (options.endTime) {
+            if (options.endTime  != undefined) {
                 historyOptions += '&endTime=' + options.endTime;
             }
             historyOptions += '&';
@@ -238,6 +240,13 @@
     League.getLeagueData = function (summonerId, regionOrFunction, callback) {
         var regionAndFunc = util.getCallbackAndRegion(regionOrFunction, region, callback),
             url = util.craftUrl(endpoint, regionAndFunc.region, leagueUrl.summoner + '/' + summonerId + '?', authKey);
+
+        return util.makeRequest(url, 'Error getting league data: ', null, regionAndFunc.callback);
+    };
+
+    League.getChallengerData = function (regionOrFunction, callback) {
+        var regionAndFunc = util.getCallbackAndRegion(regionOrFunction, region, callback),
+            url = util.craftUrl(endpoint, regionAndFunc.region, leagueUrl.challenger + '&', authKey);
 
         return util.makeRequest(url, 'Error getting league data: ', null, regionAndFunc.callback);
     };
