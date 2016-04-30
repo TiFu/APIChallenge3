@@ -49,7 +49,7 @@ function checkData() {
 function updateSummoner(summoner_id) {
   console.log("Updating summoner: " + summoner_id);
   var gameId = null;
-  var options =  {rankedQueues: ["RANKED_SOLO_5x5"], beginIndex: 0, endIndex: 1};
+  var options =  {rankedQueues: ["TEAM_BUILDER_DRAFT_RANKED_5x5"], beginIndex: 0, endIndex: 1};
   // TODO check if gameId is already in table with that summoner id => if yes no new game (vllt unique summoner_id und gameId, fliegt halt nen fehler aber w/e)
   League.getMatchHistory(summoner_id, options).then((result) => {
     console.log("Got Match History");
