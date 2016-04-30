@@ -28,25 +28,25 @@ function createDatabase() {
 
 function createUsersTable() {
   console.log("Creating Summoners Table");
-  return connection.query("CREATE TABLE IF NOT EXISTS  summoners (summoner_id int not null, summoner_name varchar(100), timestamp TIMESTAMP(3) NULL DEFAULT NULL, primary key(summoner_id))");
+  return connection.query("CREATE TABLE IF NOT EXISTS  summoners (summoner_id int not null, summoner_name varchar(100), update_time TIMESTAMP NULL DEFAULT NULL, primary key(summoner_id))");
 }
 
 function createMasteryTable() {
   console.log("Creating Mastery Table");
-  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id int, champion_id int, game_id int, timestamp TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3), championLevel int, championPoints int, pointsSinceLastLevel int, pointsUntilNextLevel int, UNIQUE(summoner_id, game_id))")
+  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id int, champion_id int, game_id int, update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, championLevel int, championPoints int, pointsSinceLastLevel int, pointsUntilNextLevel int, UNIQUE(summoner_id, game_id))")
 }
 
 function checkData() {
   console.log("checking data");
-  return connection.query("SELECT summoner_id, timestamp FROM summoners").then((result) => {
+  return connection.query("SELECT summoner_id FROM summoners").then((result) => {
     for (var i = 0; i < result.length; i++) {
-      updateSummoner(result[i].summoner_id, result[i].timestamp);
+      updateSummoner(result[i].summoner_id);
     }
   })
 
 }
 
-function updateSummoner(summoner_id, timestamp) {
+function updateSummoner(summoner_id) {
   console.log("Updating summoner: " + summoner_id);
   var gameId = null;
   var options =  {rankedQueues: ["RANKED_SOLO_5x5"], beginIndex: 0, endIndex: 1};
@@ -69,7 +69,7 @@ function updateSummoner(summoner_id, timestamp) {
     }
   }).then(() => {
     console.log("Created game: " + summoner_id);
-    return connection.query("UPDATE summoners SET timestamp = now() WHERE summoner_id = " + summoner_id);
+    return connection.query("UPDATE summoners SET update_time = now() WHERE summoner_id = " + summoner_id);
   }).catch((err) => {
     console.log("Error fetching infos for " + summoner_id + ": ", err);
     return Promise.resolve(false);
