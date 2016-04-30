@@ -33,7 +33,7 @@ function createUsersTable() {
 
 function createMasteryTable() {
   console.log("Creating Mastery Table");
-  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id int, champion_id int, game_id int, timestamp TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3), championLevel int, championPoints int, pointsSinceLastLevel int, pointsUntilNextLevel int)")
+  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id int, champion_id int, game_id int, timestamp TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3), championLevel int, championPoints int, pointsSinceLastLevel int, pointsUntilNextLevel int, UNIQUE(summoner_id, game_id))")
 }
 
 function checkData() {
@@ -50,10 +50,7 @@ function updateSummoner(summoner_id, timestamp) {
   console.log("Updating summoner: " + summoner_id);
   var gameId = null;
   var options =  {rankedQueues: ["RANKED_SOLO_5x5"], beginIndex: 0, endIndex: 1};
-  if (timestamp != null) {
-    options.beginTime =  Date.now();
-    options.endTime = timestamp;
-  }
+  // TODO check if gameId is already in table with that summoner id => if yes no new game (vllt unique summoner_id und gameId, fliegt halt nen fehler aber w/e)
   League.getMatchHistory(summoner_id, options).then((result) => {
     console.log("Got Match History");
     if (result.matches == undefined || result.matches.length == 0) {
@@ -68,7 +65,7 @@ function updateSummoner(summoner_id, timestamp) {
       return Promise.resolve(true);
     } else if (result) {
       console.log("got mastery");
-      return insertMasteryUpdate(summoner_id, result, gameId);
+      return insertMasteryUpdate(summoner_id, result, gameId).catch((err) => true);
     }
   }).then(() => {
     console.log("Created game: " + summoner_id);
