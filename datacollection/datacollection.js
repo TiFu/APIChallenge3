@@ -28,12 +28,12 @@ function createDatabase() {
 
 function createUsersTable() {
   console.log("Creating Summoners Table");
-  return connection.query("CREATE TABLE IF NOT EXISTS  summoners (summoner_id int not null, summoner_name varchar(100), update_time TIMESTAMP NULL DEFAULT NULL, primary key(summoner_id))");
+  return connection.query("CREATE TABLE IF NOT EXISTS  summoners (summoner_id bigint not null, summoner_name varchar(100), update_time TIMESTAMP NULL DEFAULT NULL, primary key(summoner_id))");
 }
 
 function createMasteryTable() {
   console.log("Creating Mastery Table");
-  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id int, champion_id int, game_id int, update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, championLevel int, championPoints int, pointsSinceLastLevel int, pointsUntilNextLevel int, UNIQUE(summoner_id, game_id))")
+  return connection.query("CREATE TABLE IF NOT EXISTS mastery (summoner_id bigint, champion_id bigint, game_id bigint, update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP, championLevel int, championPoints bigint, pointsSinceLastLevel bigint, pointsUntilNextLevel bigint, UNIQUE(summoner_id, game_id))")
 }
 
 function checkData() {
