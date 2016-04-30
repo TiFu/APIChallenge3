@@ -101,7 +101,7 @@ initDB().then(() => {
   return connection.query("SELECT COUNT(*) as cnt FROM summoners");
 }).then((result) => {
   console.log(result);
-  if (result[0].cnt == 0) {
+  if (result[0].cnt != NUMBER_OF_PLAYERS) {
     console.log("Loading Challengers");
     return initChallengers();
   } else {

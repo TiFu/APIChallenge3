@@ -20,7 +20,7 @@
         leagueUrl = {
             summoner: '/v2.5/league/by-summoner',
             team: '/v2.5/league/by-team',
-            challenger: '/v2.5/league/challenger?type=RANKED_SOLO_5x5',
+            challenger: '/v2.5/league/master?type=RANKED_SOLO_5x5',
         },
         statsUrl = '/v1.3/stats/by-summoner',
         summonerUrl = '/v1.4/summoner',
