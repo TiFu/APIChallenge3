@@ -49,16 +49,16 @@ function checkData() {
 function updateSummoner(summoner_id) {
   console.log("Updating summoner: " + summoner_id);
   var gameId = null;
-  var options =  {rankedQueues: ["TEAM_BUILDER_DRAFT_RANKED_5x5"], beginIndex: 0, endIndex: 1};
   // TODO check if gameId is already in table with that summoner id => if yes no new game (vllt unique summoner_id und gameId, fliegt halt nen fehler aber w/e)
-  League.getMatchHistory(summoner_id, options).then((result) => {
+  League.getRecentGames(summoner_id).then((result) => {
     console.log("Got Match History");
-    if (result.matches == undefined || result.matches.length == 0) {
+    if (result.games == undefined || result.games.length == 0) {
       return Promise.resolve(true);
-    } else if (result.matches.length == 1) {
-      gameId = result.matches[0].matchId;
+    } else {
+      result.sort((a, b) => b.createDate < a.createDate);
+      gameId = result.games[0].matchId;
       console.log("Getting Champion Mastery");
-      return League.ChampionMastery.getChampionMastery(summoner_id, result.matches[0].champion);
+      return League.ChampionMastery.getChampionMastery(summoner_id, result.games[0].champion);
     }
   }).then((result) => {
     if (result === true) {
