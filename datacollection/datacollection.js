@@ -57,9 +57,9 @@ function updateSummoner(summoner_id) {
       return Promise.resolve(true);
     } else {
       result.sort((a, b) => a.createDate < b.createDate);
-      gameId = result[0].matchId;
+      gameId = result[0].gameId;
       console.log("Getting Champion Mastery");
-      return League.ChampionMastery.getChampionMastery(summoner_id, result[0].champion);
+      return League.ChampionMastery.getChampionMastery(summoner_id, result[0].championId);
     }
   }).then((result) => {
     if (result === true) {
@@ -78,21 +78,22 @@ function updateSummoner(summoner_id) {
 
 }
 function insertMasteryUpdate(summonerId, mastery, gameId) {
+  console.log("inserting game in mastery");
   return connection.query("INSERT INTO mastery (summoner_id, champion_id, game_id, championLevel, championPoints, pointsSinceLastLevel, pointsUntilNextLevel) VALUES (" + summonerId + "," + mastery.championId + ", " + gameId + ", " + mastery.championLevel + "," + mastery.championPoints + "," + mastery.championPointsSinceLastLevel + "," + mastery.championPointsUntilNextLevel + ")")
 }
 
 function initChallengers() {
   return League.getChallengerData().then((result) => {
     console.log("inserting challengers");
-    var insert = "INSERT INTO summoners (summoner_id, summoner_name) VALUES ";
-    for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    var insert = "INSERT INTO summoners (summoner_id, summoner_name) VALUES (35301382, 'feedl0rd')";
+/*    for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
       insert += "(" + result.entries[i].playerOrTeamId + ", '" +result.entries[i].playerOrTeamName + "')";
       if (i < NUMBER_OF_PLAYERS-1) {
         insert +=","
       } else {
         insert += ";"
       }
-    }
+    }*/
     return connection.query(insert);
   });
 }
