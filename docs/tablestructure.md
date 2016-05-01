@@ -6,6 +6,7 @@
 |champion_id   	|   	|
 |game_id   	|   	|
 |timestamp   	| timestamp of the game  	|
+| mastery_level | champ mastery level |
 | pts_gained   	| pts gained from this game  	|
 | pts_next  	|  pts till next level 	|
 | pts_since  	| pts since last level  	|
