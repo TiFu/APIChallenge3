@@ -55,7 +55,7 @@ function updateSummoner(summoner_id) {
     if (result.games == undefined || result.games.length == 0) {
       return Promise.resolve(true);
     } else {
-      result.sort((a, b) => b.createDate < a.createDate);
+      result.sort((a, b) => a.createDate < b.createDate);
       gameId = result.games[0].matchId;
       console.log("Getting Champion Mastery");
       return League.ChampionMastery.getChampionMastery(summoner_id, result.games[0].champion);
