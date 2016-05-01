@@ -51,7 +51,6 @@ function updateSummoner(summoner_id) {
   var gameId = null;
   // TODO check if gameId is already in table with that summoner id => if yes no new game (vllt unique summoner_id und gameId, fliegt halt nen fehler aber w/e)
   League.getRecentGames(summoner_id).then((result) => {
-    console.log(result);
     console.log("Got Match History");
     if (result == undefined || result.length == 0) {
       console.log("Returning without mastery");
