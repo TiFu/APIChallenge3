@@ -85,15 +85,15 @@ function insertMasteryUpdate(summonerId, mastery, gameId) {
 function initChallengers() {
   return League.getChallengerData().then((result) => {
     console.log("inserting challengers");
-    var insert = "INSERT INTO summoners (summoner_id, summoner_name) VALUES (35301382, 'feedl0rd')";
-/*    for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    var insert = "INSERT INTO summoners (summoner_id, summoner_name) VALUES ";
+    for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
       insert += "(" + result.entries[i].playerOrTeamId + ", '" +result.entries[i].playerOrTeamName + "')";
       if (i < NUMBER_OF_PLAYERS-1) {
         insert +=","
       } else {
         insert += ";"
       }
-    }*/
+    }
     return connection.query(insert);
   });
 }
