@@ -10,15 +10,15 @@ exports.init = function(mainApp) {
 
 
 function getTop10Players(req,res, next) {
-  sendTop10(main.database.query("SELECT s.summoner_name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id group by g.summoner_id order by avg desc LIMIT 10"), res);
+  sendTop10(main.database.query("SELECT s.summoner_name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 1 week group by g.summoner_id order by avg desc LIMIT 10"), res);
 }
 
 function getTop10Champions(req, res, next) {
-  sendTop10(main.database.query("SELECT c.name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id group by g.champion_id order by avg desc LIMIT 10;"), res);
+  sendTop10(main.database.query("SELECT c.name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 1 week group by g.champion_id order by avg desc LIMIT 10;"), res);
 }
 
 function getTop10PlayersPerChamp(req, res, next) {
-  sendTop10(  main.database.query("SELECT s.summoner_name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [req.params.championId]), res);
+  sendTop10(  main.database.query("SELECT s.summoner_name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 1 week and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [req.params.championId]), res);
 }
 
 function sendTop10(query, res) {
