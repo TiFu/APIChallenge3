@@ -5,7 +5,7 @@ var WinstonContext = require("winston-context");
 var League = require("./leaguejs/lolapi");
 var datacollection = require("./datacollection");
 var analysis = require("./analysis");
-
+var db = require("./database");
 
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
@@ -39,5 +39,7 @@ League.init(process.env.API_KEY, process.env.API_REGION);
 League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 
 // init data collection & analysis.
+db.init(new WinstonContext(winston, "[Database] ")).then(() => {
 datacollection.init(db.CONNECTION, new WinstonContext(winston, "[Collection] "), League);
 analysis.init(db.CONNECTION, new WinstonContext(winston, "[Analysis] "), League);
+});

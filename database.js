@@ -1,10 +1,9 @@
 var mysql = require("promise-mysql");
-var config = require("config");
 var logger;
 exports.CONNECTION;
 
 // returns a promise<Boolean>, true if success, error otherwise
-exports.init = function(log) {
+exports.init = function(log, config) {
   logger = log;
   return mysql.createConnection({
       host: config.get("database.host"),

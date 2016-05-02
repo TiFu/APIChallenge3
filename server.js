@@ -57,7 +57,7 @@ app.use(morgan('dev'));
 
 
 // init client request stuff
-db.init(new WinstonContext(winston, "[Database]")).then(() => {
+db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
   // load client side modules
   return loadModules();
 }).then(() => {
