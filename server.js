@@ -10,15 +10,8 @@ var formatter = require("./formatter").formatter;
 var WinstonContext = require("winston-context");
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
-var passport = require('passport');
 var expressSession = require('express-session');
-var authentication = require("./authentication")
 var League = require("./leaguejs/lolapi");
-
-// init League
-League.init(process.env.API_KEY, process.env.API_REGION);
-League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
-
 // set up winston logging to file & console
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
@@ -38,8 +31,19 @@ winston.add(winston.transports.File, {
   json: false,
 });
 
+if (!process.env.API_KEY || !process.env.API_REGION) {
+  serverLogger.error("API-Key or API Region not found! Please set API_KEY and API_REGION as environment variables and configure your rate limit in config/default.json.");
+  process.exit(1);
+}
+// no calls at all so far
+// init League
+//serverLogger.info("Initializing LeagueJS");
+//League.init(process.env.API_KEY, process.env.API_REGION);
+//League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
+
 // array containing available endpoints
 var modules = [];
+
 var app = express();
 app.use(bodyParser.json({
   limit: '2kb',
@@ -50,28 +54,17 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(morgan('dev'));
-// add session
-app.use(expressSession({secret: 'iae45iae45iae45', resave: true, saveUninitialized: true}));
-app.use(passport.initialize());
-app.use(passport.session());
 
-// init database
-// add endpoint for list of registered apiEndpoints
+
+// init client request stuff
 db.init(new WinstonContext(winston, "[Database]")).then(() => {
-  authentication.initPassportWithMysql(passport, db.CONNECTION); // init passport
+  // load client side modules
   return loadModules();
 }).then(() => {
-  addAPIEndpoint("/modules", util.createEndpointFromFunc(() => Promise.resolve(apiEndpoints.map((f) => {
-    return {
-      "name": f.name,
-      "description": f.description,
-      "loaded": f.loaded,
-      "reason": f.reason ? f.reason : ""
-    };
-  }))));
-  listen();
+  return listen();
 }).catch((err) => {
   serverLogger.error("Failed to start server: " + err);
+  process.exit(1);
 })
 
 function listen() {
@@ -90,10 +83,7 @@ function listen() {
  */
 function loadModules() {
   var mainObject = {
-    addAPIEndpoint: addAPIEndpoint,
-    addLoginEndpoint: addLoginEndpoint,
-    addAuthenticatedEndpoint: addAuthenticatedEndpoint,
-    addValidatedEndpoint: addValidatedEndpoint,
+    addEndpoint: addEndpoint,
     database: db.CONNECTION,
     config: config,
     League: League,
@@ -121,44 +111,8 @@ function loadModules() {
 }
 
 /**
- * Adds an endpoint at /api/route which only validated & authenticated users
- * can access.
- * @param route route string
- * @param func (req, res, next) => {do stuff}
+ * adds an endpoint
  */
-function addValidatedEndpoint(route, func) {
-  addAuthenticatedEndpoint(route, (req, res, next) => {
-    if (!req.user.validated) {
-      res.status(401).send("Unauthorized");
-    } else {
-      func(req, res, next);
-    }
-  });
-}
-
-/**
- * add an endpoint only accessible by logged in users
- */
-function addAuthenticatedEndpoint(route, func) {
-  app.post("/api" + route, (req, res, next) => {
-    if (req.isAuthenticated()) {
-      next();
-    } else {
-      res.status(401).send("Unauthorized");
-    }
-  }, func);
-}
-
-/**
- * endpoint for logging in (needs passport.authenticate)
- */
-function addLoginEndpoint(route, func) {
-    app.post("/api" + route, passport.authenticate("local"), func);
-}
-
-/**
- * adds an api endpoint accessible by everyone
- */
-function addAPIEndpoint(route, func) {
-  app.post("/api" + route, func);
+function addEndpoint(route, func) {
+  app.post(route, func);
 }

@@ -12,7 +12,8 @@
 	"min-password-length": 8,
 	"min-username-length": 4,
 	"port": 1337,
-	"logfile": "logs/raspberrystatus.log",
+	"logfile": "logs/server.log",
+	"datalogfile": "logs/datacollection.log",
 	"endpointsDir": "./endpoints/",
 	"limitPer10s": 10,
 	"limitPer10min": 500
