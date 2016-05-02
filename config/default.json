@@ -16,5 +16,6 @@
 	"datalogfile": "logs/datacollection.log",
 	"endpointsDir": "./endpoints/",
 	"limitPer10s": 10,
-	"limitPer10min": 500
+	"limitPer10min": 500,
+	"serverRatio": 0.3
 }

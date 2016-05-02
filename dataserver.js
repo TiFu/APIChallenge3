@@ -34,9 +34,10 @@ if (!process.env.API_KEY || !process.env.API_REGION) {
 }
 
 // init League
+var dataRatio = 1 - config.get("serverRatio");
 serverLogger.info("Initializing LeagueJS");
 League.init(process.env.API_KEY, process.env.API_REGION);
-League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
+League.setRateLimit(config.get("limitPer10s") * dataRatio, config.get("limitPer10min") * dataRatio);
 
 // init data collection & analysis.
 db.init(new WinstonContext(winston, "[Database] ")).then(() => {

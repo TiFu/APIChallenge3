@@ -16,6 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `champions`
+--
+
+DROP TABLE IF EXISTS `champions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `champions` (
+  `id` int(11) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `full` varchar(30) DEFAULT NULL,
+  `sprite` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `champions`
+--
+
+LOCK TABLES `champions` WRITE;
+/*!40000 ALTER TABLE `champions` DISABLE KEYS */;
+INSERT INTO `champions` VALUES (1,'Annie','Annie.png','champion0.png'),(2,'Olaf','Olaf.png','champion2.png'),(3,'Galio','Galio.png','champion0.png'),(4,'Twisted Fate','TwistedFate.png','champion3.png'),(5,'Xin Zhao','XinZhao.png','champion3.png'),(6,'Urgot','Urgot.png','champion3.png'),(7,'LeBlanc','Leblanc.png','champion1.png'),(8,'Vladimir','Vladimir.png','champion3.png'),(9,'Fiddlesticks','FiddleSticks.png','champion0.png'),(10,'Kayle','Kayle.png','champion1.png'),(11,'Master Yi','MasterYi.png','champion1.png'),(12,'Alistar','Alistar.png','champion0.png'),(13,'Ryze','Ryze.png','champion2.png'),(14,'Sion','Sion.png','champion2.png'),(15,'Sivir','Sivir.png','champion2.png'),(16,'Soraka','Soraka.png','champion3.png'),(17,'Teemo','Teemo.png','champion3.png'),(18,'Tristana','Tristana.png','champion3.png'),(19,'Warwick','Warwick.png','champion3.png'),(20,'Nunu','Nunu.png','champion2.png'),(21,'Miss Fortune','MissFortune.png','champion2.png'),(22,'Ashe','Ashe.png','champion0.png'),(23,'Tryndamere','Tryndamere.png','champion3.png'),(24,'Jax','Jax.png','champion1.png'),(25,'Morgana','Morgana.png','champion2.png'),(26,'Zilean','Zilean.png','champion4.png'),(27,'Singed','Singed.png','champion2.png'),(28,'Evelynn','Evelynn.png','champion0.png'),(29,'Twitch','Twitch.png','champion3.png'),(30,'Karthus','Karthus.png','champion1.png'),(31,'Cho\'Gath','Chogath.png','champion0.png'),(32,'Amumu','Amumu.png','champion0.png'),(33,'Rammus','Rammus.png','champion2.png'),(34,'Anivia','Anivia.png','champion0.png'),(35,'Shaco','Shaco.png','champion2.png'),(36,'Dr. Mundo','DrMundo.png','champion0.png'),(37,'Sona','Sona.png','champion3.png'),(38,'Kassadin','Kassadin.png','champion1.png'),(39,'Irelia','Irelia.png','champion1.png'),(40,'Janna','Janna.png','champion1.png'),(41,'Gangplank','Gangplank.png','champion0.png'),(42,'Corki','Corki.png','champion0.png'),(43,'Karma','Karma.png','champion1.png'),(44,'Taric','Taric.png','champion3.png'),(45,'Veigar','Veigar.png','champion3.png'),(48,'Trundle','Trundle.png','champion3.png'),(50,'Swain','Swain.png','champion3.png'),(51,'Caitlyn','Caitlyn.png','champion0.png'),(53,'Blitzcrank','Blitzcrank.png','champion0.png'),(54,'Malphite','Malphite.png','champion1.png'),(55,'Katarina','Katarina.png','champion1.png'),(56,'Nocturne','Nocturne.png','champion2.png'),(57,'Maokai','Maokai.png','champion1.png'),(58,'Renekton','Renekton.png','champion2.png'),(59,'Jarvan IV','JarvanIV.png','champion1.png'),(60,'Elise','Elise.png','champion0.png'),(61,'Orianna','Orianna.png','champion2.png'),(62,'Wukong','MonkeyKing.png','champion2.png'),(63,'Brand','Brand.png','champion0.png'),(64,'Lee Sin','LeeSin.png','champion1.png'),(67,'Vayne','Vayne.png','champion3.png'),(68,'Rumble','Rumble.png','champion2.png'),(69,'Cassiopeia','Cassiopeia.png','champion0.png'),(72,'Skarner','Skarner.png','champion2.png'),(74,'Heimerdinger','Heimerdinger.png','champion1.png'),(75,'Nasus','Nasus.png','champion2.png'),(76,'Nidalee','Nidalee.png','champion2.png'),(77,'Udyr','Udyr.png','champion3.png'),(78,'Poppy','Poppy.png','champion2.png'),(79,'Gragas','Gragas.png','champion1.png'),(80,'Pantheon','Pantheon.png','champion2.png'),(81,'Ezreal','Ezreal.png','champion0.png'),(82,'Mordekaiser','Mordekaiser.png','champion2.png'),(83,'Yorick','Yorick.png','champion3.png'),(84,'Akali','Akali.png','champion0.png'),(85,'Kennen','Kennen.png','champion1.png'),(86,'Garen','Garen.png','champion0.png'),(89,'Leona','Leona.png','champion1.png'),(90,'Malzahar','Malzahar.png','champion1.png'),(91,'Talon','Talon.png','champion3.png'),(92,'Riven','Riven.png','champion2.png'),(96,'Kog\'Maw','KogMaw.png','champion1.png'),(98,'Shen','Shen.png','champion2.png'),(99,'Lux','Lux.png','champion1.png'),(101,'Xerath','Xerath.png','champion3.png'),(102,'Shyvana','Shyvana.png','champion2.png'),(103,'Ahri','Ahri.png','champion0.png'),(104,'Graves','Graves.png','champion1.png'),(105,'Fizz','Fizz.png','champion0.png'),(106,'Volibear','Volibear.png','champion3.png'),(107,'Rengar','Rengar.png','champion2.png'),(110,'Varus','Varus.png','champion3.png'),(111,'Nautilus','Nautilus.png','champion2.png'),(112,'Viktor','Viktor.png','champion3.png'),(113,'Sejuani','Sejuani.png','champion2.png'),(114,'Fiora','Fiora.png','champion0.png'),(115,'Ziggs','Ziggs.png','champion4.png'),(117,'Lulu','Lulu.png','champion1.png'),(119,'Draven','Draven.png','champion0.png'),(120,'Hecarim','Hecarim.png','champion1.png'),(121,'Kha\'Zix','Khazix.png','champion1.png'),(122,'Darius','Darius.png','champion0.png'),(126,'Jayce','Jayce.png','champion1.png'),(127,'Lissandra','Lissandra.png','champion1.png'),(131,'Diana','Diana.png','champion0.png'),(133,'Quinn','Quinn.png','champion2.png'),(134,'Syndra','Syndra.png','champion3.png'),(136,'Aurelion Sol','AurelionSol.png','champion4.png'),(143,'Zyra','Zyra.png','champion4.png'),(150,'Gnar','Gnar.png','champion0.png'),(154,'Zac','Zac.png','champion3.png'),(157,'Yasuo','Yasuo.png','champion3.png'),(161,'Vel\'Koz','Velkoz.png','champion3.png'),(201,'Braum','Braum.png','champion0.png'),(202,'Jhin','Jhin.png','champion4.png'),(203,'Kindred','Kindred.png','champion4.png'),(222,'Jinx','Jinx.png','champion1.png'),(223,'Tahm Kench','TahmKench.png','champion4.png'),(236,'Lucian','Lucian.png','champion1.png'),(238,'Zed','Zed.png','champion3.png'),(245,'Ekko','Ekko.png','champion4.png'),(254,'Vi','Vi.png','champion3.png'),(266,'Aatrox','Aatrox.png','champion0.png'),(267,'Nami','Nami.png','champion2.png'),(268,'Azir','Azir.png','champion0.png'),(412,'Thresh','Thresh.png','champion3.png'),(420,'Illaoi','Illaoi.png','champion4.png'),(421,'Rek\'Sai','RekSai.png','champion2.png'),(429,'Kalista','Kalista.png','champion1.png'),(432,'Bard','Bard.png','champion4.png');
+/*!40000 ALTER TABLE `champions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `gains`
 --
 
@@ -110,4 +136,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-03  0:36:41
+-- Dump completed on 2016-05-03  1:33:34
