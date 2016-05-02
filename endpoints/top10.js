@@ -14,7 +14,7 @@ function getTop10Players(req,res, next) {
 }
 
 function getTop10Champions(req, res, next) {
-  sendTop10(main.database.query("SELECT champion_id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g group by g.champion_id order by avg desc LIMIT 10;"), res);
+  sendTop10(main.database.query("SELECT c.name as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id group by g.champion_id order by avg desc LIMIT 10;"), res);
 }
 
 function getTop10PlayersPerChamp(req, res, next) {
