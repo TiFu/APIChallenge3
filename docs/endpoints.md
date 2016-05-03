@@ -11,7 +11,9 @@
   * [/static/champions](#staticchampions)
   * [/static/champions/:id](#staticchampionsid)
   * [ChampionObject](#championobject)
-
+* [player](#player)
+  * [/player/info/:summonerId](#playerinfosummonerid)
+  * [/player/progression/:summonerId/:championId](#playerprogressionsummoneridchampionid)
 
 ## top10
 
@@ -58,7 +60,8 @@ Returns an Array<Top10Object> where id represents the summoner name.
 | Name | Type | Description |
 | --- | --- | --- |
 | rank | int | rank, starting at 1 |
-| id | string | |
+| id | int | |
+| name | string | name |
 | change | double | average mastery points gained per game |
 
 ## static
@@ -95,3 +98,79 @@ Array<ChampionObject> containing exactly one element.
 | name | string | |
 | full | string | full image name |
 | sprite | string | sprite image name |
+
+# Player
+
+This endpoint exposes different stats regarding one specific player.
+## /player/info/:summonerId
+
+This endpoint retrieves the following informations about a summoner:
+  - name
+  - mastery distribution
+  - top10 champions overall
+  - highest grade distribution
+
+**Parameters**
+
+:summonerId - summoner id
+
+**Output**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | string | summoner name |
+| masterydistribution | Array<Int> | Array with 6 entries (0 - 5) giving the number of champions with which this player has reached the corresponding mastery level |
+| top10champions | Array<ChampionEntry> | Top10 champions with most points for this player |
+| highestgradedistribution | Array<HighestGradeEntry> | same as masterydistribution only for maximum grades |
+| top10gainslastweek | Array<GainsEntry> | array containing up to 10 champions with their avg gains per game for last week |
+
+## /player/progression/:summonerId/:championId
+
+This endpoint retrives progression values for the mastery of one champion for a summoner.
+
+**Parameters**
+
+:summonerId - summoner id
+
+:championId - champion id
+
+**Output**
+
+Returns an Array<ChampionProgression> ordered by timestamp ASC.
+
+## ChampionEntry
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | string | |
+| mastery_level | int | |
+| pts_total | int | |
+| pts_next | int | |
+| pts_since | int | |
+| highest_grade | string | |
+| chest_granted | boolean | |
+
+## HighestGradeEntry
+
+| Name | Type | Description |
+| --- | --- | --- |
+| grade | string | |
+| cnt | int | number of occurences in the champion mastery |
+
+## GainsEntry
+
+| Name | Type | Description |
+| --- | --- | --- |
+| name | string | champion name |
+| avg_pts_gained | double | avg pts gained per game |
+| mastery_level | maximum mastery level |
+
+## ChampionProgression
+
+| Name | Type | Description |
+| --- | --- | --- |
+| champion_name | string | |
+| pts_gained | int | NULL if first entry |
+| pts_total | int | |
+| mastery_level | int | |
+| game_timestamp | timestamp | |
