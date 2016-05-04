@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="./modules/home/style.css" />
+
+<div class="global-container">
+<div layout="row" layout-align="center" class="padding-top">
+
+      <div flex layout="row" class="layout-container">
+        <div layout="row" layout-align="center" flex="33" class="champion-container" ng-repeat="champ in topChampions">
+          <img src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png">
+            <div layout="row" layout-sm="column" layout-align="space-around">
+              <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}">
+              </md-progress-circular>
+            </div>
+        </div>
+      </div>
+
+</div>
+
+<div layout="row" layout-align="center center" class="search-container">
+
+  <div flex layout="row" layout-align="center end" class="layout-container">
+    <div layout="row" layout-align="center end" flex="50" class="champion-container">
+    <md-input-container>
+      <label>Champion Name</label>
+      <input ng-model="search.name">
+    </md-input-container>
+    </div>
+  </div>
+
+</div>
+
+<div layout="row" layout-align="center">
+<div flex layout="row" class="layout-container">
+  <table class="table table-inverse table-striped table-hover">
+<!--   <thead>
+    <tr>
+      <th></th>
+      <th>Champion</th>
+      <th>Grade</th>
+      <th>Change</th>
+    </tr>
+  </thead> -->
+  <tbody class="table-listings">
+    <tr ng-repeat="champ in champList | filter:search | orderBy:'rank'" class="selectable-row" ng-click="goto(champ.name)">
+      <td scope="row"><img src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png" /></td>
+      <td>{{champ.name}}</td>
+      <td>{{champ.grade}}</td>
+      <td class="{{champ.changeDirection}}">{{champ.change}}</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+<div layout="row" layout-align="center">
+<div flex layout="row" class="layout-container">
+<md-progress-linear md-mode="indeterminate" ng-if="loadingTable"></md-progress-linear>
+</div>
+</div>
+
+<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+  <md-button class="md-primary" ng-click="loadMore()">Load More</md-button>
+</section>
+</div>

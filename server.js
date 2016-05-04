@@ -8,6 +8,7 @@ var fs = require("fs");
 var winston = require("winston");
 var formatter = require("./formatter").formatter;
 var WinstonContext = require("winston-context");
+var path = require('path');
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
 var expressSession = require('express-session');
@@ -57,7 +58,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(morgan('dev'));
 app.use(cors());
-//app.use(express.static(__dirname + 'frontend'))
+app.use(express.static(path.join(__dirname, '/frontend')))
 
 // init client request stuff
 db.init(new WinstonContext(winston, "[Database]"), config).then(() => {

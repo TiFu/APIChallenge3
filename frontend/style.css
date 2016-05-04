@@ -1,0 +1,39 @@
+.navbar-fixed-bottom {
+  background-color: white;
+}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+  border:none;
+}
+.nav {
+  padding-left:inherit;
+}
+.navbar-toggle {
+  z-index:1001;
+}
+.navbar-brand {
+  position: absolute;
+  top: 0;
+  margin:auto;
+  width: 100%;
+  padding-top:0;
+}
+.navbar-brand > img, .navbar-brand > div {
+  height:50px;
+  width: 50px;
+  margin: auto;
+}
+
+.navbar-right {
+  margin-top: 7px;
+}
+.navbar {
+  margin-bottom: 0px;
+}
+.navOption:hover {
+  color: red;
+  text-decoration: none;
+}
+.nav.navbar-nav.navbar-left li a {
+  color: black;
+  font-weight: bold;
+}

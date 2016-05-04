@@ -1,0 +1,92 @@
+.champion-container img {
+  border-radius: 100px;
+  position: absolute;
+  padding: 15px;
+  background-color: gray;
+}
+
+table tr td {
+  vertical-align: baseline !important;
+  font-size: 16px;
+  text-align: left;
+}
+
+table tr td.up {
+  color: green;
+  font-weight:bold;
+}
+
+table tr td.up:before {
+  content: '+';
+  padding-right:2px;
+  font-weight: normal;
+  color: black;
+}
+
+table tr td.down {
+  color: red;
+  font-weight:bold;
+}
+
+table tr td.down:before {
+  content: '-';
+  padding-right:2px;
+  font-weight: normal;
+  color: black;
+}
+
+table tr img {
+  width: 30px;
+}
+
+
+.layout-container {
+  max-width:1000px;
+}
+
+.selectable-row:hover {
+  cursor: pointer;
+}
+
+.global-search, md-input-container {
+  width: 100%;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.search-container {
+  height: 50px;
+  padding-top:50px;
+  padding-bottom: 25px;
+}
+
+.padding-top {
+  padding-top: 15px;
+}
+
+/*.table-listings {
+  max-height: 500px;
+  overflow-y: auto;
+}*/
+
+
+tbody {
+    display:block;
+    max-height:500px;
+    overflow:auto;
+}
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;/* even columns width , fix width of table too*/
+}
+.table>thead>tr {
+  border-bottom: 1px solid;
+}
+.table {
+  margin-bottom: 0;
+}
+
+.global-container {
+  min-width: 500px;
+}

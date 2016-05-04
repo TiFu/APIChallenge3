@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="APIChallenge3">
+
+<head>
+  <meta charset="utf-8" />
+
+  <title>API Challenge 3</title>
+  <!-- JQuery/Bootstrap/AngularJS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.8/angular-material.css">
+  </link>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.8/angular-material.js"></script>
+
+  <script src="https://code.jquery.com/jquery-2.2.3.min.js" 
+          integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" 
+          crossorigin="anonymous">
+  </script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"></link>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.11.2/lodash.js"></script>
+
+  <!-- Index CSS and app.js -->
+  <link rel="stylesheet" href="style.css" />
+  <script src="Scripts/app.js"></script>
+
+  <!-- Contollers (pages) -->
+  <script src="modules/home/homeController.js"></script>
+  <script src="modules/about/aboutController.js"></script>
+
+  <!-- Factories -->
+
+  <!-- Services -->
+  <!-- <script src="Modules/admin/services.js"></script> -->
+</head>
+
+<body ng-controller="HomeController">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-brand" href="#/home">
+<!--       <img src="https://pbs.twimg.com/profile_images/378800000593026127/b77ee8bd43bb7051e3f6a0f3ca86f66e.jpeg"> -->
+    <div>MasteryGG</div>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="#/home">Home</a></li>
+        <li><a href="#/about">About</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="col-xs-12" id="view" ng-view=""></div>
+</body>
+
+</html>
