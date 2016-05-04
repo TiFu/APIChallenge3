@@ -6,10 +6,6 @@ exports.init = function(mainApp) {
   initChampions();
   main.addEndpoint("/api/static/champions", getChampions);
   main.addEndpoint("/api/static/champions/:id", getChampionById)
-  // check champs daily.
-  setInterval(() => {
-    initChampions();
-  }, 24*60*60*1000);
 };
 
 function getChampions(req, res, next) {
@@ -31,19 +27,5 @@ function generateChampionResponse(query, res) {
   }).catch((err) => {
     main.logger.warn("ERROR", err);
     res.status(500).send("Internal Server Error");
-  })
-}
-
-function initChampions() {
-  return main.League.Static.getChampionList({champData: "image"}).then((result) => {
-    var promises = [];
-    for (var champ in result.data) {
-      var currentChamp = result.data[champ];
-      var promise = main.database.query("INSERT IGNORE INTO champions (id, name, full, sprite) values (?, ?, ?, ?)", [currentChamp.id, currentChamp.name, currentChamp.image.full, currentChamp.image.sprite]);
-      promises.push(promise);
-    }
-    return Promise.all(promises);
-  }).catch((err) => {
-    main.logger.info("Error: " + err);
   })
 }

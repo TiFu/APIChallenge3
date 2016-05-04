@@ -33,18 +33,17 @@ if (!process.env.API_KEY || !process.env.API_REGION) {
   process.exit(1);
 }
 
-// init League
-var dataRatio = 1 - config.get("serverRatio");
 serverLogger.info("Initializing LeagueJS");
 League.init(process.env.API_KEY, process.env.API_REGION);
-League.setRateLimit(config.get("limitPer10s") * dataRatio, config.get("limitPer10min") * dataRatio);
+League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 
 // init data collection & analysis.
 db.init(new WinstonContext(winston, "[Database] "), config).then(() => {
   serverLogger.info("Starting collection services");
-//datacollection.init(db.CONNECTION, new WinstonContext(winston, "[Collection] "), League);
-//analysis.init(db.CONNECTION, new WinstonContext(winston, "[Analysis] "), League);
+datacollection.init(db.CONNECTION, new WinstonContext(winston, "[Collection] "), League);
+analysis.init(db.CONNECTION, new WinstonContext(winston, "[Analysis] "), League);
 currentmastery.init(db.CONNECTION, new WinstonContext(winston, "[Current Mastery] "), League);
+staticdata.init(db.CONNECTION, new WinstonContext(winston, "[Static Data] "), League);
 }).catch((err) => {
   serverLogger.warn(err);
   process.exit(1);

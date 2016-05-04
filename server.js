@@ -34,16 +34,6 @@ winston.add(winston.transports.File, {
   json: false,
 });
 
-if (!process.env.API_KEY || !process.env.API_REGION) {
-  serverLogger.error("API-Key or API Region not found! Please set API_KEY and API_REGION as environment variables and configure your rate limit in config/default.json.");
-  process.exit(1);
-}
-
-// init League
-serverLogger.info("Initializing LeagueJS");
-League.init(process.env.API_KEY, process.env.API_REGION);
-League.setRateLimit(config.get("limitPer10s") * config.get("serverRatio"), config.get("limitPer10min") * config.get("serverRatio"));
-
 // array containing available endpoints
 var modules = [];
 
@@ -90,7 +80,6 @@ function loadModules() {
     addEndpoint: addEndpoint,
     database: db.CONNECTION,
     config: config,
-    League: League,
     logger: null,
   }
   var files = fs.readdirSync(config.get("endpointsDir"))
