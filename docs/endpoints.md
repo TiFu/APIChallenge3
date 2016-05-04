@@ -123,6 +123,7 @@ This endpoint retrieves the following informations about a summoner:
 | top10champions | Array<ChampionEntry> | Top10 champions with most points for this player |
 | highestgradedistribution | Array<HighestGradeEntry> | same as masterydistribution only for maximum grades |
 | top10gainslastweek | Array<GainsEntry> | array containing up to 10 champions with their avg gains per game for last week |
+| rank | Arra<RankObject> | global rank information for the last week including rank, avg_gain and number of counted games |
 
 ## /player/progression/:summonerId/:championId
 
@@ -164,6 +165,14 @@ Returns an Array<ChampionProgression> ordered by timestamp ASC.
 | name | string | champion name |
 | avg_pts_gained | double | avg pts gained per game |
 | mastery_level | maximum mastery level |
+
+## RankObject
+
+| Name | Type | Description |
+| --- | --- | --- |
+| rank | int | global rank for last week |
+| avg_gain | double | avg gain for the last week |
+| games | int | number of counted games |
 
 ## ChampionProgression
 

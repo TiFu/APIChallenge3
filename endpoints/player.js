@@ -28,6 +28,7 @@ function getPlayerInfo(req, res, next) {
   promises.push(getSummonerName(summoner_id));
   promises.push(getHighestGradeDistribution(summoner_id));
   promises.push(getTop10GainsLastWeek(summoner_id));
+  promises.push(getGlobalRank(summoner_id));
   var resultObj = {};
   Promise.all(promises).then((result) => {
     for (var i = 0; i < result.length; i++) {
@@ -60,9 +61,10 @@ function getMasteryDistribution(summoner_id) {
 }
 
 
-// Mastery Gains Rank last week
-function getGlobalRank() {
-  // TODO implement retrieving global rank
+function getGlobalRank(summoner_id) {
+  return main.database.query("select rank, avg_gain, games from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, games FROM (select @rank:=@rank+1 as rank, summoner_id, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where game_timestamp > now() - interval 1 week group by summoner_id having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ?", [summoner_id]).then((result) => {
+    return {name: "rank", data: result[0]};
+  });
 }
 
 function getHighestGradeDistribution(summoner_id) {
