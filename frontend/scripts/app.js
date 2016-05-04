@@ -27,19 +27,19 @@ angular.module('APIChallenge3', [
 
   $routeProvider
   .when('/', {
-    templateUrl: 'Modules/home/views/home.html'
+    templateUrl: 'modules/home/views/home.html'
   })
 
   .when('/about', {
-    templateUrl: 'Modules/about/views/about.html',
+    templateUrl: 'modules/about/views/about.html',
   })
 
   .when('/home', {
-    templateUrl: 'Modules/home/views/home.html'
+    templateUrl: 'modules/home/views/home.html'
   })
 
   .otherwise({
-    templateUrl: 'Modules/home/views/home.html',
+    templateUrl: 'modules/home/views/home.html',
   })
 
 /*  .otherwise({
