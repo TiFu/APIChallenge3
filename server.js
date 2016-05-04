@@ -12,6 +12,8 @@ var WinstonContext = require("winston-context");
 var serverLogger = new WinstonContext(winston, "[Server]");
 var expressSession = require('express-session');
 var League = require("./leaguejs/lolapi");
+var cors = require("cors");
+
 // set up winston logging to file & console
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
@@ -54,7 +56,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(morgan('dev'));
-
+app.use(cors());
+//app.use(express.static(__dirname + 'frontend'))
 
 // init client request stuff
 db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
