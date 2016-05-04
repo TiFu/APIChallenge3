@@ -13,7 +13,6 @@ exports.init = function(conn, log, leagJS) {
 }
 
 function updateCurrentMastery() {
-  // TODO remove summoner_id
   connection.query("SELECT summoner_id FROM summoners WHERE last_current_mastery_update < now() - INTERVAL 22 HOUR OR last_current_mastery_update is NULL)").then((result) => {
     for (var i = 0; i < result.length; i++) {
       var currentSummoner = result[i].summoner_id;
