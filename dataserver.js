@@ -7,6 +7,7 @@ var datacollection = require("./datacollection");
 var analysis = require("./analysis");
 var db = require("./database");
 var currentmastery = require("./currentmastery");
+var staticdata = require("./staticdata.js");
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
 

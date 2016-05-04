@@ -2,8 +2,6 @@ var main = null;
 
 exports.init = function(mainApp) {
   main = mainApp;
-
-  initChampions();
   main.addEndpoint("/api/static/champions", getChampions);
   main.addEndpoint("/api/static/champions/:id", getChampionById)
 };
@@ -13,7 +11,7 @@ function getChampions(req, res, next) {
 }
 
 function getChampionById(req, res, next) {
-  var id = req.params.id;
+  var id = req.paramgrs.id;
   generateChampionResponse(main.database.query("SELECT  * FROM champions WHERE id = ?", [id]), res);
 }
 
