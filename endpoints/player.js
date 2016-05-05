@@ -72,9 +72,13 @@ function getMasteryDistribution(summoner_id) {
 
 
 function getGlobalRank(summoner_id) {
-  return main.database.query("select rank, avg_gain, games from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, games FROM (select @rank:=@rank+1 as rank, summoner_id, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where game_timestamp > now() - interval 1 week group by summoner_id having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ?", [summoner_id]).then((result) => {
-    return {name: "rank", data: result[0]};
-  });
+  return globalRankByWeek(summoner_id).then((result) => {
+    return {name: "globalrank", data: result};
+  })
+}
+
+function globalRankByWeek(summoner_id) {
+  return main.database.query("select rank, avg_gain, games, week, year from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games, year FROM (select @rank:=@rank+1 as rank, summoner_id, week(game_timestamp) as week, year(game_timestamp) as year, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains group by summoner_id, WEEK(game_timestamp) having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by year desc, week desc", [summoner_id])
 }
 
 function getHighestGradeDistribution(summoner_id) {
