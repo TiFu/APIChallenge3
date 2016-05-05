@@ -5,7 +5,7 @@
 
       <div flex layout="row" class="layout-container">
         <div layout="row" layout-align="center" flex="33" class="champion-container" ng-repeat="champ in topChampions">
-          <img data-ng-src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png">
+          <img ng-src="{{getImgUrl(champ.name)}}">
             <div layout="row" layout-sm="column" layout-align="space-around">
               <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}">
               </md-progress-circular>
@@ -40,11 +40,11 @@
     </tr>
   </thead> -->
   <tbody class="table-listings">
-    <tr ng-repeat="champ in champList | filter:search | orderBy:'rank'" class="selectable-row" ng-click="goto(champ.name)">
-      <td scope="row"><img src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png" /></td>
-      <td>{{champ.name}}</td>
-      <td>{{champ.grade}}</td>
-      <td class="{{champ.changeDirection}}">{{champ.change}}</td>
+    <tr ng-repeat="champ in champList | filter:search | orderBy:['rank','name']" class="selectable-row" ng-click="goto(champ.name)">
+      <td colspan="2">{{champ.rank}} (<span class="{{champ.changeDirection}}">0</span>)</td>
+      <td colspan="2" scope="row"><img ng-src="{{getImgUrl(champ.name)}}"></td>
+      <td colspan="4">{{champ.name}}</td>
+      <td colspan="4">{{champ.change === 0 ? 'no data yet' : champ.change}}</td>
     </tr>
   </tbody>
 </table>

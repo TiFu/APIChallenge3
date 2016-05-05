@@ -32,9 +32,12 @@ angular.module('APIChallenge3', [
     resolve: {
         top: function(MainService) {
           return MainService.GetTop10Champions();
+        },
+        champions: function(MainService) {
+          return MainService.GetChampionList();
         }
         //STORE CHAMPIONS!!
-    }  
+    }
   })
 
   .when('/about', {
@@ -47,6 +50,9 @@ angular.module('APIChallenge3', [
     resolve: {
         top: function(MainService) {
           return MainService.GetTop10Champions();
+        },
+        champions: function(MainService) {
+          return MainService.GetChampionList();
         }
     }
   })
@@ -57,8 +63,11 @@ angular.module('APIChallenge3', [
     resolve: {
         top: function(MainService) {
           return MainService.GetTop10Champions();
+        },
+        champions: function(MainService) {
+          return MainService.GetChampionList();
         }
-    }  
+    }
   })
 
 /*  .otherwise({

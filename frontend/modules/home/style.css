@@ -11,7 +11,29 @@ table tr td {
   text-align: left;
 }
 
-table tr td.up {
+.up {
+  color: green;
+  font-weight:bold;
+}
+.up:before {
+  content: '+';
+  padding-right:2px;
+  font-weight: normal;
+  color: black;
+}
+
+.down {
+  color: red;
+  font-weight:bold;
+}
+.down:before {
+  content: '-';
+  padding-right:2px;
+  font-weight: normal;
+  color: black;
+}
+
+/*table tr td.up {
   color: green;
   font-weight:bold;
 }
@@ -33,7 +55,7 @@ table tr td.down:before {
   padding-right:2px;
   font-weight: normal;
   color: black;
-}
+}*/
 
 table tr img {
   width: 30px;

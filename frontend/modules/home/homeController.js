@@ -10,6 +10,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute'])
 	'$http',
 	'MainService',
 	'top',
+	'champions',
 function(
 	$scope,
 	$location,
@@ -17,7 +18,10 @@ function(
 	$routeParams,
 	$http,
 	MainService,
-	top) {
+	top,
+	champions) {
+
+	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/';
 
 	//will run when event queue for this controller has settled down
 	activate();
@@ -28,10 +32,14 @@ function(
 	//i.e. if mode = ['home','graves','brand'], will print graves, brand. For path of Home/Graves/Brand
 	console.log('mode', mode.slice(1));
 
-	$scope.champList = top.data;
+	console.log(top);
+	console.log('champs', champions);
+	$scope.champList = top.data.data;
+	$scope.max = top.data.max;
+	$scope.min = top.data.min;
 	$scope.champList = $scope.champList.map(function(champ) {
 		champ.changeDirection = 'up';
-		champ.masteryAverage = 70;
+		champ.masteryAverage = (champ.change / $scope.max)*100;
 		champ.currentAverage = 0;
 		return champ;
 	});
@@ -81,6 +89,10 @@ function getCurrentRequest() {
 		}
 			$scope.topChampions[2].currentAverage++;
 			$timeout(champ3Circle, 15);
+	}
+
+	$scope.getImgUrl = function(name) {
+		return IMGURL + _.find(champions.data, {name: name}).full;
 	}
 
 	//selecting a champion/summoner should generically path to a new url.
