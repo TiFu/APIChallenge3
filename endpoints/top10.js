@@ -10,19 +10,32 @@ exports.init = function(mainApp) {
 
 
 function getTop10Players(req,res, next) {
-  sendTop10(main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 1 week group by g.summoner_id order by avg desc"), res);
+
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval ?+1 week and g.game_timestamp < now() - interval ? week group by g.summoner_id order by avg desc"), res)
 }
 
 function getTop10Champions(req, res, next) {
-  sendTop10(main.database.query("SELECT c.name as name, c.id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 1 week group by g.champion_id order by avg desc;"), res);
+sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval ?+1 week and g.game_timestamp < now() - interval ? week group by g.champion_id order by avg desc;"), res);
 }
 
 function getTop10PlayersPerChamp(req, res, next) {
-  sendTop10(  main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 1 week and g.champion_id = ? group by g.summoner_id order by avg desc", [req.params.championId]), res);
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval ?+1 week and g.game_timestamp < now() - interval ? week and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res);
 }
 
-function sendTop10(query, res) {
-  query.then((result) => {
+// first param is week, second summoner_id
+function transformWithLast2Weeks(queryString, champion_id) {
+  var thisWeek;
+  var parameters = champion_id ? [0,0, champion_id] : [0,0];
+ return  main.database.query(queryString, parameters).then((result) => {
+    thisWeek = transformToTop10Entry(result);
+    parameters[0]++;
+    parameters[1]++;
+    return main.database.query(queryString, parameters);
+  }).then((result) => {
+    return {thisWeek: thisWeek, lastWeek: transformToTop10Entry(result)};
+  })
+}
+function transformToTop10Entry(result) {
     var outputVal = [];
     var min = Number.POSITIVE_INFINITY;
     var max = Number.NEGATIVE_INFINITY;
@@ -40,10 +53,13 @@ function sendTop10(query, res) {
       }
     }
 
-    outputVal = {max: max, min: min, data: outputVal};
-    res.status(200).send(outputVal);
+   return {max: max, min: min, data: outputVal};
+}
+function sendTop10(query, res) {
+  query.then((result) => {
+    res.status(200).send(result);
   }).catch((err) => {
-    main.logger.warn("Couldn't collect data for query " + query, err);
+    main.logger.warn(err);
     res.status(500).send("Internav Server Error");
   });
 
