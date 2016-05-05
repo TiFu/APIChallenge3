@@ -14,6 +14,8 @@
 * [player](#player)
   * [/player/info/:summonerId](#playerinfosummonerid)
   * [/player/progression/:summonerId/:championId](#playerprogressionsummoneridchampionid)
+* [champion](#champion)
+  * [/champion/:championId](#championchampionid)
 
 ## top10
 
@@ -57,11 +59,11 @@ Returns an Array<Top10Object> where id represents the summoner name.
 
 ### Top10Object
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rank | int | rank, starting at 1 |
-| id | int | |
-| name | string | name |
+| Name   | Type   | Description                            |
+|:-------|:-------|:---------------------------------------|
+| rank   | int    | rank, starting at 1                    |
+| id     | int    |                                        |
+| name   | string | name                                   |
 | change | double | average mastery points gained per game |
 
 ## static
@@ -92,11 +94,11 @@ Array<ChampionObject> containing exactly one element.
 
 ### ChampionObject
 
-| Name | Type | Description |
-| --- | --- | --- |
-| id | int | champion id |
-| name | string | |
-| full | string | full image name |
+| Name   | Type   | Description       |
+|:-------|:-------|:------------------|
+| id     | int    | champion id       |
+| name   | string |                   |
+| full   | string | full image name   |
 | sprite | string | sprite image name |
 
 # Player
@@ -116,14 +118,14 @@ This endpoint retrieves the following informations about a summoner:
 
 **Output**
 
-| Name | Type | Description |
-| --- | --- | --- |
-| name | string | summoner name |
-| masterydistribution | Array<Int> | Array with 6 entries (0 - 5) giving the number of champions with which this player has reached the corresponding mastery level |
-| top10champions | Array<ChampionEntry> | Top10 champions with most points for this player |
-| highestgradedistribution | Array<HighestGradeEntry> | same as masterydistribution only for maximum grades |
-| top10gainslastweek | Array<GainsEntry> | array containing up to 10 champions with their avg gains per game for last week |
-| rank | Arra<RankObject> | global rank information for the last week including rank, avg_gain and number of counted games |
+| Name                     | Type                     | Description                                                                                                                    |
+|:-------------------------|:-------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+| name                     | string                   | summoner name                                                                                                                  |
+| masterydistribution      | Array<Int>               | Array with 6 entries (0 - 5) giving the number of champions with which this player has reached the corresponding mastery level |
+| top10champions           | Array<ChampionEntry>     | Top10 champions with most points for this player                                                                               |
+| highestgradedistribution | Array<HighestGradeEntry> | same as masterydistribution only for maximum grades                                                                            |
+| top10gainslastweek       | Array<GainsEntry>        | array containing up to 10 champions with their avg gains per game for last week                                                |
+| rank                     | Arra<RankObject>         | global rank information for the last week including rank, avg_gain and number of counted games                                 |
 
 ## /player/progression/:summonerId/:championId
 
@@ -141,45 +143,104 @@ Returns an Array<ChampionProgression> ordered by timestamp ASC.
 
 ## ChampionEntry
 
-| Name | Type | Description |
-| --- | --- | --- |
-| name | string | |
-| mastery_level | int | |
-| pts_total | int | |
-| pts_next | int | |
-| pts_since | int | |
-| highest_grade | string | |
-| chest_granted | boolean | |
+| Name          | Type    | Description |
+|:--------------|:--------|:------------|
+| name          | string  |             |
+| mastery_level | int     |             |
+| pts_total     | int     |             |
+| pts_next      | int     |             |
+| pts_since     | int     |             |
+| highest_grade | string  |             |
+| chest_granted | boolean |             |
 
 ## HighestGradeEntry
 
-| Name | Type | Description |
-| --- | --- | --- |
-| grade | string | |
-| cnt | int | number of occurences in the champion mastery |
+| Name  | Type   | Description                                  |
+|:------|:-------|:---------------------------------------------|
+| grade | string |                                              |
+| cnt   | int    | number of occurences in the champion mastery |
 
 ## GainsEntry
 
-| Name | Type | Description |
-| --- | --- | --- |
-| name | string | champion name |
-| avg_pts_gained | double | avg pts gained per game |
-| mastery_level | maximum mastery level |
+| Name           | Type                  | Description             |
+|:---------------|:----------------------|:------------------------|
+| name           | string                | champion name           |
+| avg_pts_gained | double                | avg pts gained per game |
+| mastery_level  | maximum mastery level |                         |
 
 ## RankObject
 
-| Name | Type | Description |
-| --- | --- | --- |
-| rank | int | global rank for last week |
+| Name     | Type   | Description                |
+|:---------|:-------|:---------------------------|
+| rank     | int    | global rank for last week  |
 | avg_gain | double | avg gain for the last week |
-| games | int | number of counted games |
+| games    | int    | number of counted games    |
 
 ## ChampionProgression
 
-| Name | Type | Description |
-| --- | --- | --- |
-| champion_name | string | |
-| pts_gained | int | NULL if first entry |
-| pts_total | int | |
-| mastery_level | int | |
-| game_timestamp | timestamp | |
+| Name           | Type      | Description         |
+|:---------------|:----------|:--------------------|
+| champion_name  | string    |                     |
+| pts_gained     | int       | NULL if first entry |
+| pts_total      | int       |                     |
+| mastery_level  | int       |                     |
+| game_timestamp | timestamp |                     |
+
+# Champion
+
+## /champion/:championId
+
+This endpoint retrieves various (champion mastery) stats regarding this champion.
+
+**Parameters**
+
+:championId - championId
+
+**Output**
+
+| Name                  | Type                       | Description                                                                                                        |
+|:----------------------|:---------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| data                  | Array<ChampData>           | standard champion data (id, name, full img, sprite img)                                                            |
+| stats                 | Array<ChampStats>          | champion stats including avg_gains, games_played, avg_games_summoner, number of summoners who played that champion |
+| masterydistribution   | Array<Int>                 | array mapping from mastery level => number of summoners who have that level                                        |
+| gradedistribution     | Array<HighestGradeEntry>   |                                                                                                                    |
+| percent_chest_granted | Array<{yes: int, no: int}> | array containing number of tracked summoners who got/didn't get a chest this season                                |
+| top10Players          | Array<Top10Object>         |                                                                                                                    |
+| rank                  | RankStat                   | rank data containing rank, avg_gain and number of games played                                                     |
+| totalptsstats         | PtsStats                   | pts stats including max, min, avg and standard deviation                                                           |
+
+## champData
+
+| Name   | Type   | Description    |
+|:-------|:-------|:---------------|
+| id     | int    | champion id    |
+| name   | string | champion name  |
+| full   | string | full icon name |
+| sprite | string | sprite image   |
+
+
+## ChampStats
+
+| Name               | Type   | Description                                                                 |
+|:-------------------|:-------|:----------------------------------------------------------------------------|
+| avg_gains          | double | avg gains per game for the last week                                        |
+| games_played       | int    | number of recorded games last week                                          |
+| avg_games_summoner | double | avg games per summoner who played this champ at least once in the last week |
+| summoners_played   | int    | number of summoners who played this champ                                   |
+
+## RankStat
+
+| Name     | Type   | Description  |
+|:---------|:-------|:-------------|
+| rank     | int    | ranking      |
+| avg_gain | double | average gain |
+| games    | int    |              |
+
+## PtsStats
+
+| Name               | Type | Description |
+|:-------------------|:-----|:------------|
+| max_pts            | long |             |
+| min_pts            | long |             |
+| avg_pts            | long |             |
+| standard_deviation | long |             |
