@@ -2,9 +2,9 @@ var main = null;
 
 exports.init = function(mainApp) {
   main = mainApp;
-  main.addEndpoint("/api/static/champions", getChampions);
-  main.addEndpoint("/api/static/champions/:id", getChampionById)
-  main.addEndpoint("/api/static/champions/by-name/:name", getChampionByName);
+  main.addGetEndpoint("/api/static/champions", getChampions);
+  main.addGetEndpoint("/api/static/champions/:id", getChampionById)
+  main.addGetEndpoint("/api/static/champions/by-name/:name", getChampionByName);
 };
 
 function getChampions(req, res, next) {
