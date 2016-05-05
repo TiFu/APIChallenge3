@@ -81,6 +81,7 @@ function loadModules() {
     database: db.CONNECTION,
     config: config,
     logger: null,
+    addGetEndpoint: addGetEndpoint
   }
   var files = fs.readdirSync(config.get("endpointsDir"))
   var promises = [];
@@ -108,4 +109,11 @@ function loadModules() {
  */
 function addEndpoint(route, func) {
   app.post(route, func);
+}
+
+/**
+ * adds an endpoint
+ */
+function addGetEndpoint(route, func) {
+  app.get(route, func);
 }

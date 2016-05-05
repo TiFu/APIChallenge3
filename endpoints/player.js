@@ -78,7 +78,7 @@ function getGlobalRank(summoner_id) {
 }
 
 function globalRankByWeek(summoner_id) {
-  return main.database.query("select rank, avg_gain, games, week, year from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games, year FROM (select @rank:=@rank+1 as rank, summoner_id, week(game_timestamp) as week, year(game_timestamp) as year, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains group by summoner_id, WEEK(game_timestamp) having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by year desc, week desc", [summoner_id])
+  return main.database.query("select rank, avg_gain, games, week from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games FROM (select @rank:=@rank+1 as rank, summoner_id, (to_days(now()) - to_days(game_timestamp)) DIV 3 as week, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains group by summoner_id, TO_DAYS(game_timestamp) DIV 3 having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by week asc;", [summoner_id])
 }
 
 function getHighestGradeDistribution(summoner_id) {
@@ -95,10 +95,11 @@ function getTop10Champions(summoner_id) {
 }
 
 function getTop10GainsLastWeek(summoner_id) {
-  return main.database.query("select c.name, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval 1 week group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
+  return main.database.query("select c.name, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval  3 day group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
     return {name: "top10gainslastweek", data: result};
   });
 }
+
 function getLastGames(summoner_id, offset) {
   if (!offset) {
     offset = 0;

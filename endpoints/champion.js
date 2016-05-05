@@ -46,7 +46,7 @@ function getChampionData(champion_id) {
 }
 // avg_gains, games_played, avg_games_summoner, number_of_summoners_played last week
 function getCountableStats(champion_id) {
-  return main.database.query("select sum(pts_gained) / count(pts_gained) as avg_gains, count(*) as games_played, count(*)  / count(distinct summoner_id) as avg_games_summoner, count(distinct summoner_id) as summoners_played FROM gains g where champion_id = ? and game_timestamp > now() - Interval 1 week group by champion_id;", [champion_id]).then((result) => {
+  return main.database.query("select sum(pts_gained) / count(pts_gained) as avg_gains, count(*) as games_played, count(*)  / count(distinct summoner_id) as avg_games_summoner, count(distinct summoner_id) as summoners_played FROM gains g where champion_id = ? and game_timestamp > now() - Interval 3 day group by champion_id;", [champion_id]).then((result) => {
     return {name: "stats", data: result[0]};
   });
 }
@@ -77,7 +77,7 @@ function getPercentSumsChestGranted(champion_id) {
 }
 
 function getTop10PlayersPerChamp(champion_id) {
-  return main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 1 week and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [champion_id]).then((result) => {
+  return main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3 day and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [champion_id]).then((result) => {
     var outputVal = [];
     for (var i = 0; i < result.length; i++) {
       var current = result[i];
@@ -88,7 +88,7 @@ function getTop10PlayersPerChamp(champion_id) {
 }
 
 function getChampionRank(champion_id) {
-  return main.database.query("select rank, avg_gain, games from (select @rn:=@rn+1 as rank, champion_id, avg_gain, games FROM (select @rank:=@rank+1 as rank, champion_id, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where game_timestamp > now() - interval 1 week group by champion_id having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.champion_id = ?", [champion_id]).then((result) => {
+  return main.database.query("select rank, avg_gain, games from (select @rn:=@rn+1 as rank, champion_id, avg_gain, games FROM (select @rank:=@rank+1 as rank, champion_id, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where game_timestamp > now() - interval 3 day group by champion_id having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.champion_id = ?", [champion_id]).then((result) => {
     return {name: "rank", data: result[0]};
   })
 }
