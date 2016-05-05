@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="./modules/home/style.css" />
 
-<div class="global-container">
+<div class="global-container" ng-cloak>
 <div layout="row" layout-align="center" class="padding-top">
 
       <div flex layout="row" class="layout-container">
         <div layout="row" layout-align="center" flex="33" class="champion-container" ng-repeat="champ in topChampions">
-          <img src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png">
+          <img data-ng-src="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/{{champ.name}}.png">
             <div layout="row" layout-sm="column" layout-align="space-around">
               <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}">
               </md-progress-circular>

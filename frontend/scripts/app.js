@@ -27,19 +27,38 @@ angular.module('APIChallenge3', [
 
   $routeProvider
   .when('/', {
-    templateUrl: 'modules/home/views/home.html'
+    templateUrl: 'modules/home/views/home.html',
+    controller:'HomeController',
+    resolve: {
+        top: function(MainService) {
+          return MainService.GetTop10Champions();
+        }
+        //STORE CHAMPIONS!!
+    }  
   })
 
   .when('/about', {
-    templateUrl: 'modules/about/views/about.html',
+    templateUrl: 'modules/about/views/about.html'
   })
 
   .when('/home', {
-    templateUrl: 'modules/home/views/home.html'
+    templateUrl: 'modules/home/views/home.html',
+    controller:'HomeController',
+    resolve: {
+        top: function(MainService) {
+          return MainService.GetTop10Champions();
+        }
+    }
   })
 
   .otherwise({
     templateUrl: 'modules/home/views/home.html',
+    controller:'HomeController',
+    resolve: {
+        top: function(MainService) {
+          return MainService.GetTop10Champions();
+        }
+    }  
   })
 
 /*  .otherwise({
