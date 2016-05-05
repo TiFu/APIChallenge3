@@ -4,8 +4,18 @@ var main = null;
 exports.init = function(mainApp) {
   main = mainApp;
 
+  main.addEndpoint("/api/player/list", getPlayerList);
   main.addEndpoint("/api/player/info/:summonerId", getPlayerInfo);
   main.addEndpoint("/api/player/progression/:summonerId/:championId", getMasteryProgression);
+}
+
+function getPlayerList(req, res, next) {
+  return main.database.query("SELECT summoner_id, summoner_name FROM summoners").then((result) => {
+    res.status(200).send(result);
+  }).catch((err) => {
+    main.logger.warn(err);
+    res.status(500).send("Internal Server Error");
+  })
 }
 
 function getMasteryProgression(req, res, next) {
