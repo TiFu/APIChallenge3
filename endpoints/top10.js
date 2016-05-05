@@ -24,10 +24,23 @@ function getTop10PlayersPerChamp(req, res, next) {
 function sendTop10(query, res) {
   query.then((result) => {
     var outputVal = [];
+    var min = Number.POSITIVE_INFINITY;
+    var max = Number.NEGATIVE_INFINITY;
     for (var i = 0; i < result.length; i++) {
       var current = result[i];
+      if (!current.avg) {
+        current.avg = 0;
+      }
       outputVal.push({rank: i+1, id: current.id, name: current.name, change: current.avg})
+      if (current.avg < min) {
+        min = current.avg;
+      }
+      if (current.avg > max) {
+        max = current.avg;
+      }
     }
+
+    outputVal = {max: max, min: min, data: outputVal};
     res.status(200).send(outputVal);
   }).catch((err) => {
     main.logger.warn("Couldn't collect data for query " + query, err);
