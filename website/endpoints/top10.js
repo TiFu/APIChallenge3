@@ -3,22 +3,22 @@ var main = null;
 exports.init = function(mainApp) {
   main = mainApp;
 
-  mainApp.addEndpoint("/api/top10/champions", getTop10Champions)
-  mainApp.addEndpoint("/api/top10/players", getTop10Players)
-  mainApp.addEndpoint("/api/top10/players/:championId", getTop10PlayersPerChamp);
+  mainApp.addEndpoint("/api/top10/champions/:all?", getTop10Champions)
+  mainApp.addEndpoint("/api/top10/players/:all?", getTop10Players)
+  mainApp.addEndpoint("/api/top10/players/:championId/:all?", getTop10PlayersPerChamp);
 }
 
 
 function getTop10Players(req,res, next) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc"), res)
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc"), res, req)
 }
 
 function getTop10Champions(req, res, next) {
-sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, c.full as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;"), res);
+sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, c.full as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;"), res, req);
 }
 
 function getTop10PlayersPerChamp(req, res, next) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res);
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res, req);
 }
 
 // first param is week, second summoner_id
@@ -83,8 +83,11 @@ function transformToTop10Entry(result) {
 
    return {max: max, min: min, avg: avg / avgCounter, data: outputVal};
 }
-function sendTop10(query, res) {
+function sendTop10(query, res, req) {
   query.then((result) => {
+    if (!req.params.all) {
+      result.data = result.data.slice(0,10);
+    }
     res.status(200).send(result);
   }).catch((err) => {
     main.logger.warn(err);
