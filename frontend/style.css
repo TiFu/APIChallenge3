@@ -24,9 +24,10 @@
 }
 
 .navbar-brand > div {
-  margin: auto;
+/*  margin: auto;
   height:50px;
   width: 50px;
+  padding-top: 15px;*/
   padding-top: 15px;
 }
 
