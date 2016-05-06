@@ -9,7 +9,7 @@ exports.init = function(conn, log, leagJS) {
 
   setInterval(() => {
     processEntries();
-  }, 24*60*60*1000); // check every 24 hours.
+  }, 60*60*1000); // check every 24 hours.
   processEntries();
 }
 
