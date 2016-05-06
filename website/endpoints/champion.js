@@ -19,7 +19,7 @@ function getChampionStats(req, res, next) {
   promises.push(getTop10PlayersPerChamp(champion_id));
   promises.push(getChampionRank(champion_id));
   promises.push(getTotalPointsDistribution(champion_id));
-
+  promises.push(getTop10HighestMastery(champion_id));
   var resultObj = {};
   Promise.all(promises).then((result) => {
     for (var i = 0; i < result.length; i++) {
@@ -82,6 +82,12 @@ function getPercentSumsChestGranted(champion_id) {
     res.no = sums[0].cnt - res.yes;
     return {name: "percent_chest_granted", data: res};
   })
+}
+
+function getTop10HighestMastery(champion_id) {
+    return main.database.query("SELECT pts_total, mastery_level, pts_next, pts_since FROM current_mastery WHERE champion_id = ? group by summoner_id ORDER BY pts_total DESC LIMIT 10", [champion_id]).then((result) => {
+      return {name: "top10HighestMastery", data: result};
+    })
 }
 
 function getTop10PlayersPerChamp(champion_id) {
