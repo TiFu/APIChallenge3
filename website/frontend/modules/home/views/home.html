@@ -5,7 +5,7 @@
 <div flex>
   <div layout="column" layout-align="center center" class="alert alert-danger">
     <div>
-      <strong>Error!</strong>  
+      <strong>Error!</strong>
       There was a problem reaching our server! Please try again later.
     </div>
     <div>
@@ -60,21 +60,49 @@
   <table class="table table-inverse table-striped table-hover">
   <thead>
     <tr>
-      <th colspan="4">Rank</th>
-      <th colspan="6">Champion</th>
-      <th colspan="4">Average Points</th>
+      <th colspan="4"
+          class="sortable-table-header"
+          href="#"
+          ng-click="orderByField='rank'; reverseSort = !reverseSort"
+          ng-class="{'sort-up' : !reverseSort && orderByField==='rank',
+                     'sort-down' : reverseSort && orderByField==='rank',
+                     'sort-active': orderByField==='rank'}">
+          Rank
+      </th>
+      <th colspan="6"
+          class="sortable-table-header"
+          href="#"
+          ng-click="orderByField='name'; reverseSort = !reverseSort"
+          ng-class="{'sort-up' : !reverseSort && orderByField==='name',
+                     'sort-down' : reverseSort && orderByField==='name',
+                     'sort-active': orderByField==='name'}">
+        Champion
+      </th>
+      <th colspan="4"
+          class="sortable-table-header"
+          href="#"
+          ng-click="orderByField='points'; reverseSort = !reverseSort"
+          ng-class="{'sort-up' : !reverseSort && orderByField==='points',
+                     'sort-down' : reverseSort && orderByField==='points',
+                     'sort-active': orderByField==='points'}">
+        Average Points
+      </th>
     </tr>
   </thead>
   <tbody class="table-listings">
-    <tr ng-repeat="champ in champList | filter:search | orderBy:['rank','name']" class="selectable-row" ng-click="goto(champ.name)">
-      <td colspan="4">
-          {{champ.rank}} 
+    <tr ng-repeat="champ in champList | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
+      <td colspan="4" class="relative-container">
+          <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up',
+                          'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
+          {{champ.rank}}
           (<span class="{{champ.rankChangeDirection}}">{{champ.rankChange}}</span>)
       </td>
       <td colspan="6" scope="row"><img ng-src="{{getImgUrl(champ.name)}}">
       {{champ.name}}</td>
-      <td colspan="4">
-          {{champ.points === 0 ? 'no data yet' : champ.points}} 
+      <td colspan="4" class="relative-container">
+          <div ng-class="{'arrow-up' : champ.pointsChangeDirection === 'up',
+                          'arrow-down' : champ.pointsChangeDirection === 'down'}"></div>
+          {{champ.points === 0 ? 'no data yet' : champ.points}}
           (<span class="{{champ.pointsChangeDirection}}">{{champ.pointsChange}}</span>)
       </td>
     </tr>
@@ -90,7 +118,7 @@
 </div>
 
 <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-  <md-button class="md-primary" 
+  <md-button class="md-primary"
              ng-click="loadMore()"
              ng-disabled="championCount === champList.length">
     Load More
