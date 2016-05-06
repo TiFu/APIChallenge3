@@ -46,7 +46,6 @@ if (cluster.isMaster) {
 		var collection = require("./collection/dataserver");
 		process.on("message",collection.handleNewSummoner); // add handler for messages
 	} else if (process.env.workerId > 0 && process.argv.indexOf("no-server") === -1) {
-		process.send("This is B"); // send msg
 		require("./website/server.js");
 	}
 }

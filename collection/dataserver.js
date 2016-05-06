@@ -34,14 +34,22 @@ if (!process.env.API_KEY || !process.env.API_REGION) {
   process.exit(1);
 }
 
-exports.handleNewSummoner = (name) => {
-  console.log("Adding summoner: " + name);
-}
 
 
 serverLogger.info("Initializing LeagueJS");
 League.init(process.env.API_KEY, process.env.API_REGION);
 League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
+
+exports.handleNewSummoner = (name) => {
+  console.log("Adding summoner: " + name);
+  name = name.replace(" ", "");
+  League.Summoner.getByName(name).then((result) => {
+    serverLogger.info("Got summoner");
+    console.log(result);
+    console.log(result[name].id);
+    db.CONNECTION.query("INSERT INTO summoners (summoner_id, summoner_name, summoner_icon) values (?, ?, ?)", [result[name].id, result[name].name, result[name].profileIconId]);
+  });
+}
 
 // init data collection & analysis.
 db.init(new WinstonContext(winston, "[Database] "), config).then(() => {
