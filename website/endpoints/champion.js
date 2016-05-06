@@ -85,11 +85,11 @@ function getPercentSumsChestGranted(champion_id) {
 }
 
 function getTop10PlayersPerChamp(champion_id) {
-  return main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, MAX(pts_gained) as max, MIN(pts_gained) as min, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where g.pts_gained is not null and s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3 day and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [champion_id]).then((result) => {
+  return main.database.query("SELECT s.summoner_name as name, s.summoner_id as id, MAX(pts_total) as total, MAX(pts_gained) as max, MIN(pts_gained) as min, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where g.pts_gained is not null and s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3 day and g.champion_id = ? group by g.summoner_id order by avg desc LIMIT 10", [champion_id]).then((result) => {
     var outputVal = [];
     for (var i = 0; i < result.length; i++) {
       var current = result[i];
-      outputVal.push({rank: i+1, id: current.id, name: current.name, change: current.avg, max: current.max, min: current.min})
+      outputVal.push({rank: i+1, id: current.id, name: current.name, change: current.avg, total: current.total, max: current.max, min: current.min})
     }
     return {name: "top10Players", data: outputVal};
   })
