@@ -9,16 +9,21 @@ exports.init = function(conn, log, leagJS) {
   setInterval(() => {
     updateCurrentMastery();
   }, 24*60*60*1000); // check every 20 minutes.
+  console.log("updating current mastery");
   updateCurrentMastery();
 }
 
 function updateCurrentMastery() {
-  connection.query("SELECT summoner_id FROM summoners WHERE last_current_mastery_update < now() - INTERVAL 22 HOUR OR last_current_mastery_update is NULL)").then((result) => {
+  console.log("selecting");
+  connection.query("SELECT summoner_id FROM summoners WHERE last_current_mastery_update < now() - INTERVAL 22 HOUR OR last_current_mastery_update is NULL").then((result) => {
+    console.log("got result");
     for (var i = 0; i < result.length; i++) {
       var currentSummoner = result[i].summoner_id;
       logger.info("Updating summoner: " + currentSummoner);
       updateSummonerMastery(currentSummoner);
     }
+  }).catch((err) => {
+    console.log(err);
   });
 }
 
