@@ -10,8 +10,10 @@ mysql.createConnection({
       user: config.get("database.username"),
       password: config.get("database.password"),
       multipleStatements: true
-    }).then(function(conn) {
-      connection = conn;
+    }).then((conn) => {
+        connection = conn;
+        return connection.query("DROP DATABASE " + config.get("database.name"));
+    }).then(function() {
       return connection.query("CREATE DATABASE IF NOT EXISTS " + config.get("database.name"));
     }).then(() => {
       return connection.query("USE " + config.get("database.name"));
