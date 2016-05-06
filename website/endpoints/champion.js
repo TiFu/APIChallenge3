@@ -57,9 +57,12 @@ function getMasteryDistribution(champion_id) {
     result.forEach(r => masteryDistribution[r.mastery_level] = r.cnt);
     return main.database.query("select count(*) as cnt from summoners;");
   }).then((totalSummonersResult) => {
-    masteryDistribution[0] = totalSummonersResult[0].cnt - masteryDistribution.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-
-    return {name: "masterydistribution", data: masteryDistribution};
+    var elemSum = masteryDistribution.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
+    masteryDistribution[0] = totalSummonersResult[0].cnt - elemSum;
+    var avg = masteryDistribution.reduce((previous, current, index) => {
+      return previous += current * index;
+    },0) / elemSum;
+    return {name: "masterydistribution", data: {avg: avg, distribution: masteryDistribution} };
   });
 }
 
