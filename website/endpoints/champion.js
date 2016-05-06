@@ -71,8 +71,13 @@ function getMaxGradeDistribution(champion_id) {
 
 // percent of sums who played the champ
 function getPercentSumsChestGranted(champion_id) {
-  return main.database.query("select sum(chest_granted = 1) as yes, sum(chest_granted = 0) as no from current_mastery;").then((result) => {
-    return {name: "percent_chest_granted", data: result[0]};
+  var res;
+  return main.database.query("select sum(chest_granted = 1) as yes from current_mastery where champion_id = ?;", [champion_id]).then((result) => {
+    res = result[0];
+    return main.database.query("select count(*) as cnt from summoners;");
+  }).then((sums) => {
+    res.no = sums[0].cnt - res.yes;
+    return {name: "percent_chest_granted", data: res};
   })
 }
 

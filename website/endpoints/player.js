@@ -62,6 +62,7 @@ function getPlayerInfo(req, res, next) {
   promises.push(getHighestGradeDistribution(summoner_id));
   promises.push(getTop10GainsLastWeek(summoner_id));
   promises.push(getGlobalRank(summoner_id));
+  promises.push(getPercentSumsChestGranted(summoner_id));
   var resultObj = {};
   Promise.all(promises).then((result) => {
     for (var i = 0; i < result.length; i++) {
@@ -73,6 +74,18 @@ function getPlayerInfo(req, res, next) {
     res.status(500).send("Internal Server Error");
   });
 }
+
+function getPercentSumsChestGranted(summoner_id) {
+  var res;
+  return main.database.query("select sum(chest_granted = 1) as yes, sum(chest_granted = 0) as no from current_mastery where summoner_id = ?;", [summoner_id]).then((result) => {
+    res = result[0];
+    return main.database.query("select count(*) as cnt from champions");
+  }).then((champs) => {
+    res.no = champs[0].cnt - res.yes;
+    return {name: "percent_chest_granted", data: res};
+  })
+}
+
 
 function getSummonerName(summoner_id) {
   return main.database.query("SELECT summoner_name, summoner_icon FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
