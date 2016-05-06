@@ -1,5 +1,7 @@
 .champion-container img {
-  border-radius: 100px;
+  -webkit-border-radius: 100px; 
+  -moz-border-radius: 100px; 
+  border-radius: 100px; 
   position: absolute;
   padding: 15px;
   background-color: gray;
@@ -15,23 +17,23 @@ table tr td {
   color: green;
   font-weight:bold;
 }
-.up:before {
+/*.up:before {
   content: '+';
-  padding-right:2px;
+  padding-right:0;
   font-weight: normal;
   color: black;
-}
+}*/
 
 .down {
   color: red;
   font-weight:bold;
 }
-.down:before {
+/*.down:before {
   content: '-';
-  padding-right:2px;
+  padding-right:0;
   font-weight: normal;
   color: black;
-}
+}*/
 
 /*table tr td.up {
   color: green;

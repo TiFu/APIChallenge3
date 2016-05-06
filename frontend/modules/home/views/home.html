@@ -58,20 +58,25 @@
 <div layout="row" layout-align="center">
 <div flex layout="row" class="layout-container">
   <table class="table table-inverse table-striped table-hover">
-<!--   <thead>
+  <thead>
     <tr>
-      <th></th>
-      <th>Champion</th>
-      <th>Grade</th>
-      <th>Change</th>
+      <th colspan="4">Rank</th>
+      <th colspan="6">Champion</th>
+      <th colspan="4">Average Points</th>
     </tr>
-  </thead> -->
+  </thead>
   <tbody class="table-listings">
     <tr ng-repeat="champ in champList | filter:search | orderBy:['rank','name']" class="selectable-row" ng-click="goto(champ.name)">
-      <td colspan="2">{{champ.rank}} (<span class="{{champ.changeDirection}}">0</span>)</td>
-      <td colspan="2" scope="row"><img ng-src="{{getImgUrl(champ.name)}}"></td>
-      <td colspan="4">{{champ.name}}</td>
-      <td colspan="4">{{champ.change === 0 ? 'no data yet' : champ.change}}</td>
+      <td colspan="4">
+          {{champ.rank}} 
+          (<span class="{{champ.rankChangeDirection}}">{{champ.rankChange}}</span>)
+      </td>
+      <td colspan="6" scope="row"><img ng-src="{{getImgUrl(champ.name)}}">
+      {{champ.name}}</td>
+      <td colspan="4">
+          {{champ.points === 0 ? 'no data yet' : champ.points}} 
+          (<span class="{{champ.pointsChangeDirection}}">{{champ.pointsChange}}</span>)
+      </td>
     </tr>
   </tbody>
 </table>
@@ -85,6 +90,10 @@
 </div>
 
 <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-  <md-button class="md-primary" ng-click="loadMore()">Load More</md-button>
+  <md-button class="md-primary" 
+             ng-click="loadMore()"
+             ng-disabled="championCount === champList.length">
+    Load More
+  </md-button>
 </section>
 </div>

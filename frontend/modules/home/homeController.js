@@ -29,30 +29,50 @@ function(
 	activate();
 
 	function activate() {
+	//If we have no top10 data, show error mask
 	if (!top.data.data.length) {
 		executeOrder66();
 		return;
 	}
+
 	var mode = getCurrentRequest();
+	var results = top.data;
 	//print all but first param which is home, will return us our pathing request.
 	//i.e. if mode = ['home','graves','brand'], will print graves, brand. For path of Home/Graves/Brand
 	console.log('mode', mode.slice(1));
 
-	console.log(top);
-	console.log('champs', champions);
-	$scope.champList = top.data.data;
-	$scope.max = top.data.max;
-	$scope.min = top.data.min;
+	$scope.champList = results.data;
+	$scope.championCount = $scope.champList.length;
+	var max = results.max;
+
 	$scope.champList = $scope.champList.map(function(champ) {
-		champ.changeDirection = 'up';
-		champ.masteryAverage = (champ.change / $scope.max)*100;
+		//get a 1 thru 100% of where this champ is compared to highest champ score.
+		champ.masteryAverage = (champ.points / max)*100;
 		champ.currentAverage = 0;
+
+		//roud points
+		champ.points = Math.ceil(champ.points);
+		champ.pointsChange = Math.ceil(champ.pointsChange);
+
+		//add points direction and remove +/-
+		champ.pointsChangeDirection = champ.pointsChange < 0 ? 'down' : 'up'
+		champ.pointsChange = champ.pointsChange.toString().replace(/-/g, '');
+		//handle NaN
+		champ.pointsChange = champ.pointsChange.toString() === 'NaN' ? 0 : champ.pointsChange;
+
+		//add rank direction and remove +/-
+		champ.rankChangeDirection = champ.rankChange < 0 ? 'down' : 'up'		
+		champ.rankChange = champ.rankChange.toString().replace(/-/g, '');
+		//handle NaN
+		champ.rankChange = champ.rankChange.toString() === 'NaN' ? 0 : champ.rankChange;
+
 		return champ;
 	});
 
-	console.log('champion list', $scope.champList);
+	//grab top 3 champions
 	$scope.topChampions = $scope.champList.slice(0,3);
-	console.log('top Champions', $scope.topChampions);
+
+	//run circles
 	runLevels();
 }
 

@@ -61,6 +61,10 @@
   font-weight: bold;
 }
 
+.global-container {
+  /*background: rgba(255,255,255,0.70);*/
+}
+
 
 .global-error-container {
 /*  max-width: 100%;
@@ -68,7 +72,12 @@
   width: 100%;
   height: 100%;*/
   /*background: red;*/
-
+  
+  background: url('http://wallpapercave.com/wp/P1bxHvH.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .global-error-container .alert {
@@ -79,14 +88,14 @@
 body {
   display: flex;
   flex-direction: column;
-  background: url('http://wallpapercave.com/wp/P1bxHvH.jpg') no-repeat center center fixed; 
+/*  background: url('http://wallpapercave.com/wp/P1bxHvH.jpg') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover;*/
 }
 
 #view {
   flex:1;
-  background: rgba(0, 0, 0, 0.30);
+  /*background: rgba(0, 0, 0, 0.30);*/
 }

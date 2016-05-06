@@ -10,7 +10,7 @@ angular.module('Home')
   };
 
   service.GetChampionList = function() {
-    return $http.get('/api/static/champions', {cache: true});
+    return $http.get('/api/static/champions', {cache: false});
   }
 
   return service;
