@@ -64,13 +64,14 @@ function getMasteryDistribution(champion_id) {
 }
 
 function getMaxGradeDistribution(champion_id) {
-  return main.database.query("select highest_grade, count(highest_grade) as cnt from current_mastery where champion_id = ? group by highest_grade" , [champion_id]).then((result) => {
-    return {name: "gradedistribution", data: result[0]};
+  return main.database.query("select highest_grade, count(*) as cnt from current_mastery where champion_id = ? group by highest_grade" , [champion_id]).then((result) => {
+    return {name: "gradedistribution", data: result};
   })
 }
 
 // percent of sums who played the champ
 function getPercentSumsChestGranted(champion_id) {
+  console.log("getting percent chest granted");
   var res;
   return main.database.query("select sum(chest_granted = 1) as yes from current_mastery where champion_id = ?;", [champion_id]).then((result) => {
     res = result[0];

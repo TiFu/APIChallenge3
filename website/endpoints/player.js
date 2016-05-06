@@ -77,7 +77,7 @@ function getPlayerInfo(req, res, next) {
 
 function getPercentSumsChestGranted(summoner_id) {
   var res;
-  return main.database.query("select sum(chest_granted = 1) as yes, sum(chest_granted = 0) as no from current_mastery where summoner_id = ?;", [summoner_id]).then((result) => {
+  return main.database.query("select sum(chest_granted = 1) as yes from current_mastery where summoner_id = ?;", [summoner_id]).then((result) => {
     res = result[0];
     return main.database.query("select count(*) as cnt from champions");
   }).then((champs) => {
@@ -118,7 +118,7 @@ function globalRankByWeek(summoner_id) {
 }
 
 function getHighestGradeDistribution(summoner_id) {
-    return main.database.query("SELECT highest_grade as grade, COUNT(highest_grade) as cnt FROM current_mastery WHERE summoner_id = ? and highest_grade is not null GROUP BY highest_grade", [summoner_id]).then((result) => {
+    return main.database.query("SELECT highest_grade as grade, COUNT(*) as cnt FROM current_mastery WHERE summoner_id = ? GROUP BY highest_grade", [summoner_id]).then((result) => {
       return {name: "highestgradedistribution", data: result};
     })
 }
