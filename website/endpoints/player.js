@@ -118,7 +118,7 @@ function getTop10Champions(summoner_id) {
 }
 
 function getTop10GainsLastWeek(summoner_id) {
-  return main.database.query("select c.name, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval  3 day group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
+  return main.database.query("select c.name, count(pts_gained) as games, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval  3 day group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
     return {name: "top10gainslastweek", data: result};
   });
 }
