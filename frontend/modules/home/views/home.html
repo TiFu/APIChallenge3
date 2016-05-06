@@ -1,6 +1,33 @@
 <link rel="stylesheet" href="./modules/home/style.css" />
 
-<div class="global-container" ng-cloak>
+<!-- Error Mask -->
+<div layout="row" flex="50" layout-align="center center" ng-cloak ng-show="noDataError" class="global-error-container">
+<div flex>
+  <div layout="column" layout-align="center center" class="alert alert-danger">
+    <div flex class="">
+      <strong>Error!</strong>  
+      There was a problem reaching our server! Please try again later.
+    </div>
+    <div>
+      <md-button class="md-raised" ng-disabled="retryNoDataError" ng-click="retryNoData()">
+        Retry
+      </md-button>
+    </div>
+  </div>
+  <div layout="row" ng-if="retryNoDataError" ng-cloak>
+      <md-progress-linear class="md-warn" md-mode="indeterminate">
+      </md-progress-linear>
+  </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="global-container" ng-cloak ng-hide="noDataError">
 <div layout="row" layout-align="center" class="padding-top">
 
       <div flex layout="row" class="layout-container">

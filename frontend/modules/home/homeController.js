@@ -8,6 +8,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute'])
 	'$timeout',
 	'$routeParams',
 	'$http',
+	'$route',
 	'MainService',
 	'top',
 	'champions',
@@ -17,6 +18,7 @@ function(
 	$timeout,
 	$routeParams,
 	$http,
+	$route,
 	MainService,
 	top,
 	champions) {
@@ -27,6 +29,10 @@ function(
 	activate();
 
 	function activate() {
+	if (!top.data.data.length) {
+		executeOrder66();
+		return;
+	}
 	var mode = getCurrentRequest();
 	//print all but first param which is home, will return us our pathing request.
 	//i.e. if mode = ['home','graves','brand'], will print graves, brand. For path of Home/Graves/Brand
@@ -101,6 +107,11 @@ function getCurrentRequest() {
 		$location.path('/home/'+champ);
 	}
 
+	$scope.retryNoData = function() {
+		$scope.retryNoDataError = true;
+		$timeout(function() { $route.reload(); }, 1000);
+	}
+
 	//pushes placeholder data (will be endpoint) onto table, then runs scrollToBottom
 	$scope.loadMore = function() {
 		console.log('loading more');
@@ -123,6 +134,11 @@ function getCurrentRequest() {
   			targetDiv.animate({scrollTop:height});
   			$scope.loadingTable = false;
 		}, 3000);
+	}
+
+	function executeOrder66() {
+		$scope.noDataError = true;
+		//log errors
 	}
 
 
