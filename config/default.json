@@ -1,9 +1,9 @@
 {
 	"database": {
-		"password": "",
+		"password": "root",
 		"username": "root",
 		"host": "localhost",
-		"name": "datacollection",
+		"name": "apichallenge3",
 		"tables": {
 			"users": "users",
 			"authentication": "auth"

@@ -48,6 +48,7 @@ function updateSummoner(summoner_id) {
     logger.info("Finished update for " + summoner_id);
     return Promise.resolve(true);
   }).catch((err) => {
+    logger.warn(err);
     logger.warn("Error fetching infos for " + summoner_id + ": ", err);
     return Promise.resolve(false);
   });

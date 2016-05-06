@@ -55,6 +55,7 @@ db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
   return loadModules();
 }).then(() => {
   addGetEndpoint("/health", (req, res, next) => res.status(200).send(""));
+  addGetEndpoint("/info/poll", (req, res, next) => res.status(200).send(""));
   return listen();
 }).catch((err) => {
   serverLogger.error("Failed to start server: " + err);
@@ -62,7 +63,9 @@ db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
 })
 
 function listen() {
-  app.listen(config.get("port"), () => {
+  var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+  var port = process.env.OPENSHIFT_NODEJS_PORT || config.get("port");
+  app.listen(port, ipaddress, () => {
     serverLogger.info("Server running at http://127.0.0.1:" + config.get("port"));
   });
 }
