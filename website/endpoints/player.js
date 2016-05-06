@@ -1,6 +1,8 @@
 var urlencode = require('urlencode');
 
 var main = null;
+var counter = 0;
+var addedSummoners = {};
 
 exports.init = function(mainApp) {
   main = mainApp;
@@ -9,15 +11,20 @@ exports.init = function(mainApp) {
   main.addEndpoint("/api/player/info/:summonerId", getPlayerInfo);
   main.addEndpoint("/api/player/info/by-name/:summonerName", getSummonerByName);
   main.addEndpoint("/api/player/progression/:summonerId/:championId", getMasteryProgression);
+
+  process.on("message", (message) => {
+    addedSummoners["" + message.token].status(200).send({added: message.success});
+  });
 }
 
 function getSummonerByName(req, res, next) {
   var name = urlencode.decode(req.params.summonerName);
   main.database.query("SELECT summoner_id FROM summoners WHERE summoner_name = ?", [name]).then((result) => {
     if (result.length == 0) {
-      // send message
-      process.send(name); // register user
-      res.status(200).send({new: true}); // let's just say we added him. i have actually no idea how to retrive an answer for that...
+      var ourCounter = counter++;
+      addedSummoners["" + ourCounter] = res;
+      process.send({workerId: process.env.workerId, token: ourCounter, data: name}); // register user
+//      res.status(200).send({new: true}); // let's just say we added him. i have actually no idea how to retrive an answer for that...
     } else {
       req.params.summonerId = result[0].summoner_id;
       getPlayerInfo(req, res, next);
