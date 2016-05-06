@@ -1,7 +1,7 @@
 var connection = null;
 var logger = null;
 var League = null;
-
+var games = [];
 exports.init = function(conn, log, leagJS) {
   connection = conn;
   logger = log;
@@ -35,6 +35,7 @@ function processEntries() {
       games = [];
       return true;
     }).catch((err) => {
+      logger.error(err);
       logger.error("Error processing new games.", err);
       return false;
     });
