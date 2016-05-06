@@ -10,10 +10,6 @@ var League = require("../leaguejs/lolapi");
 League.init(process.env.API_KEY, process.env.API_REGION);
 League.setRateLimit(8, 400);
 
-// MOCK getMatch Endpoint for testing purposes
-League.getMatch = (gameId, timeline) =>{
-  return Promise.resolve({matchCreation: gameId, matchDuration: 70});
-}
 // execute
 initDB().then(() => {
   processEntries();
@@ -26,7 +22,7 @@ function initDB() {
       password: "root"
     }).then(function(conn) {
       connection = conn;
-      return conn.query("use datacollection");
+      return conn.query("use apichallenge3");
     });
 }
 
@@ -74,10 +70,13 @@ function processEntry(masteryEntry) {
 
 function getGame(gameId) {
   if (games["" + gameId]) {
+    console.log("using cached game");
     return Promise.resolve(games["" + gameId]);
   } else {
     return League.getMatch(gameId, false).then((game) => {
+      console.log("geting game from riot");
       games["" + gameId] = game;
+      console.log("read game: ", game);
       return game;
     })
   }
@@ -85,6 +84,8 @@ function getGame(gameId) {
 
 function createFirstEntry(masteryEntry) {
   return getGame(masteryEntry.game_id).then((game) => {
+    console.log("creation: " + game.matchCreation);
+    console.log("duration: " + game.matchDuration);
     masteryEntry.timestamp = game.matchCreation + game.matchDuration;
     masteryEntry.pts_gained = null;
     return insertGains(masteryEntry);
@@ -100,5 +101,5 @@ function createEntry(masteryEntry, lastEntry) {
 }
 
 function insertGains(masteryEntry) {
-  return connection.query("INSERT INTO gains (summoner_id, champion_id, game_id, game_timestamp, pts_gained, mastery_level, pts_next, pts_since, pts_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [masteryEntry.summoner_id, masteryEntry.champion_id, masteryEntry.game_id, masteryEntry.game_timestamp, masteryEntry.pts_gained, masteryEntry.championLevel, masteryEntry.pointsSinceLastLevel, masteryEntry.pointsUntilNextLevel, masteryEntry.championPoints]);
+  return connection.query("INSERT INTO gains (summoner_id, champion_id, game_id, game_timestamp, pts_gained, mastery_level, pts_next, pts_since, pts_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [masteryEntry.summoner_id, masteryEntry.champion_id, masteryEntry.game_id, masteryEntry.timestamp, masteryEntry.pts_gained, masteryEntry.championLevel, masteryEntry.pointsSinceLastLevel, masteryEntry.pointsUntilNextLevel, masteryEntry.championPoints]);
 }

@@ -10,7 +10,7 @@ exports.init = function(mainApp) {
 }
 
 function getPlayerList(req, res, next) {
-  return main.database.query("SELECT summoner_id, summoner_name FROM summoners").then((result) => {
+  return main.database.query("SELECT summoner_id, summoner_name, summoner_icon FROM summoners").then((result) => {
     res.status(200).send(result);
   }).catch((err) => {
     main.logger.warn(err);
@@ -52,7 +52,7 @@ function getPlayerInfo(req, res, next) {
 }
 
 function getSummonerName(summoner_id) {
-  return main.database.query("SELECT summoner_name FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
+  return main.database.query("SELECT summoner_name, summoner_icon FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
     return {name: "name", data: result[0].summoner_name};
   });
 }

@@ -10,16 +10,15 @@ exports.init = function(mainApp) {
 
 
 function getTop10Players(req,res, next) {
-
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc"), res)
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc"), res)
 }
 
 function getTop10Champions(req, res, next) {
-sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;"), res);
+sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, c.full as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;"), res);
 }
 
 function getTop10PlayersPerChamp(req, res, next) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res);
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res);
 }
 
 // first param is week, second summoner_id
@@ -38,7 +37,6 @@ function transformWithLast2Weeks(queryString, champion_id) {
 }
 
 function transformChange(thisWeek, lastWeek) {
-  console.log(thisWeek);
   thisWeek.minChange = thisWeek.min - lastWeek.min;
   thisWeek.maxChange = thisWeek.max - lastWeek.max;
   thisWeek.avgChange = thisWeek.avg - lastWeek.avg;
@@ -70,7 +68,7 @@ function transformToTop10Entry(result) {
       if (!current.avg) {
         current.avg = 0;
       }
-      outputVal.push({rank: i+1, id: current.id, name: current.name, points: current.avg})
+      outputVal.push({rank: i+1, id: current.id, name: current.name, icon: current.icon, points: current.avg})
       avg += current.avg;
       if (current.avg > 0) {
         avgCounter++;
