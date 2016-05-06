@@ -152,20 +152,35 @@ function getMasteryDistribution(summoner_id) {
   }
 
   function getTop10Champions(summoner_id) {
-    return main.database.query("SELECT name, mastery_level, pts_total, pts_next, pts_since, highest_grade, chest_granted FROM current_mastery cm, champions c WHERE c.id = cm.champion_id and summoner_id = ? ORDER BY pts_total DESC LIMIT 10", [summoner_id]).then((result) => {
-        return {
-          name: "top10champions",
-          data: result
-        };
-      })
-      // TODO add global rank last week regarding champion (with mysql variable) + the respective gain
+    return main.database.query("SELECT champion_id, name, mastery_level, pts_total, pts_next, pts_since, highest_grade, chest_granted FROM current_mastery cm, champions c WHERE c.id = cm.champion_id and summoner_id = ? ORDER BY pts_total DESC LIMIT 10", [summoner_id]).then((result) => {
+      return {
+        name: "top10champions",
+        data: result
+      };
+    })
   }
 
   function getTop10GainsLastWeek(summoner_id) {
-    return main.database.query("select c.name, count(pts_gained) as games, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval  3 day group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
+    var champions;
+    return main.database.query("select champion_id, c.name, count(pts_gained) as games, sum(pts_gained) / count(pts_gained) as avg_pts_gained, max(mastery_level) as mastery_level FROM gains g, champions c where g.champion_id = c.id and summoner_id = ? and game_timestamp > now() - interval  3 day group by champion_id having avg_pts_gained is not null order by avg_pts_gained desc limit 10", [summoner_id]).then((result) => {
+        champions = result;
+        var promises = [];
+        for (var i = 0; i < result.length; i++) {
+          var current = result[i];
+          var prom = function(j) {
+            var current = result[j];
+            var query = main.database.query("select count(*) as cnt from (select sum(pts_gained) / count(pts_gained) as cnt from gains where champion_id = ? and game_timestamp > now() - interval 3 day group by summoner_id having sum(pts_gained) / count(pts_gained) > ?) t1;", [current.champion_id, current.avg_pts_gained]).then((rankRes) => {
+               champions[j].rank = rankRes[0].cnt+1;
+            });
+            return query;
+          }(i);
+          promises.push(prom);
+        }
+        return Promise.all(promises);
+    }).then(() => {
       return {
         name: "top10gainslastweek",
-        data: result
+        data: champions
       };
     });
   }
