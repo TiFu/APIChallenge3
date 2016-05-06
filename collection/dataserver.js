@@ -1,11 +1,11 @@
 var config = require("config");
 var winston = require("winston");
-var formatter = require("./formatter").formatter;
+var formatter = require("../formatter").formatter;
 var WinstonContext = require("winston-context");
 var League = require("./leaguejs/lolapi");
 var datacollection = require("./datacollection");
 var analysis = require("./analysis");
-var db = require("./database");
+var db = require("../database");
 var currentmastery = require("./currentmastery");
 var staticdata = require("./staticdata.js");
 // use this to log here!
@@ -33,6 +33,11 @@ if (!process.env.API_KEY || !process.env.API_REGION) {
   serverLogger.error("API-Key or API Region not found! Please set API_KEY and API_REGION as environment variables and configure your rate limit in config/default.json.");
   process.exit(1);
 }
+
+exports.handleNewSummoner = (name) => {
+  console.log("Adding summoner: " + name);
+}
+
 
 serverLogger.info("Initializing LeagueJS");
 League.init(process.env.API_KEY, process.env.API_REGION);

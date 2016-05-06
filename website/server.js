@@ -1,18 +1,17 @@
 var express = require("express")
 var bodyParser = require('body-parser');
 var morgan = require("morgan")
-var db = require("./database");
+var db = require("../database");
 var config = require("config");
 var util = require("./util");
 var fs = require("fs");
 var winston = require("winston");
-var formatter = require("./formatter").formatter;
+var formatter = require("../formatter").formatter;
 var WinstonContext = require("winston-context");
 var path = require('path');
 // use this to log here!
 var serverLogger = new WinstonContext(winston, "[Server]");
 var expressSession = require('express-session');
-var League = require("./leaguejs/lolapi");
 var cors = require("cors");
 
 // set up winston logging to file & console
@@ -55,6 +54,7 @@ db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
   // load client side modules
   return loadModules();
 }).then(() => {
+  addGetEndpoint("/health", (req, res, next) => res.status(200).send(""));
   return listen();
 }).catch((err) => {
   serverLogger.error("Failed to start server: " + err);
@@ -83,12 +83,12 @@ function loadModules() {
     logger: null,
     addGetEndpoint: addGetEndpoint
   }
-  var files = fs.readdirSync(config.get("endpointsDir"))
+  var files = fs.readdirSync("./website/" + config.get("endpointsDir"))
   var promises = [];
   serverLogger.info("Started loading Endpoints: " + files.length);
   for (var i = 0; i < files.length; i++) {
     serverLogger.info("Loading module: " + files[i].replace(".js", ""))
-    var modul = require(config.get("endpointsDir") + files[i].replace(".js", ""));
+    var modul = require("./" + config.get("endpointsDir") + files[i].replace(".js", ""));
     modules.push({
       module: modul,
       name: modul.name,
