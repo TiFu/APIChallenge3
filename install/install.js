@@ -13,6 +13,8 @@ mysql.createConnection({
     }).then((conn) => {
         connection = conn;
         return connection.query("DROP DATABASE " + config.get("database.name"));
+    }).catch((err) => {
+        console.log(err);
     }).then(function() {
       return connection.query("CREATE DATABASE IF NOT EXISTS " + config.get("database.name"));
     }).then(() => {
