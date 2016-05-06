@@ -73,7 +73,7 @@ function getGame(gameId) {
 
 function createFirstEntry(masteryEntry) {
   return getGame(masteryEntry.game_id).then((game) => {
-    masteryEntry.timestamp = game.matchCreation + game.matchDuration;
+    masteryEntry.timestamp = Math.floor((game.matchCreation + game.matchDuration) / 1000.0);
     masteryEntry.pts_gained = null;
     return insertGains(masteryEntry);
   });
@@ -81,7 +81,7 @@ function createFirstEntry(masteryEntry) {
 
 function createEntry(masteryEntry, lastEntry) {
   return getGame(masteryEntry.game_id).then((game) => {
-    masteryEntry.timestamp = game.matchCreation + game.matchDuration;
+    masteryEntry.timestamp = Math.floor((game.matchCreation + game.matchDuration) / 1000.0);
     masteryEntry.pts_gained = masteryEntry.championPoints - lastEntry.championPoints; // difference before after
     return insertGains(masteryEntry);
   });
@@ -89,5 +89,5 @@ function createEntry(masteryEntry, lastEntry) {
 
 function insertGains(masteryEntry) {
   logger.debug("Inserting mastery entry.", masteryEntry);
-  return connection.query("INSERT INTO gains (summoner_id, champion_id, game_id, game_timestamp, pts_gained, mastery_level, pts_next, pts_since, pts_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [masteryEntry.summoner_id, masteryEntry.champion_id, masteryEntry.game_id, masteryEntry.game_timestamp, masteryEntry.pts_gained, masteryEntry.championLevel, masteryEntry.pointsSinceLastLevel, masteryEntry.pointsUntilNextLevel, masteryEntry.championPoints]);
+  return connection.query("INSERT INTO gains (summoner_id, champion_id, game_id, game_timestamp, pts_gained, mastery_level, pts_next, pts_since, pts_total) VALUES (?, ?, ?, FROM_UNIXTIME(?), ?, ?, ?, ?, ?)", [masteryEntry.summoner_id, masteryEntry.champion_id, masteryEntry.game_id, masteryEntry.timestamp, masteryEntry.pts_gained, masteryEntry.championLevel, masteryEntry.pointsSinceLastLevel, masteryEntry.pointsUntilNextLevel, masteryEntry.championPoints]);
 }
