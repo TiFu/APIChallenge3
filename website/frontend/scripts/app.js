@@ -68,10 +68,13 @@ angular.module('APIChallenge3', [
           return MainService.GetChampionList();
         }
     }
-  })
+  });
 
 /*  .otherwise({
     redirectTo: '/home'
   });*/
-
+// $locationProvider.html5Mode({
+//   enabled: true,
+//   requireBase: false
+//   });
 }]);

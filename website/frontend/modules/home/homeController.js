@@ -9,6 +9,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute'])
 	'$routeParams',
 	'$http',
 	'$route',
+	'$mdToast',
 	'MainService',
 	'top',
 	'champions',
@@ -19,11 +20,15 @@ function(
 	$routeParams,
 	$http,
 	$route,
+	$mdToast,
 	MainService,
 	top,
 	champions) {
 
 	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/';
+	$scope.scrollToTop = scrollToTop;
+	$scope.searchForPlayerChampion = searchForPlayerChampion;
+
 
 	//will run when event queue for this controller has settled down
 	activate();
@@ -39,10 +44,33 @@ function(
 	var results = top.data;
 	//print all but first param which is home, will return us our pathing request.
 	//i.e. if mode = ['home','graves','brand'], will print graves, brand. For path of Home/Graves/Brand
-	console.log('mode', mode.slice(1));
+	console.log('mode', mode, mode.length);
 
+	if (mode.length === 1) {
+		$scope.viewMode = 'Main';
+		runMainView(mode, results);
+	} else if (mode.length === 2 && _.find(champions, { 'name': mode[1]})) {
+				$scope.viewMode = 'Champion';
+				searchForChampion(mode[1]);
+			} else {
+				$scope.viewMode = 'Summoner';
+				searchForPlayer(mode[1]);
+			}	
+}
+
+
+function runChampionView(mode, results) {
+
+}
+
+function runSummonerView(data) {
+
+	console.log(data);
+}
+
+function runMainView(mode, results) {
 	$scope.champList = results.data;
-	$scope.championCount = $scope.champList.length;
+	$scope.championCount = champions.length;
 	var max = results.max;
 
 	$scope.champList = $scope.champList.map(function(champ) {
@@ -136,30 +164,68 @@ function getCurrentRequest() {
 	$scope.loadMore = function() {
 		console.log('loading more');
 		$scope.loadingTable = true;
-		for (var i = 0; i < 100; i++) {
-			$timeout(function() {
-				$scope.champList.push({rank: 10, name: 'Blitzcrank',grade: 'A+',change: '0',changeDirection: 'up'});
-			},1000);
-		}
-
-
-		scrollToBottom();
+		showSimpleToast('mtest');
+		MainService.GetAllChampions()
+		.success(function(result) {
+			top.data = result;
+			activate();
+			$timeout(scrollToBottom,0);
+		})
+		.error(function(err) {
+			console.log(err);
+		});
 	}
 
 	//smooth scroll to bottom of the main table
 	function scrollToBottom() {
-		$timeout(function() {
 			var targetDiv = $('.table-listings');
 			var height = targetDiv[0].scrollHeight;
   			targetDiv.animate({scrollTop:height});
   			$scope.loadingTable = false;
-		}, 3000);
+	}
+
+	//smooth scroll to top of the main table
+	function scrollToTop() {
+			var targetDiv = $('.table-listings');
+			var height = 0;
+  			targetDiv.animate({scrollTop:height});
+	}
+
+	function searchForPlayerChampion() {
+		$scope.searchingGlobally = true;
+		$location.path('/home/'+$scope.globalSearch);
+	}
+	$scope.globalSearch = 'TSM MeNoHaxor';
+
+	function searchForPlayer(summonerName) {
+		MainService.getPlayerInfo(summonerName)
+		.success(function(result) {
+			runSummonerView(result);
+		})
+		.catch(function(result) {
+			console.error('Could not find summoner!');
+		});
+	}
+
+
+	function searchForChampion(championName) {
+		console.log('looking for data on: ' + championName);
 	}
 
 	function executeOrder66() {
 		$scope.noDataError = true;
 		//log errors
 	}
+
+	//expiramental toast - not in use
+	function showSimpleToast(message) {
+    $mdToast.show(
+      $mdToast.simple()
+        .textContent(message)
+        .position({bottom: false,top: true,left: false,right: true})
+        .hideDelay(3000)
+    );
+  };
 
 
 }]);

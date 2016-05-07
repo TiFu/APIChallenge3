@@ -9,8 +9,16 @@ angular.module('Home')
     return $http.post('/api/top10/champions');
   };
 
+  service.GetAllChampions = function() {
+    return $http.post('/api/top10/champions/all');
+  };
+
   service.GetChampionList = function() {
     return $http.get('/api/static/champions', {cache: true});
+  }
+
+  service.getPlayerInfo = function(name) {
+  	return $http.post('api/player/info/by-name/'+name.trim());
   }
 
   return service;

@@ -63,6 +63,8 @@
 
 .global-container {
   /*background: rgba(255,255,255,0.70);*/
+      margin-right: auto;
+    margin-left: auto;
 }
 
 
@@ -98,4 +100,38 @@ body {
 #view {
   flex:1;
   /*background: rgba(0, 0, 0, 0.30);*/
+}
+
+.global-text-search {
+  right: 10px;
+  top: -41px;
+  position: absolute;
+}
+
+.global-text-search > div {
+  position: relative;
+}
+
+.global-text-search md-input-container {
+
+   position: absolute;
+    right: 100px;
+    top: -12px;
+    width: 150px;
+}
+
+.global-text-search button {
+/*    position: absolute;
+    right: 30px;
+    top: 0;*/
+      position: absolute;
+      right: 0;
+    top: -10px;
+}
+
+.global-search-spinner {
+  display: inline-block;
+  position: absolute;
+  top: -10px;
+  right: 240px;
 }

@@ -7,6 +7,20 @@
   background-color: gray;
 }
 
+.footer-height {
+  min-height: 50px;
+}
+
+.table-height {
+    min-height: 250px;
+}
+
+.champion-container-height {
+  max-height: 170px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 table tr td {
   vertical-align: baseline !important;
   font-size: 16px;
@@ -106,7 +120,7 @@ table tr img {
   cursor: pointer;
 }
 
-.global-search, md-input-container {
+.global-search {
   width: 100%;
   font-size: 18px;
   margin-bottom: 5px;
@@ -129,8 +143,8 @@ table tr img {
 
 
 tbody {
-    display:block;
-    max-height:500px;
+    /*display:block;
+    max-height:500px;*/
     overflow:auto;
 }
 thead, tbody tr {
@@ -211,3 +225,13 @@ table thead th.sort-active  {
   border-right: 5px solid transparent;
   border-top: 5px solid black;
 }*/
+
+.scroll-to-top {
+      position: absolute;
+right: 10px;
+    top: 38px;
+}
+
+.scroll-to-top md-icon {
+  font-size: 21px;
+}

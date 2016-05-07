@@ -1,4 +1,21 @@
-<link rel="stylesheet" href="./modules/home/style.css" />
+<link rel="stylesheet" href="/modules/home/style.css" />
+
+<!-- Search Container -->
+<div class="global-text-search">
+    <div>
+  <md-progress-circular md-mode="indeterminate" class="global-search-spinner" ng-if="searchingGlobally">
+  </md-progress-circular>
+  <md-input-container>
+    <label>Summoner Name</label>
+      <input ng-model="globalSearch">
+  </md-input-container>
+  <md-button class="md-raised md-primary" 
+             ng-disabled="searchingGlobally || !globalSearch" 
+             ng-click="searchForPlayerChampion()">
+    Search
+  </md-button>
+  </div>
+</div>
 
 <!-- Error Mask -->
 <div layout="row" flex="50" layout-align="center center" ng-cloak ng-show="noDataError" class="global-error-container">
@@ -27,21 +44,24 @@
 
 
 
-<div class="global-container" ng-cloak ng-hide="noDataError">
-<div layout="row" layout-align="center" class="padding-top">
+<div layout="column" 
+     layout-align="space-around stretch"
+     flex="grow" 
+     class="global-container" 
+     ng-cloak ng-hide="noDataError || viewMode !== 'Main'">
 
-      <div flex layout="row" class="layout-container">
-        <div layout="row" layout-align="center" flex="33" class="champion-container" ng-repeat="champ in topChampions">
+
+      <div layout="row" flex="noshrink" class="layout-container champion-container-height">
+        <div layout="row" layout-align="space-around center" flex="33" class="champion-container" ng-repeat="champ in topChampions">
           <img ng-src="{{getImgUrl(champ.name)}}">
-            <div layout="row" layout-sm="column" layout-align="space-around">
+            <div>
               <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}">
               </md-progress-circular>
             </div>
         </div>
       </div>
 
-</div>
-
+<!-- 
 <div layout="row" layout-align="center center" class="search-container">
 
   <div flex layout="row" layout-align="center end" class="layout-container">
@@ -53,11 +73,11 @@
     </div>
   </div>
 
-</div>
+</div> -->
 
-<div layout="row" layout-align="center">
-<div flex layout="row" class="layout-container">
-  <table class="table table-inverse table-striped table-hover">
+<div layout="column" flex="grow" layout-align="center" class="table-height">
+<div flex="grow" layout="column" class="layout-container relative-container">
+  <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
   <thead>
     <tr>
       <th colspan="4"
@@ -89,6 +109,11 @@
       </th>
     </tr>
   </thead>
+  <div class="scroll-to-top">
+    <md-button class="md-fab md-mini md-primary md-raised" aria-label="Scroll Up" ng-click="scrollToTop()">
+        <md-icon md-font-icon="fa-angle-double-up" class="fa"></md-icon>
+    </md-button>
+  </div>
   <tbody class="table-listings">
     <tr ng-repeat="champ in champList | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
       <td colspan="4" class="relative-container">
@@ -117,11 +142,13 @@
 </div>
 </div>
 
-<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+
+<section layout="row" layout-sm="column" layout-align="center center" class="footer-height" layout-wrap>
   <md-button class="md-primary"
              ng-click="loadMore()"
              ng-disabled="championCount === champList.length">
-    Load More
+    Load More Champions
   </md-button>
 </section>
+
 </div>
