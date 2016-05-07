@@ -53,6 +53,21 @@ exports.handleNewSummoner = (input) => {
     serverLogger.info("Requesting Mastery for Current User with id: " + summonerId);
     return currentmastery.updateSummonerMastery(summonerId);
   })).then((res) => {
+    serverLogger.info("Selecting rows for gains update");
+    return db.CONNECTION.query("SELECT id as champion_id, case when mastery_level is null then 1 else mastery_level end as mastery_level, case when pts_total is null then 0 else pts_total end as pts_total, case when pts_since is null then 0 else pts_since end as pts_since, case when pts_next is null then 1800 else pts_next end as pts_next FROM  champions left join current_mastery on id = champion_id and summoner_id = ?;", [summonerId]);
+  }).then((result) => {
+    serverLogger.info("Got Rows for Gains update");
+    var promises = [];
+    var queryString = "INSERT INTO gains (summoner_id, champion_id, game_id, game_timestamp, mastery_level, pts_gained, pts_next, pts_since, pts_total) VALUES ";
+    for (var i = 0; i < result.length; i++) {
+      queryString += "( " + summonerId + ", " + result[i].champion_id + ", NULL, now(), "+ result[i].mastery_level + ", NULL, " + result[i].pts_next + ", "+ result[i].pts_since + ", "+ result[i].pts_total +")";
+      if (i < result.length -1) {
+        queryString += ",";
+      }
+    }
+    serverLogger.info("Inserting rows into gains");
+    return db.CONNECTION.query(queryString);
+  }).then((res) => {
     serverLogger.info("Answering request to add new user.");
     process.send({workerId: input.workerId, summoner_id: summonerId, token: input.token, success: true});
   }).catch((err) => {
