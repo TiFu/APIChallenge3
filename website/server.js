@@ -79,12 +79,6 @@ function listen() {
  * - logger instance with a module defined prefix ([Module module.name])
  */
 function loadModules() {
-  var mainObject = {
-    addEndpoint: addEndpoint,
-    database: db.CONNECTION,
-    config: config,
-    addGetEndpoint: addGetEndpoint
-  }
   var files = fs.readdirSync("./website/" + config.get("endpointsDir"))
   var promises = [];
   serverLogger.info("Started loading Endpoints: " + files.length);
@@ -100,8 +94,7 @@ function loadModules() {
     // init logger for module
     var moduleCtx = new WinstonContext(winston, "[Module " + modul.name +"]");
     serverLogger.info("Initialized Winston Context with name: " + modul.name);
-    var localMainObject = { logger: moduleCtx,     addEndpoint: addEndpoint,
-        database: db.CONNECTION,
+    var localMainObject = { releaseConnection: releaseConnection, logger: moduleCtx, addEndpoint: addEndpoint,
         config: config,
         addGetEndpoint: addGetEndpoint};
     // init module
@@ -110,16 +103,29 @@ function loadModules() {
   return Promise.resolve(true);
 }
 
+function releaseConnection(connection) {
+  return db.POOL.releaseConnection(connection);
+}
 /**
  * adds an endpoint
  */
 function addEndpoint(route, func) {
-  app.post(route, func);
+  app.post(route, (req, res, next) => {
+    db.POOL.getConnection().then((conn) => {
+      serverLogger.info("Created connection");
+      func(req, res, next, conn);
+    })
+  });
 }
 
 /**
  * adds an endpoint
  */
 function addGetEndpoint(route, func) {
-  app.get(route, func);
+  app.get(route, (req, res, next) => {
+    db.POOL.getConnection().then((conn) => {
+      serverLogger.info("Created connection");
+      func(req, res, next, conn);
+    })
+  });
 }

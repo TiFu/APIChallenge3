@@ -8,19 +8,19 @@ exports.init = function(mainApp) {
   main.addGetEndpoint("/api/static/champions/by-name/:name", getChampionByName);
 };
 
-function getChampions(req, res, next) {
-  generateChampionResponse(main.database.query("SELECT * FROM champions"), res);
+function getChampions(req, res, next, connection) {
+  generateChampionResponse(connection.query("SELECT * FROM champions"), res, connection);
 }
 
-function getChampionById(req, res, next) {
+function getChampionById(req, res, next, connection) {
   var id = req.params.id;
-  generateChampionResponse(main.database.query("SELECT  * FROM champions WHERE id = ?", [id]), res);
+  generateChampionResponse(connection.query("SELECT  * FROM champions WHERE id = ?", [id]), res, connection);
 }
-function getChampionByName(req, res,next) {
+function getChampionByName(req, res,next, connection) {
   var name = req.params.name;
-  generateChampionResponse(main.database.query("SELECT * FROM champions where name = ?", [name]), res);
+  generateChampionResponse(connection.query("SELECT * FROM champions where name = ?", [name]), res, connection);
 }
-function generateChampionResponse(query, res) {
+function generateChampionResponse(query, res, connection) {
   query.then((result) => {
     var returnObjects = [];
     for (var i = 0; i < result.length; i++) {
@@ -33,5 +33,7 @@ function generateChampionResponse(query, res) {
   }).catch((err) => {
     main.logger.warn(err);
     res.status(500).send("Internal Server Error");
+  }).then(() => {
+    main.releaseConnection(connection);
   })
 }

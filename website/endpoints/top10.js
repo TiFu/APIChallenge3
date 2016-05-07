@@ -5,32 +5,32 @@ exports.init = function(mainApp) {
   main = mainApp;
 
   mainApp.addEndpoint("/api/top10/champions/:all?", getTop10Champions)
+  mainApp.addEndpoint("/api/top10/players/champion/:championId/:all?", getTop10PlayersPerChamp);
   mainApp.addEndpoint("/api/top10/players/:all?", getTop10Players)
-  mainApp.addEndpoint("/api/top10/players/:championId/:all?", getTop10PlayersPerChamp);
 }
 
 
-function getTop10Players(req,res, next) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc"), res, req)
+function getTop10Players(req,res, next, connection) {
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc", undefined, connection), res, req, connection)
 }
 
-function getTop10Champions(req, res, next) {
-sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, c.full as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;"), res, req);
+function getTop10Champions(req, res, next, connection) {
+sendTop10(transformWithLast2Weeks("SELECT c.name as name, c.id as id, c.full as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, champions c where c.id = g.champion_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day group by g.champion_id order by avg desc;", undefined,  connection), res, req, connection);
 }
 
-function getTop10PlayersPerChamp(req, res, next) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id order by avg desc", req.params.championId), res, req);
+function getTop10PlayersPerChamp(req, res, next, connection) {
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval 3*?+3 day and g.game_timestamp < now() - interval 3*? day and g.champion_id = ? group by g.summoner_id having avg is not null order by avg desc", req.params.championId, connection), res, req, connection);
 }
 
 // first param is week, second summoner_id
-function transformWithLast2Weeks(queryString, champion_id) {
+function transformWithLast2Weeks(queryString, champion_id, connection) {
   var thisWeek;
   var parameters = champion_id ? [0,0, champion_id] : [0,0];
- return  main.database.query(queryString, parameters).then((result) => {
+ return  connection.query(queryString, parameters).then((result) => {
     thisWeek = transformToTop10Entry(result);
     parameters[0]++;
     parameters[1]++;
-    return main.database.query(queryString, parameters);
+    return connection.query(queryString, parameters);
   }).then((result) => {
     var lastWeek = transformToTop10Entry(result);
     return transformChange(thisWeek, lastWeek);
@@ -84,7 +84,7 @@ function transformToTop10Entry(result) {
 
    return {max: max, min: min, avg: avg / avgCounter, data: outputVal};
 }
-function sendTop10(query, res, req) {
+function sendTop10(query, res, req, connection) {
   query.then((result) => {
     if (!req.params.all) {
       result.data = result.data.slice(0,10);
@@ -92,7 +92,9 @@ function sendTop10(query, res, req) {
     res.status(200).send(result);
   }).catch((err) => {
     main.logger.warn(err);
-    res.status(500).send("Internav Server Error");
+    res.status(500).send("Internal Server Error");
+  }).then(() => {
+    main.releaseConnection(connection);
   });
 
 }
