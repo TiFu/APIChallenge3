@@ -33,7 +33,7 @@ function getChampionStats(req, res, next, connection) {
     res.status(500).send("Internal Server Error");
     return true;
   }).then(() => {
-    connection.release();
+    main.releaseConnection(connection);
   });
 }
 
