@@ -6,14 +6,15 @@ exports.init = function(con, log, leag) {
   logger = log;
   connection = con;
   League = leag;
+}
 
+exports.start = () => {
   initChampions();
   // check champs daily.
   setInterval(() => {
     initChampions();
   }, 24*60*60*1000);
 }
-
 function initChampions() {
   return League.Static.getChampionList({champData: "image"}).then((result) => {
     var promises = [];

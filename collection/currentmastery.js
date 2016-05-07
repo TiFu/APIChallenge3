@@ -6,13 +6,15 @@ exports.init = function(conn, log, leagJS) {
   connection = conn;
   logger = log;
   League = leagJS;
+}
+
+exports.start = () => {
   setInterval(() => {
     updateCurrentMastery();
   }, 24*60*60*1000); // check every 20 minutes.
   console.log("updating current mastery");
   updateCurrentMastery();
 }
-
 function updateCurrentMastery() {
   connection.query("SELECT summoner_id FROM summoners WHERE last_current_mastery_update < now() - INTERVAL 22 HOUR OR last_current_mastery_update is NULL").then((result) => {
     for (var i = 0; i < result.length; i++) {
@@ -25,9 +27,9 @@ function updateCurrentMastery() {
   });
 }
 
-function updateSummonerMastery(summonerId) {
-  logger.debug("Retrieving champion mastery.");
-  League.ChampionMastery.getChampionMastery(summonerId).then((result) => {
+exports.updateSummonerMastery = (summonerId) => {
+  logger.debug("Retrieving champion mastery for " + summonerId);
+  return League.ChampionMastery.getChampionMastery(summonerId).then((result) => {
       logger.debug("Building promise chain.");
       var chain = result.reduce((previousValue, currentValue) => {
         return previousValue.then(() => insertMastery(currentValue));

@@ -1,5 +1,6 @@
 
 var main = null;
+exports.name = "champion";
 
 exports.init = function(mainApp) {
   main = mainApp;

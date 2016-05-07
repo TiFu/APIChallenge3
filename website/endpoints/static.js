@@ -1,4 +1,5 @@
 var main = null;
+exports.name = "static";
 
 exports.init = function(mainApp) {
   main = mainApp;

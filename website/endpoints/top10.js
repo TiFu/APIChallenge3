@@ -1,4 +1,5 @@
 var main = null;
+exports.name = "top10";
 
 exports.init = function(mainApp) {
   main = mainApp;

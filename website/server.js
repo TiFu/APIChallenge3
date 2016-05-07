@@ -83,7 +83,6 @@ function loadModules() {
     addEndpoint: addEndpoint,
     database: db.CONNECTION,
     config: config,
-    logger: null,
     addGetEndpoint: addGetEndpoint
   }
   var files = fs.readdirSync("./website/" + config.get("endpointsDir"))
@@ -99,10 +98,14 @@ function loadModules() {
       loaded: true,
     });
     // init logger for module
-    var moduleCtx = new WinstonContext(winston, "[Module " + modules[i].name +"]");
-    mainObject.logger = moduleCtx;
+    var moduleCtx = new WinstonContext(winston, "[Module " + modul.name +"]");
+    serverLogger.info("Initialized Winston Context with name: " + modul.name);
+    var localMainObject = { logger: moduleCtx,     addEndpoint: addEndpoint,
+        database: db.CONNECTION,
+        config: config,
+        addGetEndpoint: addGetEndpoint};
     // init module
-    modul.init(mainObject);
+    modul.init(localMainObject);
   }
   return Promise.resolve(true);
 }

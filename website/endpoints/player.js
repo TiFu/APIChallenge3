@@ -3,6 +3,7 @@ var urlencode = require('urlencode');
 var main = null;
 var counter = 0;
 var addedSummoners = {};
+exports.name = "player";
 
 exports.init = function(mainApp) {
   main = mainApp;
@@ -13,9 +14,17 @@ exports.init = function(mainApp) {
   main.addEndpoint("/api/player/progression/:summonerId/:championId", getMasteryProgression);
 
   process.on("message", (message) => {
-    addedSummoners["" + message.token].status(200).send({
-      added: message.success
-    });
+    var req = addedSummoners["" + message.token].req;
+    var res = addedSummoners["" + message.token].res;
+    var next = addedSummoners["" + message.token].next;
+    main.logger.info("Answer from collection: " + message.summoner_id);
+    req.params.summonerId = message.summoner_id;
+    if (message.success) {
+      main.logger.info("Requesting player info");
+        getPlayerInfo(req, res, next);
+    } else {
+      res.status(200).send({success: false});
+    }
   });
 }
 
@@ -24,13 +33,12 @@ function getSummonerByName(req, res, next) {
   main.database.query("SELECT summoner_id FROM summoners WHERE summoner_name = ?", [name]).then((result) => {
     if (result.length == 0) {
       var ourCounter = counter++;
-      addedSummoners["" + ourCounter] = res;
+      addedSummoners["" + ourCounter] = {req: req, res: res, next: next};
       process.send({
         workerId: process.env.workerId,
         token: ourCounter,
         data: name
       }); // register user
-      //      res.status(200).send({new: true}); // let's just say we added him. i have actually no idea how to retrive an answer for that...
     } else {
       req.params.summonerId = result[0].summoner_id;
       getPlayerInfo(req, res, next);
@@ -60,6 +68,7 @@ function getMasteryProgression(req, res, next) {
 
 function getPlayerInfo(req, res, next) {
   var summoner_id = req.params.summonerId;
+  main.logger.info("Getting Player info for : " + summoner_id);
   var promises = [];
   promises.push(getMasteryDistribution(summoner_id));
   promises.push(getTop10Champions(summoner_id));
@@ -74,6 +83,7 @@ function getPlayerInfo(req, res, next) {
     for (var i = 0; i < result.length; i++) {
       resultObj[result[i].name] = result[i].data;
     }
+    resultObj.success = true;
     res.status(200).send(resultObj);
   }).catch((err) => {
     main.logger.warn(err);
@@ -98,6 +108,8 @@ function getPercentSumsChestGranted(summoner_id) {
 
 function getSummonerName(summoner_id) {
   return main.database.query("SELECT summoner_name, summoner_icon FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
+    main.logger.info("Result for get summoner name");
+    main.logger.info(result);
     return {
       name: "name",
       data: result[0].summoner_name

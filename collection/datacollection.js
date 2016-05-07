@@ -7,12 +7,14 @@ exports.init = function(conn, log, leagJS) {
   connection = conn;
   logger = log;
   League = leagJS;
+}
+
+exports.start = () => {
   setInterval(() => {
     checkData();
   }, 20*60*1000); // check every 20 minutes.
   checkData();
 }
-
 function checkData() {
   return connection.query("SELECT summoner_id FROM summoners").then((result) => {
     for (var i = 0; i < result.length; i++) {

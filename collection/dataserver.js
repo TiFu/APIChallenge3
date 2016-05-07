@@ -44,12 +44,19 @@ exports.handleNewSummoner = (input) => {
   var name = input.data;
   serverLogger.info("Adding summoner: " + name);
   name = name.replace(" ", "");
+  var summonerId;
   League.Summoner.getByName(name).then((result) => {
     serverLogger.info("Got summoner");
+    summonerId = result[name].id;
     return db.CONNECTION.query("INSERT INTO summoners (summoner_id, summoner_name, summoner_icon) values (?, ?, ?)", [result[name].id, result[name].name, result[name].profileIconId]);
-  }).then((res) => {
-    process.send({workerId: input.workerId, token: input.token, success: true});
+    }).then((res => {
+    serverLogger.info("Requesting Mastery for Current User with id: " + summonerId);
+    return currentmastery.updateSummonerMastery(summonerId);
+  })).then((res) => {
+    serverLogger.info("Answering request to add new user.");
+    process.send({workerId: input.workerId, summoner_id: summonerId, token: input.token, success: true});
   }).catch((err) => {
+    serverLogger.warn(err);
     process.send({workerId: input.workerId, token: input.token, success: false});
   });
 }
@@ -57,10 +64,16 @@ exports.handleNewSummoner = (input) => {
 // init data collection & analysis.
 db.init(new WinstonContext(winston, "[Database] "), config).then(() => {
   serverLogger.info("Starting collection services");
-datacollection.init(db.CONNECTION, new WinstonContext(winston, "[Collection] "), League);
-analysis.init(db.CONNECTION, new WinstonContext(winston, "[Analysis] "), League);
-currentmastery.init(db.CONNECTION, new WinstonContext(winston, "[Current Mastery] "), League);
-staticdata.init(db.CONNECTION, new WinstonContext(winston, "[Static Data] "), League);
+    datacollection.init(db.CONNECTION, new WinstonContext(winston, "[Collection] "), League);
+    analysis.init(db.CONNECTION, new WinstonContext(winston, "[Analysis] "), League);
+    currentmastery.init(db.CONNECTION, new WinstonContext(winston, "[Current Mastery] "), League);
+    staticdata.init(db.CONNECTION, new WinstonContext(winston, "[Static Data] "), League);
+    if (process.argv.indexOf("no-collection") === -1) {
+        datacollection.start();
+        analysis.start();
+        currentmastery.start();
+        staticdata.start();
+    }
 }).catch((err) => {
   serverLogger.warn(err);
   process.exit(1);

@@ -48,7 +48,7 @@ if (cluster.isMaster) {
     });
   }
 } else {
-	if (process.env.workerId == 0 && process.argv.indexOf("no-collection") === -1) { // collection
+	if (process.env.workerId == 0) { // collection
 		var collection = require("./collection/dataserver");
 		process.on("message", collection.handleNewSummoner); // add handler for messages
 	} else if (process.env.workerId > 0 && process.argv.indexOf("no-server") === -1) {

@@ -6,13 +6,15 @@ exports.init = function(conn, log, leagJS) {
   connection = conn;
   logger = log;
   League = leagJS;
+}
 
+exports.start = () => {
   setInterval(() => {
     processEntries();
   }, 60*60*1000); // check every 24 hours.
   processEntries();
-}
 
+}
 
 function processEntries() {
     return connection.query("SELECT * FROM mastery WHERE processed = 0 ORDER BY update_time ASC").then((result) => {
