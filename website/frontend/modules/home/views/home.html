@@ -43,6 +43,11 @@
 
 
 
+<div ng-if="loadingData" layout="row" layout-align="center center" class="padding-top loading-data">
+  <div layout-align="center center" class="alert alert-info full-width">
+  Loading Data...
+  </div>
+</div>
 
 
 <div layout="column" 
@@ -51,7 +56,7 @@
      ng-hide="noDataError"
      ng-cloak
      ng-include="'/modules/home/views/mainview.html'" 
-     ng-if="viewMode === 'Main'">
+     ng-if="viewMode === 'Main' && !loadingData">
 </div>
 
 <div layout="column" 
@@ -60,7 +65,7 @@
      ng-hide="noDataError"
      ng-cloak
      ng-include="'/modules/home/views/summonerview.html'" 
-     ng-if="viewMode === 'Summoner'">
+     ng-if="viewMode === 'Summoner' && !loadingData">
 </div>
 
 <div layout="column" 
@@ -69,9 +74,8 @@
      ng-hide="noDataError"
      ng-cloak
      ng-include="'/modules/home/views/championview.html'" 
-     ng-if="viewMode === 'Champion'">
+     ng-if="viewMode === 'Champion' && !loadingData">
 </div>
-
 
 
 <!-- <div layout="column" 

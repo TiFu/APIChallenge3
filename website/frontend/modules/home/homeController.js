@@ -50,6 +50,8 @@ function(
 	//i.e. if mode = ['home','graves','brand'], will print graves, brand. For path of Home/Graves/Brand
 	console.log('mode', mode, mode.length);
 
+
+	loadingDataStart();
 	if (mode.length === 1) {
 		$scope.viewMode = 'Main';
 		runMainView(mode, results);
@@ -65,9 +67,11 @@ function(
 
 function runSummonerView(data) {
 	if (!data.success) {
+		loadingDataEnd();
 		executeOrder66();
 		return;
 	}
+	loadingDataStart();
 	$scope.summonerData = data;
 	$scope.champList = data.top10champions;
 	//updateChampionSpinners(21333);
@@ -97,6 +101,7 @@ function runSummonerView(data) {
 	//graph grades
 	//$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
 	$scope.summonerData.gradeGraph = $scope.summonerData.highestgradedistribution;	
+	$scope.summonerData.gradeGraph = _.filter($scope.summonerData.gradeGraph, 'highest_grade');
 	$scope.summonerData.gradeGraph = _.map($scope.summonerData.gradeGraph, function(value, key) {
 		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
 	});
@@ -118,13 +123,16 @@ function runSummonerView(data) {
 	$scope.lotsGraphReady = true;
 
 	$scope.topChampions = $scope.summonerData.champions.slice(0,3);
+	loadingDataEnd();
 }
 
 function runChampionView(data) {
 	if (_.isEmpty(data)) {
+		loadingDataEnd();
 		executeOrder66();
 		return;
 	}
+	loadingDataStart();
 
 	$scope.championData = data;
 	console.log($scope.championData);
@@ -150,6 +158,7 @@ function runChampionView(data) {
 	//graph grades
 	//$scope.championData.gradeGraph = _.filter($scope.championData.gradedistribution, 'highest_grade');
 	$scope.championData.gradeGraph = $scope.championData.gradedistribution;
+	$scope.championData.gradeGraph = _.filter($scope.championData.gradeGraph, 'highest_grade');
 	$scope.championData.gradeGraph = _.map($scope.championData.gradeGraph, function(value, key) {
 		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
 	});
@@ -172,9 +181,11 @@ function runChampionView(data) {
 
 	//show graphs
 	$scope.lotsGraphReady = true;
+	loadingDataEnd();
 }
 
 function runMainView(mode, results) {
+	loadingDataStart();
 	$scope.champList = results.data;
 	$scope.championCount = champions.length;
 	var max = results.max;
@@ -183,9 +194,10 @@ function runMainView(mode, results) {
 
 	//grab top 3 champions
 	$scope.topChampions = $scope.champList.slice(0,3);
-
+	loadingDataEnd();
 	//run circles
 	runLevels();
+
 }
 
 function mapChampData(champ) {
@@ -214,6 +226,7 @@ function mapChampData(champ) {
 
 	return champ;
 }
+
 function updateChampionInfo(max) {
 	$scope.champList = $scope.champList.map(function(champ) {
 		champ = mapChampData(champ);
@@ -332,14 +345,14 @@ function getCurrentRequest() {
 	}
 
 	function searchForPlayerChampion() {
+		loadingDataStart();
 		$scope.searchingGlobally = true;
 		$location.path('/home/'+$scope.globalSearch);
 		$scope.globalSearch = '';
 	}
-	$scope.globalSearch = 'TSM MeNoHaxor';
 
 	function searchForPlayer(summonerName) {
-		console.log('searching for player');
+		loadingDataStart();
 		MainService.getPlayerInfo(summonerName)
 		.success(function(result) {
 			runSummonerView(result);
@@ -352,6 +365,7 @@ function getCurrentRequest() {
 
 
 	function searchForChampion(id) {
+		loadingDataStart();
 		MainService.getChampionInfo(id)
 		.success(function(result) {
 			runChampionView(result);
@@ -362,6 +376,7 @@ function getCurrentRequest() {
 		});
 	}
 
+	//STAR WARS REFERENCE, MANDATORY TO KNOW!
 	function executeOrder66() {
 		$scope.noDataError = true;
 		//log errors
@@ -376,6 +391,14 @@ function getCurrentRequest() {
         .hideDelay(3000)
     );
   };
+
+  function loadingDataStart() {
+  	$scope.loadingData = true;
+  }
+
+  function loadingDataEnd() {
+  	$scope.loadingData = false;
+  }
 
   function soundTheAlarm(message) {
   	$scope.errorMessage = message;
@@ -399,6 +422,7 @@ function getCurrentRequest() {
 	function activate() {
 		$scope.labels= graphMaster.gradeGraphLabel;
 		$scope.data= graphMaster.gradeGraphData;
+
     }
 }])
 .controller('levelGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
@@ -406,6 +430,14 @@ function getCurrentRequest() {
 	function activate() {
 		$scope.labels= graphMaster.levelGraphLabelC;
 		$scope.data= graphMaster.levelGraphDataC;
+		$scope.colours = [{ // default
+          "fillColor": "rgba(224, 108, 112, 1)",
+          "strokeColor": "rgba(207,100,103,1)",
+          "pointColor": "rgba(220,220,220,1)",
+          "pointStrokeColor": "#fff",
+          "pointHighlightFill": "#fff",
+          "pointHighlightStroke": "rgba(151,187,205,0.8)"
+        }]
     }
 }])
 .controller('gradeGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {

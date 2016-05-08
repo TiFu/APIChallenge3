@@ -64,6 +64,10 @@ table tr td {
   top: 19px;
 }
 
+.championview-row .arrow-up {
+  top: 16px;
+}
+
 .arrow-down {
   width: 0;
   height: 0;
@@ -75,6 +79,10 @@ table tr td {
   position: absolute;
   left: 2px;
   top: 19px;
+}
+
+.championview-row .arrow-down {
+  top: 16px;
 }
 
 .no-margin-top {

@@ -49,17 +49,11 @@
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
             <tr>
-              <th colspan="3">
+              <th colspan="6">
                   Summoner
               </th>
               <th colspan="3">
                   Level
-              </th>
-              <th colspan="3">
-                Next
-              </th>
-              <th colspan="3">
-                Since
               </th>
               <th colspan="3">
                 Total
@@ -68,16 +62,11 @@
           </thead>
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10HighestMastery" class="selectable-row" ng-click="goto(champ.summoner_name)">
-	      <td colspan="3">
+	      <td colspan="6">
                   {{champ.summoner_name}}
 	      </td>
               <td colspan="3">
                   {{champ.mastery_level}}
-              </td>
-              <td colspan="3">
-                  {{champ.pts_next}}</td>
-              <td colspan="3">
-                  {{champ.pts_since}}
               </td>
               <td colspan="3">
                   {{champ.pts_total}}
@@ -91,8 +80,8 @@
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
             <tr>
-              <th colspan="4">
-                  Rank (Change)
+              <th colspan="2">
+                  Rank
               </th>
               <th colspan="4">
                 Name
@@ -103,8 +92,8 @@
             </tr>
           </thead>
           <tbody class="table-listings">
-            <tr ng-repeat="champ in championData.top10Players.data" class="selectable-row" ng-click="goto(champ.name)">
-              <td colspan="4" class="relative-container">
+            <tr ng-repeat="champ in championData.top10Players.data" class="selectable-row championview-row" ng-click="goto(champ.name)">
+              <td colspan="2" class="relative-container">
                  <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up' || champ.rankChangeDirection === 'upNew',
                                  'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
                  {{champ.rank}}

@@ -1,5 +1,5 @@
 
-<div layout="column" class="layout-container padding-top" layout-align="start center">
+<div layout="column" class="layout-container padding-top" layout-align="start center" ng-cloak>
     <div class="row" flex>
     <div class="col-sm-6">
         <div class="panel panel-default">
@@ -31,7 +31,7 @@
           <div class="col-xs-6" ng-controller="levelGraphController">
             <label>Levels Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150"
+                  chart-data="data" chart-labels="labels" height="150" width="150" chart-legend="true"  colours="colours"
                   ng-if="data.length">
               </canvas> 
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
