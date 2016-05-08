@@ -118,7 +118,8 @@ function runChampionView(data) {
 	}
 
 	$scope.championData = data;
-
+	console.log($scope.championData);
+	$scope.championData.top10Players.data = $scope.championData.top10Players.data.map(mapChampData);
 	//graph level data
 	$scope.championData.levelGraph = _.map($scope.championData.masterydistribution.distribution, function(value, key) {
 		return {labels: 'Level ' + key, data: value}
@@ -177,12 +178,7 @@ function runMainView(mode, results) {
 	runLevels();
 }
 
-function updateChampionInfo(max) {
-	$scope.champList = $scope.champList.map(function(champ) {
-		//get a 1 thru 100% of where this champ is compared to highest champ score.
-		champ.masteryAverage = (champ.points / max)*100;
-		champ.currentAverage = 0;
-
+function mapChampData(champ) {
 		//roud points
 		champ.points = Math.ceil(champ.points);
 		champ.pointsChange = Math.ceil(champ.pointsChange);
@@ -194,11 +190,19 @@ function updateChampionInfo(max) {
 		champ.pointsChange = champ.pointsChange.toString() === 'NaN' ? 0 : champ.pointsChange;
 
 		//add rank direction and remove +/-
-		champ.rankChangeDirection = champ.rankChange < 0 ? 'down' : 'up'		
+		champ.rankChangeDirection = champ.rankChange < 0 ? 'down' : 'up'
 		champ.rankChange = champ.rankChange.toString().replace(/-/g, '');
 		//handle NaN
 		champ.rankChange = champ.rankChange.toString() === 'NaN' ? 0 : champ.rankChange;
 
+	return champ;
+}
+function updateChampionInfo(max) {
+	$scope.champList = $scope.champList.map(function(champ) {
+		champ = mapChampData(champ);
+		//get a 1 thru 100% of where this champ is compared to highest champ score.
+		champ.masteryAverage = (champ.points / max)*100;
+		champ.currentAverage = 0;
 		return champ;
 	});
 }

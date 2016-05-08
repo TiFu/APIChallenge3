@@ -90,7 +90,7 @@ function getPercentSumsChestGranted(champion_id, connection) {
 }
 
 function getTop10HighestMastery(champion_id, connection) {
-    return connection.query("SELECT pts_total, mastery_level, pts_next, pts_since FROM current_mastery WHERE champion_id = ? group by summoner_id ORDER BY pts_total DESC LIMIT 10", [champion_id]).then((result) => {
+    return connection.query("SELECT summoner_name, pts_total, mastery_level, pts_next, pts_since FROM current_mastery cm, summoners s WHERE  cm.summoner_id = s.summoner_id and champion_id = ? ORDER BY pts_total DESC LIMIT 10", [champion_id]).then((result) => {
       return {name: "top10HighestMastery", data: result};
     })
 }
