@@ -226,7 +226,7 @@ function getMasteryDistribution(summoner_id, connection) {
     return connection.query("SELECT name as champion_name, game_timestamp, mastery_level, pts_gained, pts_next, pts_total, pts_since FROM gains g, champions c where c.id = g.champion_id and g.summoner_id = ? order by game_timestamp desc LIMIT ?, 10", [summoner_id, offset]).then((result) => {
         result = result.map((r) => {
           var date = new Date(r.game_timestamp);
-          r.game_timestamp = date.getFullYear() + "-" + ("0" + date.getMonth()).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+          r.game_timestamp = date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
           return r;
         })
         return {
@@ -237,5 +237,11 @@ function getMasteryDistribution(summoner_id, connection) {
   }
 
   function getMasteryProgressionForChamp(summoner_id, champion_id, connection) {
-    return connection.query("SELECT name as champion_name, pts_gained, pts_total, mastery_level, game_timestamp FROM gains g, champions c where c.id = g.champion_id and summoner_id = ? and champion_id = ? ORDER BY game_timestamp ASC", [summoner_id, champion_id]);
+    return connection.query("SELECT name as champion_name, pts_gained, pts_total, pts_since, pts_next, mastery_level, game_timestamp FROM gains g, champions c where c.id = g.champion_id and summoner_id = ? and champion_id = ? ORDER BY game_timestamp ASC", [summoner_id, champion_id]).then((result) => {
+      return result.map(r => {
+        var date = new Date(r.game_timestamp);
+        r.game_timestamp = date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
+        return r;
+      });
+    });
   }
