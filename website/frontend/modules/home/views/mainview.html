@@ -50,7 +50,7 @@
   <tbody class="table-listings">
     <tr ng-repeat="champ in champList | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
       <td colspan="4" class="relative-container">
-          <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up',
+          <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up'  || champ.rankChangeDirection === 'upNew',
                           'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
           {{champ.rank}}
           (<span class="{{champ.rankChangeDirection}}">{{champ.rankChange}}</span>)
@@ -60,7 +60,7 @@
       <td colspan="4" class="relative-container">
           <div ng-class="{'arrow-up' : champ.pointsChangeDirection === 'up',
                           'arrow-down' : champ.pointsChangeDirection === 'down'}"></div>
-          {{champ.points === 0 ? 'no data yet' : champ.points}}
+          {{champ.points === 0 ? 'no data' : champ.points}}
           (<span class="{{champ.pointsChangeDirection}}">{{champ.pointsChange}}</span>)
       </td>
     </tr>

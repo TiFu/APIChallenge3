@@ -103,7 +103,7 @@
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10Players.data" class="selectable-row" ng-click="goto(champ.name)">
               <td colspan="4" class="relative-container">
-                 <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up',
+                 <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up' || champ.rankChangeDirection === 'upNew',
                                  'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
                  {{champ.rank}}
                  (<span class="{{champ.rankChangeDirection}}">{{champ.rankChange}}</span>)

@@ -195,11 +195,18 @@ function mapChampData(champ) {
 		//add points direction and remove +/-
 		champ.pointsChangeDirection = champ.pointsChange < 0 ? 'down' : 'up'
 		champ.pointsChange = champ.pointsChange.toString().replace(/-/g, '');
+
+		console.log(champ.pointsChange);
+		console.log(champ.pointsChange === 'NaN');
+		console.log(champ.pointsChangeDirection);
+		console.log("");
 		//handle NaN
-		champ.pointsChange = champ.pointsChange.toString() === 'NaN' ? 0 : champ.pointsChange;
+		champ.pointsChange = champ.pointsChange === 'NaN' ? champ.points : champ.pointsChange;
 
 		//add rank direction and remove +/-
-		champ.rankChangeDirection = champ.rankChange < 0 ? 'down' : 'up'
+		champ.rankChangeDirection = champ.rankChange < 0 ? 'down' : 'up';
+		champ.rankChangeDirection = champ.rankChange === "NEW" ? "upNew" : champ.rankChangeDirection;
+
 		champ.rankChange = champ.rankChange.toString().replace(/-/g, '');
 		//handle NaN
 		champ.rankChange = champ.rankChange.toString() === 'NaN' ? 0 : champ.rankChange;

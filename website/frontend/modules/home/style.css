@@ -81,6 +81,10 @@ table tr td {
   color: green;
   /*font-weight:bold;*/
 }
+
+.upNew {
+  color: green;
+}
 .up:before {
   content: '+';
   padding-right:0;
