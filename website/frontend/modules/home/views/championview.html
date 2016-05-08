@@ -4,18 +4,18 @@
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="row">
-            <div class="col-xs-6">
-          <div class="champion-container-relative">
-              <img ng-src="{{getImgUrl(championData.data.name)}}" ng-cloak>
-              <div>{{championData.data.name}}</div>
-          </div>
-        </div>
-        <div class="col-xs-6">
-                <div class="summoner-stats">Weekly Ranking: <strong>{{championData.rank.rank}}</strong></div>
-        <div class="summoner-stats">Game Average: <strong>{{championData.rank.avg_gain}}</strong></div>
-         <div class="summoner-stats">Average played: <strong>{{championData.stats.avg_games_summoner}}</strong></div>
-         <div class="summoner-stats">#Summoners: <strong>{{championData.stats.summoners_played}}</strong></div>
-        <div class="summoner-stats">#Games: <strong>{{championData.stats.games_played}}</strong></div>
+            	<div class="col-xs-6">
+          		<div class="champion-container-relative">
+          		    <img ng-src="{{getImgUrl(championData.data.name)}}" ng-cloak>
+          		    <div>{{championData.data.name}}</div>
+          			</div>
+        		</div>
+        	<div class="col-xs-6">
+        	        <div class="summoner-stats">Weekly Ranking: <strong>{{championData.rank.rank}}</strong></div>
+        		<div class="summoner-stats">Game Average: <strong>{{championData.rank.avg_gain}}</strong></div>
+        		<div class="summoner-stats">Average played: <strong>{{championData.stats.avg_games_summoner}}</strong></div>
+        		<div class="summoner-stats">#Summoners: <strong>{{championData.stats.summoners_played}}</strong></div>
+       			<div class="summoner-stats">#Games: <strong>{{championData.stats.games_played}}</strong></div>
                 </div>
           </div>
         </div>

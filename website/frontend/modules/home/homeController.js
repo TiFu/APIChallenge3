@@ -28,7 +28,8 @@ function(
 	champions,
 	graphMaster) {
 
-	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/';
+	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/';
+	var PROFILEICONURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/';
 	$scope.scrollToTop = scrollToTop;
 	$scope.searchForPlayerChampion = searchForPlayerChampion;
 
@@ -285,6 +286,9 @@ function getCurrentRequest() {
 		return IMGURL + _.find(champions.data, {name: name}).full;
 	}
 
+	$scope.getProfileIconUrl = function(id) {
+		return PROFILEICONURL + id + ".png";
+	}
 	//selecting a champion/summoner should generically path to a new url.
 	//will trigger a new query when the controller re-loads.
 	$scope.goto = function(champ) {

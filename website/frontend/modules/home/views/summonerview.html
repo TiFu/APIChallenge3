@@ -3,10 +3,20 @@
     <div class="row" flex>
     <div class="col-sm-6">
         <div class="panel panel-default">
-        <div class="summoner-name">{{summonerData.name}}</div>
+	<div class="row">
+            	<div class="col-xs-6">
+          		<div class="champion-container-relative">
+          		    <img ng-src="{{getProfileIconUrl(summonerData.profile_icon)}}" ng-cloak>
+          		    <div class="summoner-name">{{summonerData.name}}</div>
+          			</div>
+        		</div>
+        	<div class="col-xs-6">
+
         <div class="summoner-stats">Weekly Ranking: <strong>{{summonerData.globalrank[0].rank}}</strong></div>
         <div class="summoner-stats">Games: <strong>{{summonerData.globalrank[0].games}}</strong></div>
         <div class="summoner-stats">Game Average: <strong>{{summonerData.globalrank[0].avg_gain}}</strong></div>
+	</div>
+	</div>
         </div>
 
         <div class="row pie-chart-container" ng-if="lotsGraphReady">

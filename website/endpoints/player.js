@@ -89,6 +89,7 @@ function getPlayerInfo(req, res, next, connection) {
   promises.push(getTop10GainsLastWeek(summoner_id, connection));
   promises.push(getGlobalRank(summoner_id, connection));
   promises.push(getPercentSumsChestGranted(summoner_id, connection));
+  promises.push(getSummonerIcon(summoner_id, connection));
   var resultObj = {};
   Promise.all(promises).then((result) => {
     for (var i = 0; i < result.length; i++) {
@@ -119,11 +120,18 @@ function getPercentSumsChestGranted(summoner_id, connection) {
   })
 }
 
+function getSummonerIcon(summoner_id, connection) {
+  return connection.query("SELECT summoner_icon FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
+    return {
+      name: "profile_icon",
+      data: result[0].summoner_icon
+    };
+  });
+
+}
 
 function getSummonerName(summoner_id, connection) {
   return connection.query("SELECT summoner_name, summoner_icon FROM summoners WHERE summoner_id = ?", [summoner_id]).then((result) => {
-    main.logger.info("Result for get summoner name");
-    main.logger.info(result);
     return {
       name: "name",
       data: result[0].summoner_name
