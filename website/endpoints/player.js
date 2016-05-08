@@ -177,8 +177,8 @@ function getMasteryDistribution(summoner_id, connection) {
     })
   }
 
-  function getTop10Champions(summoner_id) {
-    return main.database.query("SELECT champion_id, name, case when mastery_level is null then 1 else mastery_level end as mastery_level, case when pts_total is null then 0 else pts_total end as pts_total, case when pts_since is null then 0 else pts_since end as pts_since, case when pts_next is null then 1800 else pts_next end as pts_next, highest_grade, case when chest_granted is null then 0 else chest_granted end as chest_granted FROM champions c LEFT JOIN current_mastery cm on c.id = cm.champion_id and summoner_id = ? ORDER BY pts_total DESC", [summoner_id]).then((result) => {
+  function getTop10Champions(summoner_id, connection) {
+    return connection.query("SELECT champion_id, name, case when mastery_level is null then 1 else mastery_level end as mastery_level, case when pts_total is null then 0 else pts_total end as pts_total, case when pts_since is null then 0 else pts_since end as pts_since, case when pts_next is null then 1800 else pts_next end as pts_next, highest_grade, case when chest_granted is null then 0 else chest_granted end as chest_granted FROM champions c LEFT JOIN current_mastery cm on c.id = cm.champion_id and summoner_id = ? ORDER BY pts_total DESC", [summoner_id]).then((result) => {
       return {
         name: "champions",
         data: result
