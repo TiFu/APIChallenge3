@@ -57,13 +57,13 @@ function getCountableStats(champion_id, connection) {
 }
 
 function getMasteryDistribution(champion_id, connection) {
-  var masteryDistribution = [0,0,0,0,0,0];
+  var masteryDistribution = [0,0,0,0,0];
   return connection.query(" select mastery_level, count(*) as cnt from current_mastery where champion_id = ? group by mastery_level;", [champion_id]).then((result) => {
-    result.forEach(r => masteryDistribution[r.mastery_level] = r.cnt);
+    result.forEach(r => masteryDistribution[r.mastery_level - 1] = r.cnt);
     return connection.query("select count(*) as cnt from summoners;");
   }).then((totalSummonersResult) => {
     var elemSum = masteryDistribution.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
-    masteryDistribution[0] = totalSummonersResult[0].cnt - elemSum;
+    masteryDistribution[0] += totalSummonersResult[0].cnt - elemSum;
     var avg = masteryDistribution.reduce((previous, current, index) => {
       return previous += current * index;
     },0) / elemSum;

@@ -67,14 +67,21 @@ function runSummonerView(data) {
 		executeOrder66();
 		return;
 	}
-
 	$scope.summonerData = data;
 	$scope.champList = data.top10champions;
 	//updateChampionSpinners(21333);
 
+	if (!$scope.summonerData.globalrank[0]) { // add defaults if nothing recorded yet
+		var obj = {};
+		obj.rank = "no data yet";
+		obj.avg_gain = "no data yet";
+		obj.games = "no data yet";
+		obj.week = "no data yet";
+		$scope.summonerData.globalrank.push(obj);
+	}
 	//graph level data
 	$scope.summonerData.levelGraph = _.map($scope.summonerData.masterydistribution.distribution, function(value, key) {
-		return {labels: 'Level ' + key, data: value}
+		return {labels: 'Level ' + (key+1), data: value}
 	});
 
 	$scope.summonerData.levelGraph.labels = [];
@@ -87,9 +94,10 @@ function runSummonerView(data) {
 
 
 	//graph grades
-	$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
+	//$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
+	$scope.summonerData.gradeGraph = $scope.summonerData.highestgradedistribution;	
 	$scope.summonerData.gradeGraph = _.map($scope.summonerData.gradeGraph, function(value, key) {
-		return {labels: 'Grade ' + value['grade'], data: value['cnt']}
+		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
 	});
 
 	$scope.summonerData.gradeGraph.labels = [];
@@ -122,7 +130,7 @@ function runChampionView(data) {
 	$scope.championData.top10Players.data = $scope.championData.top10Players.data.map(mapChampData);
 	//graph level data
 	$scope.championData.levelGraph = _.map($scope.championData.masterydistribution.distribution, function(value, key) {
-		return {labels: 'Level ' + key, data: value}
+		return {labels: 'Level ' + (key+1), data: value}
 	});
 
 	if ($scope.championData.levelGraph[0].labels.slice(-1) === '0') {

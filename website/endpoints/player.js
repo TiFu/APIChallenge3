@@ -132,10 +132,10 @@ function getSummonerName(summoner_id, connection) {
 }
 
 function getMasteryDistribution(summoner_id, connection) {
-  var mastery = [0, 0, 0, 0, 0, 0];
+  var mastery = [0, 0, 0, 0, 0];
   return connection.query("SELECT mastery_level, COUNT(mastery_level) as cnt FROM current_mastery WHERE summoner_id = ? GROUP BY mastery_level", [summoner_id]).then((result) => {
     for (var i = 0; i < result.length; i++) {
-      mastery[result[i].mastery_level] = result[i].cnt;
+      mastery[result[i].mastery_level - 1] = result[i].cnt;
     }
     return connection.query("SELECT count(*) as cnt from champions");
   }).then((champCountQuery) => {
