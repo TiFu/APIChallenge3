@@ -150,7 +150,7 @@ function getMasteryDistribution(summoner_id, connection) {
       var elemSum = mastery.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
       mastery[0] += champCountQuery[0].cnt - elemSum;
       var avg = mastery.reduce((previous, current, index) => {
-        return previous += current * index;
+        return previous += current * (index+1);
       }, 0) / elemSum;
       return {
         name: "masterydistribution",

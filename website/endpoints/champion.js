@@ -65,7 +65,7 @@ function getMasteryDistribution(champion_id, connection) {
     var elemSum = masteryDistribution.reduce((previousValue, currentValue) => previousValue + currentValue, 0);
     masteryDistribution[0] += totalSummonersResult[0].cnt - elemSum;
     var avg = masteryDistribution.reduce((previous, current, index) => {
-      return previous += current * index;
+      return previous += current * (index+1);
     },0) / elemSum;
     return {name: "masterydistribution", data: {avg: avg, distribution: masteryDistribution} };
   });
