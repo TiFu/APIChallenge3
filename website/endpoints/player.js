@@ -24,7 +24,7 @@ exports.init = function(mainApp) {
       main.logger.info("Requesting player info");
         getPlayerInfo(req, res, next, connection); // releases connection
     } else {
-      res.status(200).send({success: false});
+      res.status(200).send({success: false, summonerExists: message.summonerExists});
       main.logger.info("Releasing connection");
       main.releaseConnection(connection);
     }

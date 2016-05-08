@@ -86,7 +86,9 @@ exports.handleNewSummoner = (input) => {
     }).catch((err2) => {
       serverLogger.error(err2);
     })
-    process.send({workerId: input.workerId, token: input.token, success: false});
+
+    err = "" + err;
+    process.send({workerId: input.workerId, token: input.token, success: false, summonerExists: err.indexOf("404 Not Found") === -1});
   });
 }
 
