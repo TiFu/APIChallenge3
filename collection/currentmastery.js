@@ -39,7 +39,7 @@ exports.updateSummonerMastery = (summonerId) => {
       logger.debug("Setting last update time " + summonerId);
       return connection.query("UPDATE summoners SET last_current_mastery_update = now() WHERE summoner_id = ? ", [summonerId]);
     }).then(() => logger.info("Updated summoner: " + summonerId)).catch((err) => {
-      logger.err(err);
+      logger.error(err);
     });
 }
 

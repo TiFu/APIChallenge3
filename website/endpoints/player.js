@@ -19,7 +19,7 @@ exports.init = function(mainApp) {
     var next = addedSummoners["" + message.token].next;
     var connection = addedSummoners["" + message.token].connection;
     main.logger.info("Answer from collection: " + message.summoner_id);
-    req.params.summonerId = message .summoner_id;
+    req.params.summonerId = message.summoner_id;
     if (message.success) {
       main.logger.info("Requesting player info");
         getPlayerInfo(req, res, next, connection); // releases connection
