@@ -177,7 +177,7 @@ function getMasteryDistribution(summoner_id, connection) {
   }
 
   function getHighestGradeDistribution(summoner_id, connection) {
-    return connection.query("SELECT highest_grade as grade, COUNT(*) as cnt FROM current_mastery WHERE summoner_id = ? GROUP BY highest_grade", [summoner_id]).then((result) => {
+    return connection.query("SELECT highest_grade, COUNT(*) as cnt FROM current_mastery WHERE summoner_id = ? GROUP BY highest_grade", [summoner_id]).then((result) => {
       return {
         name: "highestgradedistribution",
         data: result
