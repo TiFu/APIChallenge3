@@ -235,3 +235,28 @@ right: 10px;
 .scroll-to-top md-icon {
   font-size: 21px;
 }
+
+/*SUMMONER*/
+.summoner-name {
+    font-size: 35px;
+    font-weight: bold;
+    color: orange;
+}
+
+.panel {
+  padding: 5px;
+}
+
+.summoner-stats {
+  font-size: 20px;
+}
+
+.margin-right {
+  margin-right: 15px;
+}
+
+.pie-chart-container label {
+  font-size: 20px;
+    text-align: center;
+      width: 100%;
+}

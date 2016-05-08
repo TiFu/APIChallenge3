@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('Home', ['ngMaterial', 'ngRoute'])
+angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
+.constant('graphMaster', {})
 
 .controller('HomeController', [
 	'$scope',
@@ -13,6 +14,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute'])
 	'MainService',
 	'top',
 	'champions',
+	'graphMaster',
 function(
 	$scope,
 	$location,
@@ -23,7 +25,8 @@ function(
 	$mdToast,
 	MainService,
 	top,
-	champions) {
+	champions,
+	graphMaster) {
 
 	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.8.1/img/champion/';
 	$scope.scrollToTop = scrollToTop;
@@ -64,8 +67,52 @@ function runChampionView(mode, results) {
 }
 
 function runSummonerView(data) {
+	if (!data.success) {
+		executeOrder66();
+		return;
+	}
 
-	console.log(data);
+	$scope.summonerData = data;
+	$scope.champList = data.top10champions;
+	//updateChampionSpinners(21333);
+
+	//graph level data
+	$scope.summonerData.levelGraph = _.map($scope.summonerData.masterydistribution.distribution, function(value, key) {
+		return {labels: 'Level ' + key, data: value}
+	});
+
+	$scope.summonerData.levelGraph.labels = [];
+	$scope.summonerData.levelGraph.data = [];
+
+	_.each($scope.summonerData.levelGraph, function(mastery) {
+		$scope.summonerData.levelGraph.labels.push(mastery.labels);
+		$scope.summonerData.levelGraph.data.push(mastery.data);
+	});
+
+
+	//graph grades
+	$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
+	$scope.summonerData.gradeGraph = _.map($scope.summonerData.gradeGraph, function(value, key) {
+		return {labels: 'Grade ' + value['grade'], data: value['cnt']}
+	});
+
+	$scope.summonerData.gradeGraph.labels = [];
+	$scope.summonerData.gradeGraph.data = [];
+
+	_.each($scope.summonerData.gradeGraph, function(mastery) {
+		$scope.summonerData.gradeGraph.labels.push(mastery.labels);
+		$scope.summonerData.gradeGraph.data.push(mastery.data);
+	});
+
+	//push graph data onto graphMaster
+    graphMaster.levelGraphLabel = $scope.summonerData.levelGraph.labels;
+    graphMaster.levelGraphData = $scope.summonerData.levelGraph.data;
+    graphMaster.gradeGraphLabel = $scope.summonerData.gradeGraph.labels;
+	graphMaster.gradeGraphData = $scope.summonerData.gradeGraph.data;
+	//show graphs
+	$scope.lotsGraphReady = true;
+
+	$scope.topChampions = $scope.champList.slice(0,3);
 }
 
 function runMainView(mode, results) {
@@ -73,6 +120,16 @@ function runMainView(mode, results) {
 	$scope.championCount = champions.length;
 	var max = results.max;
 
+	updateChampionInfo(max);
+
+	//grab top 3 champions
+	$scope.topChampions = $scope.champList.slice(0,3);
+
+	//run circles
+	runLevels();
+}
+
+function updateChampionInfo(max) {
 	$scope.champList = $scope.champList.map(function(champ) {
 		//get a 1 thru 100% of where this champ is compared to highest champ score.
 		champ.masteryAverage = (champ.points / max)*100;
@@ -96,12 +153,20 @@ function runMainView(mode, results) {
 
 		return champ;
 	});
+}
 
-	//grab top 3 champions
-	$scope.topChampions = $scope.champList.slice(0,3);
+function updateChampionSpinners(max) {
+	$scope.champList = $scope.champList.map(function(champ) {
+		//get a 1 thru 100% of where this champ is compared to highest champ score.
+		if (champ.mastery_level === 5) {
+			champ.masteryAverage = 100;
+		} else {
 
-	//run circles
-	runLevels();
+		}
+		champ.masteryAverage = (champ.pts_total / max)*100;
+		champ.currentAverage = 0;
+		return champ;
+	});
 }
 
 function getCurrentRequest() {
@@ -194,6 +259,7 @@ function getCurrentRequest() {
 	function searchForPlayerChampion() {
 		$scope.searchingGlobally = true;
 		$location.path('/home/'+$scope.globalSearch);
+		$scope.globalSearch = '';
 	}
 	$scope.globalSearch = 'TSM MeNoHaxor';
 
@@ -227,5 +293,18 @@ function getCurrentRequest() {
     );
   };
 
-
+}])
+.controller('levelGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
+	activate();
+	function activate() {
+		$scope.labels= graphMaster.gradeGraphLabel;
+		$scope.data= graphMaster.gradeGraphData;
+    }
+}])
+.controller('gradeGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
+	activate();
+	function activate() {
+		$scope.labels= graphMaster.levelGraphLabel;
+		$scope.data= graphMaster.levelGraphData;
+    }
 }]);

@@ -2,6 +2,7 @@
 
 // declare modules
 angular.module('Home', []);
+
 angular.module('About', []);
 
 angular.module('Compress', []).filter('compress', function() {

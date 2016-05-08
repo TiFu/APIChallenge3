@@ -48,6 +48,9 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/frontend')))
+app.use("/Chart.min.js", express.static(__dirname + '/../node_modules/Chart.js/dist/Chart.min.js'))
+app.use("/angular-chart.js", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.js"))
+app.use("/angular-chart.css", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.css"))
 
 // init client request stuff
 db.init(new WinstonContext(winston, "[Database]"), config).then(() => {
