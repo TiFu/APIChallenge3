@@ -108,7 +108,7 @@ function runSummonerView(data) {
 	//show graphs
 	$scope.lotsGraphReady = true;
 
-	$scope.topChampions = $scope.champList.slice(0,3);
+	$scope.topChampions = $scope.summonerData.champions.slice(0,3);
 }
 
 function runChampionView(data) {
@@ -139,9 +139,10 @@ function runChampionView(data) {
 
 
 	//graph grades
-	$scope.championData.gradeGraph = _.filter($scope.championData.highestgradedistribution, 'grade');
+	//$scope.championData.gradeGraph = _.filter($scope.championData.gradedistribution, 'highest_grade');
+	$scope.championData.gradeGraph = $scope.championData.gradedistribution;
 	$scope.championData.gradeGraph = _.map($scope.championData.gradeGraph, function(value, key) {
-		return {labels: 'Grade ' + value['grade'], data: value['cnt']}
+		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
 	});
 
 	$scope.championData.gradeGraph.labels = [];

@@ -62,7 +62,7 @@
             </tr>
           </thead>
           <tbody class="table-listings">
-            <tr ng-repeat="champ in summonerData.lastgames" class="selectable-row" ng-click="goto(        champ.champion_name)">
+            <tr ng-repeat="champ in summonerData.lastgames" class="selectable-row" ng-click="goto(champ.champion_name)">
               <td colspan="4">
                   {{champ.game_timestamp}}
               </td>
@@ -70,7 +70,7 @@
               {{champ.champion_name}}</td>
               <td colspan="4" class="relative-container">
                   <div class="arrow-up"></div>
-                  {{champ.pts_gained === 0 ? 'no data yet' : champ.pts_gained}}
+                  {{champ.pts_gained === null ? 'no data yet' : champ.pts_gained}}
               </td>
             </tr>
           </tbody>
