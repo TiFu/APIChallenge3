@@ -118,11 +118,15 @@ function runChampionView(data) {
 	}
 
 	$scope.championData = data;
-	console.log($scope.championData)
-		//graph level data
+
+	//graph level data
 	$scope.championData.levelGraph = _.map($scope.championData.masterydistribution.distribution, function(value, key) {
 		return {labels: 'Level ' + key, data: value}
 	});
+
+	if ($scope.championData.levelGraph[0].labels.slice(-1) === '0') {
+		$scope.championData.levelGraph.shift();
+	}
 
 	$scope.championData.levelGraph.labels = [];
 	$scope.championData.levelGraph.data = [];
@@ -146,6 +150,8 @@ function runChampionView(data) {
 		$scope.championData.gradeGraph.labels.push(mastery.labels);
 		$scope.championData.gradeGraph.data.push(mastery.data);
 	});
+
+	console.log($scope.championData.levelGraph)
 
 	//push graph data onto graphMaster
     graphMaster.levelGraphLabelC = $scope.championData.levelGraph.labels;
