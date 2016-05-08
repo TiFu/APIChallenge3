@@ -43,7 +43,7 @@ League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 exports.handleNewSummoner = (input) => {
   var name = input.data;
   serverLogger.info("Adding summoner: " + name);
-  name = name.replace(" ", "").toLowerCase();
+  name = name.replace(/ /g, "").toLowerCase();
   var summonerId;
   var connection;
   db.POOL.getConnection().then((conn) => {
@@ -54,6 +54,8 @@ exports.handleNewSummoner = (input) => {
   })
   .then((result) => {
     serverLogger.info("Got summoner");
+    console.log(result);
+    console.log("looking up with: " + name);
     summonerId = result[name].id;
     return connection.query("INSERT INTO summoners (summoner_id, summoner_name, summoner_icon) values (?, ?, ?)", [result[name].id, result[name].name, result[name].profileIconId]);
     }).then((res => {
