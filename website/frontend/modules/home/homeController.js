@@ -52,18 +52,14 @@ function(
 	if (mode.length === 1) {
 		$scope.viewMode = 'Main';
 		runMainView(mode, results);
-	} else if (mode.length === 2 && _.find(champions, { 'name': mode[1]})) {
+	} else if (mode.length === 2 && _.find(champions.data, { 'name': mode[1]})) {
 				$scope.viewMode = 'Champion';
-				searchForChampion(mode[1]);
+				var id = _.find(champions.data, { 'name': mode[1]}).id;
+				searchForChampion(id);
 			} else {
 				$scope.viewMode = 'Summoner';
 				searchForPlayer(mode[1]);
 			}	
-}
-
-
-function runChampionView(mode, results) {
-
 }
 
 function runSummonerView(data) {
@@ -113,6 +109,52 @@ function runSummonerView(data) {
 	$scope.lotsGraphReady = true;
 
 	$scope.topChampions = $scope.champList.slice(0,3);
+}
+
+function runChampionView(data) {
+	if (_.isEmpty(data)) {
+		executeOrder66();
+		return;
+	}
+
+	$scope.championData = data;
+	console.log($scope.championData)
+		//graph level data
+	$scope.championData.levelGraph = _.map($scope.championData.masterydistribution.distribution, function(value, key) {
+		return {labels: 'Level ' + key, data: value}
+	});
+
+	$scope.championData.levelGraph.labels = [];
+	$scope.championData.levelGraph.data = [];
+
+	_.each($scope.championData.levelGraph, function(mastery) {
+		$scope.championData.levelGraph.labels.push(mastery.labels);
+		$scope.championData.levelGraph.data.push(mastery.data);
+	});
+
+
+	//graph grades
+	$scope.championData.gradeGraph = _.filter($scope.championData.highestgradedistribution, 'grade');
+	$scope.championData.gradeGraph = _.map($scope.championData.gradeGraph, function(value, key) {
+		return {labels: 'Grade ' + value['grade'], data: value['cnt']}
+	});
+
+	$scope.championData.gradeGraph.labels = [];
+	$scope.championData.gradeGraph.data = [];
+
+	_.each($scope.championData.gradeGraph, function(mastery) {
+		$scope.championData.gradeGraph.labels.push(mastery.labels);
+		$scope.championData.gradeGraph.data.push(mastery.data);
+	});
+
+	//push graph data onto graphMaster
+    graphMaster.levelGraphLabelC = $scope.championData.levelGraph.labels;
+    graphMaster.levelGraphDataC = $scope.championData.levelGraph.data;
+    graphMaster.gradeGraphLabelC = $scope.championData.gradeGraph.labels;
+	graphMaster.gradeGraphDataC = $scope.championData.gradeGraph.data;
+
+	//show graphs
+	$scope.lotsGraphReady = true;
 }
 
 function runMainView(mode, results) {
@@ -211,6 +253,9 @@ function getCurrentRequest() {
 	}
 
 	$scope.getImgUrl = function(name) {
+		if (_.isEmpty(champions.data) || _.isUndefined(name)) {
+			return;
+		}
 		return IMGURL + _.find(champions.data, {name: name}).full;
 	}
 
@@ -234,7 +279,7 @@ function getCurrentRequest() {
 		.success(function(result) {
 			top.data = result;
 			activate();
-			$timeout(scrollToBottom,0);
+			$timeout(scrollToBottom,1000);
 		})
 		.error(function(err) {
 			console.log(err);
@@ -264,18 +309,27 @@ function getCurrentRequest() {
 	$scope.globalSearch = 'TSM MeNoHaxor';
 
 	function searchForPlayer(summonerName) {
+		console.log('searching for player');
 		MainService.getPlayerInfo(summonerName)
 		.success(function(result) {
 			runSummonerView(result);
 		})
 		.catch(function(result) {
-			console.error('Could not find summoner!');
+			console.log('alarm');
+			soundTheAlarm('Could not find summoner!');
 		});
 	}
 
 
-	function searchForChampion(championName) {
-		console.log('looking for data on: ' + championName);
+	function searchForChampion(id) {
+		MainService.getChampionInfo(id)
+		.success(function(result) {
+			runChampionView(result);
+		})
+		.catch(function(result) {
+			console.log('alarm');
+			soundTheAlarm('Could not find champion!');
+		});
 	}
 
 	function executeOrder66() {
@@ -293,6 +347,15 @@ function getCurrentRequest() {
     );
   };
 
+  function soundTheAlarm(message) {
+  	$scope.errorMessage = message;
+  	console.log('alarm', message);
+  	$timeout(function() {
+  		$scope.errorMessage = '';
+  	}, 3000);
+  }
+
+
 }])
 .controller('levelGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
@@ -306,5 +369,19 @@ function getCurrentRequest() {
 	function activate() {
 		$scope.labels= graphMaster.levelGraphLabel;
 		$scope.data= graphMaster.levelGraphData;
+    }
+}])
+.controller('levelGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
+	activate();
+	function activate() {
+		$scope.labels= graphMaster.levelGraphLabelC;
+		$scope.data= graphMaster.levelGraphDataC;
+    }
+}])
+.controller('gradeGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
+	activate();
+	function activate() {
+		$scope.labels= graphMaster.gradeGraphLabelC;
+		$scope.data= graphMaster.gradeGraphDataC;
     }
 }]);

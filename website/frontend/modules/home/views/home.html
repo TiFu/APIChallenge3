@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="/modules/home/style.css" />
 
+<!-- alert container -->
+<div class="alert alert-danger alert-popups" ng-if="errorMessage" role="alert"><strong>Error!</strong> {{errorMessage}}</div>
+
 <!-- Search Container -->
 <div class="global-text-search">
     <div>
@@ -61,12 +64,11 @@
 </div>
 
 <div layout="column" 
-     layout-align="space-around stretch"
      flex="grow" 
      class="global-container" 
      ng-hide="noDataError"
      ng-cloak
-     ng-include="'/modules/home/views/summonerview.html'" 
+     ng-include="'/modules/home/views/championview.html'" 
      ng-if="viewMode === 'Champion'">
 </div>
 

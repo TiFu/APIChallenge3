@@ -21,5 +21,9 @@ angular.module('Home')
   	return $http.post('api/player/info/by-name/'+name.trim());
   }
 
+    service.getChampionInfo = function(id) {
+  	return $http.post('api/champion/'+id);
+  }
+
   return service;
 }]);

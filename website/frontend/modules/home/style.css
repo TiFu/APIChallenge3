@@ -7,6 +7,22 @@
   background-color: gray;
 }
 
+.champion-container-relative {
+      text-align: center;
+}
+
+.champion-container-relative img {
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+      width: 150px;
+}
+
+.champion-container-relative div {
+  font-size: 25px;
+  padding-top: 15px;
+}
+
 .footer-height {
   min-height: 50px;
 }
@@ -257,6 +273,20 @@ right: 10px;
 
 .pie-chart-container label {
   font-size: 20px;
-    text-align: center;
-      width: 100%;
+  text-align: center;
+  width: 100%;
+}
+
+.pie-chart-container {
+  min-height: 200px;
+}
+
+.alert-popups {
+  position:absolute;
+  top:0;
+  right:0;
+}
+
+.layout-container {
+  /*overflow-y:auto;*/
 }

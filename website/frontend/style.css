@@ -136,3 +136,16 @@ body {
   top: -10px;
   right: 240px;
 }
+
+.full-width {
+  width:100%;
+}
+
+.chart-container {
+  text-align: center;
+}
+
+.chart-pie {
+  width: 150px !important;
+  height: 150px !important;
+}
