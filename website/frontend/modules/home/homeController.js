@@ -98,7 +98,7 @@ function runSummonerView(data) {
 	//$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
 	$scope.summonerData.gradeGraph = $scope.summonerData.highestgradedistribution;	
 	$scope.summonerData.gradeGraph = _.map($scope.summonerData.gradeGraph, function(value, key) {
-		return {labels: value['highest_grade'] === null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
+		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
 	});
 
 	$scope.summonerData.gradeGraph.labels = [];
@@ -390,15 +390,15 @@ function getCurrentRequest() {
 .controller('levelGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.labels= graphMaster.gradeGraphLabel;
-		$scope.data= graphMaster.gradeGraphData;
+		$scope.labels= graphMaster.levelGraphLabel;
+		$scope.data= graphMaster.levelGraphData;
     }
 }])
 .controller('gradeGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.labels= graphMaster.levelGraphLabel;
-		$scope.data= graphMaster.levelGraphData;
+		$scope.labels= graphMaster.gradeGraphLabel;
+		$scope.data= graphMaster.gradeGraphData;
     }
 }])
 .controller('levelGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
