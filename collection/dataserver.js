@@ -43,7 +43,7 @@ League.setRateLimit(config.get("limitPer10s"), config.get("limitPer10min"));
 exports.handleNewSummoner = (input) => {
   var name = input.data;
   serverLogger.info("Adding summoner: " + name);
-  name = name.replace(" ", "");
+  name = name.replace(" ", "").toLowerCase();
   var summonerId;
   League.Summoner.getByName(name).then((result) => {
     serverLogger.info("Got summoner");
