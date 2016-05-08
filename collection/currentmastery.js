@@ -20,14 +20,15 @@ function updateCurrentMastery() {
     for (var i = 0; i < result.length; i++) {
       var currentSummoner = result[i].summoner_id;
       logger.info("Updating summoner: " + currentSummoner);
-      updateSummonerMastery(currentSummoner);
+      updateSummonerMastery(currentSummoner, connection);
     }
   }).catch((err) => {
     logger.warn(err);
   });
 }
 
-exports.updateSummonerMastery = (summonerId) => {
+
+exports.updateSummonerMastery = (summonerId, connection) => {
   logger.debug("Retrieving champion mastery for " + summonerId);
   return League.ChampionMastery.getChampionMastery(summonerId).then((result) => {
       logger.debug("Building promise chain.");

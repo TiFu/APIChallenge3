@@ -45,16 +45,23 @@ exports.handleNewSummoner = (input) => {
   serverLogger.info("Adding summoner: " + name);
   name = name.replace(" ", "").toLowerCase();
   var summonerId;
-  League.Summoner.getByName(name).then((result) => {
+  var connection;
+  db.POOL.getConnection().then((conn) => {
+    connection = conn;
+    return connection.query("START TRANSACTION");
+  }).then(() => {
+    return League.Summoner.getByName(name);
+  })
+  .then((result) => {
     serverLogger.info("Got summoner");
     summonerId = result[name].id;
-    return db.CONNECTION.query("INSERT INTO summoners (summoner_id, summoner_name, summoner_icon) values (?, ?, ?)", [result[name].id, result[name].name, result[name].profileIconId]);
+    return connection.query("INSERT INTO summoners (summoner_id, summoner_name, summoner_icon) values (?, ?, ?)", [result[name].id, result[name].name, result[name].profileIconId]);
     }).then((res => {
     serverLogger.info("Requesting Mastery for Current User with id: " + summonerId);
-    return currentmastery.updateSummonerMastery(summonerId);
+    return currentmastery.updateSummonerMastery(summonerId, connection);
   })).then((res) => {
     serverLogger.info("Selecting rows for gains update");
-    return db.CONNECTION.query("SELECT id as champion_id, case when mastery_level is null then 1 else mastery_level end as mastery_level, case when pts_total is null then 0 else pts_total end as pts_total, case when pts_since is null then 0 else pts_since end as pts_since, case when pts_next is null then 1800 else pts_next end as pts_next FROM  champions left join current_mastery on id = champion_id and summoner_id = ?;", [summonerId]);
+    return connection.query("SELECT id as champion_id, case when mastery_level is null then 1 else mastery_level end as mastery_level, case when pts_total is null then 0 else pts_total end as pts_total, case when pts_since is null then 0 else pts_since end as pts_since, case when pts_next is null then 1800 else pts_next end as pts_next FROM  champions left join current_mastery on id = champion_id and summoner_id = ?;", [summonerId]);
   }).then((result) => {
     serverLogger.info("Got Rows for Gains update");
     var promises = [];
@@ -66,12 +73,19 @@ exports.handleNewSummoner = (input) => {
       }
     }
     serverLogger.info("Inserting rows into gains");
-    return db.CONNECTION.query(queryString);
+    return connection.query(queryString);
   }).then((res) => {
+    return connection.query("COMMIT");
+  }).then(() => {
     serverLogger.info("Answering request to add new user.");
     process.send({workerId: input.workerId, summoner_id: summonerId, token: input.token, success: true});
   }).catch((err) => {
     serverLogger.warn(err);
+    connection.query("ROLLBACK").then(() => {
+      db.POOL.releaseConnection(connection);
+    }).catch((err2) => {
+      serverLogger.error(err2);
+    })
     process.send({workerId: input.workerId, token: input.token, success: false});
   });
 }
