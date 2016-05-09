@@ -29,7 +29,7 @@ function(
 	graphMaster) {
 
 	var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/';
-	var PROFILEICONURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/profileicon/';
+	var PROFILEICONURL = './img/';
 	$scope.scrollToTop = scrollToTop;
 	$scope.searchForPlayerChampion = searchForPlayerChampion;
 
