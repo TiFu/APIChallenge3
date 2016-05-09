@@ -12,8 +12,8 @@
     <label>Summoner Name</label>
       <input ng-model="globalSearch">
   </md-input-container>
-  <md-button class="md-raised md-primary" 
-             ng-disabled="searchingGlobally || !globalSearch" 
+  <md-button class="md-raised md-primary"
+             ng-disabled="searchingGlobally || !globalSearch"
              ng-click="searchForPlayerChampion()">
     Search
   </md-button>
@@ -50,38 +50,47 @@
 </div>
 
 
-<div layout="column" 
-     flex="grow" 
-     class="global-container" 
+<div layout="column"
+     flex="grow"
+     class="global-container"
      ng-hide="noDataError"
      ng-cloak
-     ng-include="'/modules/home/views/mainview.html'" 
+     ng-include="'/modules/home/views/mainview.html'"
      ng-if="viewMode === 'Main' && !loadingData">
 </div>
 
-<div layout="column" 
-     flex="grow" 
-     class="global-container" 
+<div layout="column"
+     flex="grow"
+     class="global-container"
      ng-hide="noDataError"
      ng-cloak
-     ng-include="'/modules/home/views/summonerview.html'" 
+     ng-include="'/modules/home/views/topplayerview.html'"
+     ng-if="viewMode === 'Top10Player' && !loadingData">
+</div>
+
+<div layout="column"
+     flex="grow"
+     class="global-container"
+     ng-hide="noDataError"
+     ng-cloak
+     ng-include="'/modules/home/views/summonerview.html'"
      ng-if="viewMode === 'Summoner' && !loadingData">
 </div>
 
-<div layout="column" 
-     flex="grow" 
-     class="global-container" 
+<div layout="column"
+     flex="grow"
+     class="global-container"
      ng-hide="noDataError"
      ng-cloak
-     ng-include="'/modules/home/views/championview.html'" 
+     ng-include="'/modules/home/views/championview.html'"
      ng-if="viewMode === 'Champion' && !loadingData">
 </div>
 
 
-<!-- <div layout="column" 
+<!-- <div layout="column"
      layout-align="space-around stretch"
-     flex="grow" 
-     class="global-container" 
+     flex="grow"
+     class="global-container"
      ng-cloak ng-hide="noDataError || viewMode !== 'Main'">
  -->
 
@@ -174,7 +183,7 @@
 <!-- </div> -->
 
 
-<!-- 
+<!--
 <div layout="row" layout-align="center center" class="search-container">
 
   <div flex layout="row" layout-align="center end" class="layout-container">

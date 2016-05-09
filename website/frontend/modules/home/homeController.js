@@ -52,17 +52,62 @@ function(
 
 
 	loadingDataStart();
-	if (mode.length === 1) {
-		$scope.viewMode = 'Main';
-		runMainView(mode, results);
+	if (mode.length === 1 && mode[0] === "player") {
+		console.log("player");
+		$scope.viewMode = 'Top10Player';
+		loadTop10Summoners();
 	} else if (mode.length === 2 && _.find(champions.data, { 'name': mode[1]})) {
+		console.log("Champion");
 				$scope.viewMode = 'Champion';
 				var id = _.find(champions.data, { 'name': mode[1]}).id;
 				searchForChampion(id);
-			} else {
-				$scope.viewMode = 'Summoner';
-				searchForPlayer(mode[1]);
-			}	
+	} else if (mode.length === 2) {
+		console.log("summoner");
+		$scope.viewMode = 'Summoner';
+		searchForPlayer(mode[1]);
+	} else {
+		console.log("main");
+		$scope.viewMode = 'Main';
+		runMainView(mode, results);
+	}
+}
+
+function loadTop10Summoners() {
+	loadingDataStart();
+	MainService.GetTop10Players()
+	.success(function(result) {
+		runTop10PlayerView(result);
+	})
+	.catch(function(result) {
+		soundTheAlarm('Could not load summoner data!');
+	});
+}
+function runTop10PlayerView(results) {
+console.log(results);
+if (_.isEmpty(results)) {
+	loadingDataEnd();
+	executeOrder66();
+	return;
+}
+
+loadingDataStart();
+$scope.bestPlayers = results.data;
+console.log($scope.bestPlayers);
+var max = results.max;
+$scope.bestPlayers = $scope.bestPlayers.map((p) => {
+	p = mapChampData(p);
+	p.pointsAverage = (p.points / max) * 100;
+	p.currentAverage = 0;
+	return p;
+})
+
+$scope.topPlayers = $scope.bestPlayers.slice(0,3);
+console.log($scope.topPlayers[0])
+console.log($scope.topPlayers[1])
+console.log($scope.topPlayers[2])
+loadingDataEnd();
+
+runPlayerLevels();
 }
 
 function runSummonerView(data) {
@@ -100,7 +145,7 @@ function runSummonerView(data) {
 
 	//graph grades
 	//$scope.summonerData.gradeGraph = _.filter($scope.summonerData.highestgradedistribution, 'grade');
-	$scope.summonerData.gradeGraph = $scope.summonerData.highestgradedistribution;	
+	$scope.summonerData.gradeGraph = $scope.summonerData.highestgradedistribution;
 	$scope.summonerData.gradeGraph = _.filter($scope.summonerData.gradeGraph, 'highest_grade');
 	$scope.summonerData.gradeGraph = _.map($scope.summonerData.gradeGraph, function(value, key) {
 		return {labels: value['highest_grade'] == null ? "No Grade yet" : 'Grade ' + value['highest_grade'], data: value['cnt']}
@@ -226,7 +271,6 @@ function runMainView(mode, results) {
 	loadingDataEnd();
 	//run circles
 	runLevels();
-
 }
 
 function mapChampData(champ) {
@@ -287,6 +331,40 @@ function getCurrentRequest() {
 		champ1Circle();
 		champ2Circle();
 		champ3Circle();
+	}
+
+	//run the circle animations
+	function runPlayerLevels() {
+		player1Circle();
+		player2Circle();
+		player3Circle();
+	}
+
+	function player1Circle() {
+		if (($scope.topPlayers[0].currentAverage > $scope.topPlayers[0].masteryAverage) ||
+			$scope.topPlayers[0].currentAverage > 100) {
+			return;
+		}
+			$scope.topPlayers[0].currentAverage++;
+			$timeout(player1Circle, 15);
+	}
+
+	function player2Circle() {
+		if (($scope.topPlayers[1].currentAverage > $scope.topPlayers[1].masteryAverage) ||
+			$scope.topPlayers[1].currentAverage > 100) {
+			return;
+		}
+			$scope.topPlayers[1].currentAverage++;
+			$timeout(player2Circle, 15);
+	}
+
+	function player3Circle() {
+		if (($scope.topPlayers[2].currentAverage > $scope.topPlayers[2].masteryAverage) ||
+			$scope.topPlayers[2].currentAverage > 100) {
+			return;
+		}
+			$scope.topPlayers[2].currentAverage++;
+			$timeout(player3Circle, 15);
 	}
 
 	//champion 1's circle animation
@@ -359,6 +437,20 @@ function getCurrentRequest() {
 		$timeout(function() { $route.reload(); }, 1000);
 	}
 
+$scope.loadMorePlayers = function() {
+	console.log('loading more');
+	$scope.loadingTable = true;
+	showSimpleToast('mtest');
+	MainService.GetAllPlayers()
+	.success(function(result) {
+//		$scope.bestPlayers = result.data;
+		runTop10PlayerView(result);
+		$timeout(scrollToBottom,1000);
+	})
+	.error(function(err) {
+		console.log(err);
+	});
+}
 	//pushes placeholder data (will be endpoint) onto table, then runs scrollToBottom
 	$scope.loadMore = function() {
 		console.log('loading more');

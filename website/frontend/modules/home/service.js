@@ -5,6 +5,13 @@ angular.module('Home')
 .factory('MainService', ['$http', function($http) {
   var service = {};
 
+  service.GetTop10Players = function() {
+    return $http.post('/api/top10/players');
+  }
+
+  service.GetAllPlayers = function() {
+    return $http.post('/api/top10/players/all');    
+  }
   service.GetTop10Champions = function() {
     return $http.post('/api/top10/champions');
   };

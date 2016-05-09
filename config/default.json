@@ -1,6 +1,6 @@
 {
 	"database": {
-		"password": "",
+		"password": "root",
 		"username": "root",
 		"host": "localhost",
 		"name": "apichallenge3",

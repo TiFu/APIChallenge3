@@ -1,11 +1,10 @@
-      <div layout="row" flex="noshrink" class="layout-container champion-container-height">
-        <div layout="row" layout-align="center center" flex="33" class="champion-container" ng-repeat="champ in topChampions"  ng-click="goto(champ.name)">
-              <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}" class="image-spinner-md-progress-circular">
-              </md-progress-circular>
-              <img class="image-spinner champion-glow" ng-src="{{::getImgUrl(champ.name)}}">
-        </div>
-      </div>
-
+<div layout="row" flex="noshrink" class="layout-container champion-container-height">
+  <div layout="row" layout-align="center center" flex="33" class="champion-container" ng-repeat="player in topPlayers track by $index"  ng-click="goto(player.name)">
+        <md-progress-circular md-diameter="150" md-mode="determinate" value="{{player.currentAverage}}" class="image-spinner-md-progress-circular">
+        </md-progress-circular>
+        <img class="image-spinner champion-glow" ng-src="{{::getProfileIconUrl(player.icon)}}">
+  </div>
+</div>
 <div layout="column" flex="grow" layout-align="center" class="table-height">
 <div flex="grow" layout="column" class="layout-container relative-container">
   <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
@@ -47,14 +46,14 @@
     </md-button>
   </div>
   <tbody class="table-listings">
-    <tr ng-repeat="champ in champList | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
+    <tr ng-repeat="champ in bestPlayers | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
       <td colspan="4" class="relative-container">
           <div ng-class="::{'arrow-up' : champ.rankChangeDirection === 'up',
                           'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
           {{::champ.rank}}
           (<span class="{{::champ.rankChangeDirection}}">{{::champ.rankChange}}</span>)
       </td>
-      <td colspan="6" scope="row"><img ng-src="{{::getImgUrl(champ.name)}}">
+      <td colspan="6" scope="row"><img ng-src="{{::getProfileIconUrl(champ.icon)}}">
       {{::champ.name}}</td>
       <td colspan="4" class="relative-container">
           <div ng-class="::{'arrow-up' : champ.pointsChangeDirection === 'up',
@@ -77,7 +76,7 @@
 
 <section layout="row" layout-sm="column" layout-align="center center" class="footer-height" layout-wrap>
   <md-button class="md-primary"
-             ng-click="disableLoader = true; loadMore()"
+             ng-click="disableLoader = true; loadMorePlayers()"
              ng-disabled="disableLoader">
     Load More Champions
   </md-button>
