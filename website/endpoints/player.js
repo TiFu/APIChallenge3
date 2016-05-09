@@ -223,7 +223,7 @@ function getMasteryDistribution(summoner_id, connection) {
     if (!offset) {
       offset = 0;
     }
-    return connection.query("SELECT name as champion_name, game_timestamp, mastery_level, pts_gained, pts_next, pts_total, pts_since FROM gains g, champions c where c.id = g.champion_id and g.summoner_id = ? and game_id is null order by game_timestamp desc LIMIT ?, 10", [summoner_id, offset]).then((result) => {
+    return connection.query("SELECT name as champion_name, game_timestamp, mastery_level, pts_gained, pts_next, pts_total, pts_since FROM gains g, champions c where c.id = g.champion_id and g.summoner_id = ? and game_id is not null order by game_timestamp desc LIMIT ?, 10", [summoner_id, offset]).then((result) => {
         result = result.map((r) => {
           var date = new Date(r.game_timestamp);
           r.game_timestamp = date.getFullYear() + "-" + ("0" + (date.getMonth()+1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2);
