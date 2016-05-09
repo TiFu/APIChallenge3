@@ -177,8 +177,26 @@ function getMasteryDistribution(summoner_id, connection) {
     return connection.query("select rank, avg_gain, games, week from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games FROM (select @rank:=@rank+1 as rank, summoner_id, (to_days(now()) - to_days(game_timestamp)) DIV 3 as week, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains group by summoner_id, TO_DAYS(game_timestamp) DIV 3 having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by week asc;", [summoner_id])
   }
 
+  var mapCharGrade = {"S": 0, "A": 1, "B": 2, "C": 3, "D": 4};
+  var mapSignGrade = {"+": 0, "": 1, "-":2};
+
   function getHighestGradeDistribution(summoner_id, connection) {
     return connection.query("SELECT highest_grade, COUNT(*) as cnt FROM current_mastery WHERE summoner_id = ? GROUP BY highest_grade", [summoner_id]).then((result) => {
+      result = result.sort((grade1, grade2) => {
+        var a = grade1.highest_grade;
+        var b = grade2.highest_grade;
+        if (a === null && b == null) {
+          return 0;
+        } else if (a === null) {
+          return 1;
+        } else if (b === null) {
+          return -1;
+        }
+        var aCount = mapCharGrade[a.charAt(0)]*10 + mapSignGrade[a.charAt(1)];
+        var bCount = mapCharGrade[b.charAt(0)]*10 + mapSignGrade[b.charAt(1)];
+
+        return aCount === bCount ? 0 : (aCount < bCount ? -1 : 1);
+      });
       return {
         name: "highestgradedistribution",
         data: result
