@@ -55,14 +55,38 @@ function(
 	if (mode.length === 1) {
 		$scope.viewMode = 'Main';
 		runMainView(mode, results);
-	} else if (mode.length === 2 && _.find(champions.data, { 'name': mode[1]})) {
+	} else if (mode.length === 2) {
+	       if(_.find(champions.data, { 'name': mode[1]})) {
 				$scope.viewMode = 'Champion';
 				var id = _.find(champions.data, { 'name': mode[1]}).id;
 				searchForChampion(id);
 			} else {
 				$scope.viewMode = 'Summoner';
 				searchForPlayer(mode[1]);
-			}	
+			}
+			} else if (mode.length === 3 || (mode.length === 4 && mode[3] === '')) {
+				$scope.viewMode = 'Summoner & Champion';
+				var champ = _.filter(champions.data, { 'name': mode[1]}) ? _.filter(champions.data, { 'name': mode[1]})
+				                                                         : _.filter(champions.data, { 'name': mode[2]});
+				if (_.isUndefined(champ)) {
+					//no champion specified
+					$location.path('/home');
+					return;
+				} else {
+					if (_.get(champ, '[0].id')) {
+					    console.log('champ',mode[1]);
+						console.log('player',mode[2]);
+						searchForChampionAndPlayer(mode[1].id,mode[2]);
+					} else {
+						console.log('champ',mode[2]);
+						console.log('player',mode[1]);
+						searchForChampionAndPlayer(mode[2].id,mode[1]);
+					}
+				}
+				
+			}	else {
+				$location.path('/home');
+			}
 }
 
 function runSummonerView(data) {
@@ -119,7 +143,7 @@ function runSummonerView(data) {
 		mastery.currentPointCircle = mastery.mastery_level === 5 ? 100 : getToGoPoints(mastery);
 	});
 	$scope.summonerData.champions = _.orderBy($scope.summonerData.champions, ['mastery_level', 'currentPointCircle'], ['desc', 'desc']);
-	$scope.summonerData.top10Champions = $scope.summonerData.champions.slice(0,10);
+	$scope.summonerData.top10Champions = $scope.summonerData.champions.slice(0,6);
 	$scope.summonerData.allNon0 = _.filter($scope.summonerData.champions, 'pts_total');
 
 	//push graph data onto graphMaster
@@ -155,7 +179,10 @@ function getToGoPoints(champ) {
 }
 
 $scope.loadMoreChampionMasteries = function() {
-	$scope.$applyAysnc($scope.summonerData.top10Champions = $scope.summonerData.allNon0);
+	$scope.summonerData.top10Champions = $scope.summonerData.allNon0;
+	$scope.$applyAsync();
+
+	$timeout(function() {$("html, body").animate({ scrollTop: $(document).height() }, "slow")},0);
 }
 
 function runChampionView(data) {
@@ -227,6 +254,16 @@ function runMainView(mode, results) {
 	//run circles
 	runLevels();
 
+}
+
+function runChampionAndSummonerView(data) {
+	if (_.isEmpty(data)) {
+		loadingDataEnd();
+		executeOrder66();
+		return;
+	}
+	loadingDataStart();
+	console.log('data', data);
 }
 
 function mapChampData(champ) {
@@ -397,6 +434,25 @@ function getCurrentRequest() {
 		$scope.globalSearch = '';
 	}
 
+	function searchForChampionAndPlayer(champID,SummonerName) {
+		loadingDataStart();
+        //Find Summoner
+		MainService.getPlayerInfo(SummonerName)
+				.then(function(result) {
+					//Find Summoner And Champion
+       				MainService.getChampionAndPlayerInfo(champID,SummonerName)
+						.success(function(result) {
+							runChampionAndSummonerView(champID, result.data.id);
+						})
+						.catch(function(result) {
+							soundTheAlarm('Could not find summoner!');
+						});
+				})
+				.catch(function(err) {
+					soundTheAlarm('Could not find summoner!');
+				});
+  }
+
 	function searchForPlayer(summonerName) {
 		loadingDataStart();
 		MainService.getPlayerInfo(summonerName)
@@ -457,6 +513,17 @@ function getCurrentRequest() {
 .controller('levelGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
+		$scope.graphColors = [
+		  '#5DA5DA',
+		  '#FAA43A',
+		  '#60BD68',
+		  '#F17CB0',
+		  '#B2912F',
+		  '#B276B2',
+		  '#DECF3F',
+		  '#F15854',
+		  '#4D4D4D'
+    	];
 		$scope.labels= graphMaster.levelGraphLabel;
 		$scope.data= graphMaster.levelGraphData;
     }
@@ -464,6 +531,17 @@ function getCurrentRequest() {
 .controller('gradeGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
+		$scope.graphColors = [
+		  '#5DA5DA',
+		  '#FAA43A',
+		  '#60BD68',
+		  '#F17CB0',
+		  '#B2912F',
+		  '#B276B2',
+		  '#DECF3F',
+		  '#F15854',
+		  '#4D4D4D'
+    	];
 		$scope.labels= graphMaster.gradeGraphLabel;
 		$scope.data= graphMaster.gradeGraphData;
 
@@ -472,21 +550,45 @@ function getCurrentRequest() {
 .controller('levelGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
+		$scope.graphColors = [
+		  '#5DA5DA',
+		  '#FAA43A',
+		  '#60BD68',
+		  '#F17CB0',
+		  '#B2912F',
+		  '#B276B2',
+		  '#DECF3F',
+		  '#F15854',
+		  '#4D4D4D'
+    	];
 		$scope.labels= graphMaster.levelGraphLabelC;
 		$scope.data= graphMaster.levelGraphDataC;
-		$scope.colours = [{ // default
-          "fillColor": "rgba(224, 108, 112, 1)",
-          "strokeColor": "rgba(207,100,103,1)",
-          "pointColor": "rgba(220,220,220,1)",
-          "pointStrokeColor": "#fff",
-          "pointHighlightFill": "#fff",
-          "pointHighlightStroke": "rgba(151,187,205,0.8)"
-        }]
+		$scope.options = {
+    tooltipEvents: [],
+    showTooltips: true,
+    tooltipCaretSize: 0,
+    onAnimationComplete: function () {
+        this.showTooltip(this.segments, true);
+    },
+};
+
+		var index= 0;
     }
 }])
 .controller('gradeGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
+		$scope.graphColors = [
+		  '#5DA5DA',
+		  '#FAA43A',
+		  '#60BD68',
+		  '#F17CB0',
+		  '#B2912F',
+		  '#B276B2',
+		  '#DECF3F',
+		  '#F15854',
+		  '#4D4D4D'
+    	];
 		$scope.labels= graphMaster.gradeGraphLabelC;
 		$scope.data= graphMaster.gradeGraphDataC;
     }

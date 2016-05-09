@@ -26,17 +26,23 @@
           <div class="col-xs-6" ng-controller="gradeGraphControllerC">
             <label>Grades Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150"
+                  chart-data="data" chart-labels="labels" height="150" width="150" colours="graphColors"
                   ng-if="data.length">
               </canvas> 
+              <div ng-repeat="item in labels" class="legend-icons" style="color: {{graphColors[$index]}}; border-color:  {{graphColors[$index]}}">
+                  {{item}}
+                </div>
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
           <div class="col-xs-6" ng-controller="levelGraphControllerC">
             <label>Levels Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150"
+                  chart-data="data" chart-labels="labels" height="150" width="150" colours="graphColors"
                    ng-if="data.length">
               </canvas> 
+                <div ng-repeat="item in labels" class="legend-icons" style="color: {{graphColors[$index]}}; border-color:  {{graphColors[$index]}}">
+                  {{item}}
+                </div>
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
           

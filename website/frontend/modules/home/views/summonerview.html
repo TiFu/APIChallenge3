@@ -11,10 +11,10 @@
           			</div>
         		</div>
         	<div class="col-xs-6">
-
-        <div class="summoner-stats">Weekly Ranking: <strong>{{::summonerData.globalrank[0].rank}}</strong></div>
+        <div class="summoner-stats"><strong>Weekly Stats</strong></div>
+        <div class="summoner-stats">Rank: <strong>{{::summonerData.globalrank[0].rank}}</strong></div>
         <div class="summoner-stats">Games: <strong>{{::summonerData.globalrank[0].games}}</strong></div>
-        <div class="summoner-stats">Game Average: <strong>{{::summonerData.globalrank[0].avg_gain}}</strong></div>
+        <div class="summoner-stats">Point Average: <strong>{{::summonerData.globalrank[0].avg_gain}}</strong></div>
 	</div>
 	</div>
         </div>
@@ -24,19 +24,25 @@
           <div class="col-xs-6" ng-controller="gradeGraphController">
             <label>Grades Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150"
+                  chart-data="data" chart-labels="labels" height="150" width="150" colours="graphColors"
                   ng-if="data.length">
               </canvas> 
+              <div ng-repeat="item in labels" class="legend-icons" style="color: {{graphColors[$index]}}; border-color:  {{graphColors[$index]}}">
+                  {{item}}
+                </div>
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
 
           <div class="col-xs-6" ng-controller="levelGraphController">
             <label>Levels Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150"
+                  chart-data="data" chart-labels="labels" height="150" width="150" colours="graphColors"
                   ng-if="data.length">
                   <!-- chart-legend="true"  colours="colours" -->
-              </canvas> 
+              </canvas>
+              <div ng-repeat="item in labels" class="legend-icons" style="color: {{graphColors[$index]}}; border-color:  {{graphColors[$index]}}">
+                  {{item}}
+                </div> 
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
 
