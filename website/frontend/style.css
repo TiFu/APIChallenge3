@@ -146,10 +146,31 @@ body {
 }
 
 .chart-pie {
-  width: 150px !important;
-  height: 150px !important;
+/*  width: 150px !important;
+  height: 150px !important;*/
 }
 
 .loading-data .alert {
   text-align: center;
+}
+
+.floating-footer {
+position: fixed;
+    bottom: 0;
+    left: 40%;
+    /* margin-right: auto; */
+    /* margin-left: auto; */
+    float: left;
+    z-index: 4;
+}
+
+md-progress-circular:hover ~.champion-glow, .mastery-icon:hover ~.champion-glow {
+    border: 2px solid gold;
+padding: 16px;
+margin-left: -2px;
+margin-top: -3px;
+}
+
+.bottom-padding {
+  padding-bottom: 50px
 }

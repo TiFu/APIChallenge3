@@ -114,6 +114,14 @@ function runSummonerView(data) {
 		$scope.summonerData.gradeGraph.data.push(mastery.data);
 	});
 
+	//setup data for showing all champion masteries
+	_.each($scope.summonerData.champions, function(mastery) {
+		mastery.currentPointCircle = mastery.mastery_level === 5 ? 100 : getToGoPoints(mastery);
+	});
+	$scope.summonerData.champions = _.orderBy($scope.summonerData.champions, ['mastery_level', 'currentPointCircle'], ['desc', 'desc']);
+	$scope.summonerData.top10Champions = $scope.summonerData.champions.slice(0,10);
+	$scope.summonerData.allNon0 = _.filter($scope.summonerData.champions, 'pts_total');
+
 	//push graph data onto graphMaster
     graphMaster.levelGraphLabel = $scope.summonerData.levelGraph.labels;
     graphMaster.levelGraphData = $scope.summonerData.levelGraph.data;
@@ -126,6 +134,30 @@ function runSummonerView(data) {
 	loadingDataEnd();
 }
 
+function getToGoPoints(champ) {
+	var level2 = 1800;
+	var level3 = 4200;
+	var level4 = 6600;
+	var level5 = 9000;
+
+	switch(champ.mastery_level)  {
+    case 1:
+        return Math.ceil((champ.pts_next / level2) * 100);
+    case 2:
+        return Math.ceil((champ.pts_next / level3) * 100);
+    case 3:
+        return Math.ceil((champ.pts_next / level4) * 100);
+    case 4:
+        return Math.ceil((champ.pts_next / level5) * 100);
+    default:
+        return 0;
+	}
+}
+
+$scope.loadMoreChampionMasteries = function() {
+	$scope.$applyAysnc($scope.summonerData.top10Champions = $scope.summonerData.allNon0);
+}
+
 function runChampionView(data) {
 	if (_.isEmpty(data)) {
 		loadingDataEnd();
@@ -135,7 +167,6 @@ function runChampionView(data) {
 	loadingDataStart();
 
 	$scope.championData = data;
-	console.log($scope.championData);
 	$scope.championData.top10Players.data = $scope.championData.top10Players.data.map(mapChampData);
 	//graph level data
 	$scope.championData.levelGraph = _.map($scope.championData.masterydistribution.distribution, function(value, key) {
@@ -170,8 +201,6 @@ function runChampionView(data) {
 		$scope.championData.gradeGraph.labels.push(mastery.labels);
 		$scope.championData.gradeGraph.data.push(mastery.data);
 	});
-
-	console.log($scope.championData.levelGraph)
 
 	//push graph data onto graphMaster
     graphMaster.levelGraphLabelC = $scope.championData.levelGraph.labels;
@@ -209,10 +238,6 @@ function mapChampData(champ) {
 		champ.pointsChangeDirection = champ.pointsChange < 0 ? 'down' : 'up'
 		champ.pointsChange = champ.pointsChange.toString().replace(/-/g, '');
 
-		console.log(champ.pointsChange);
-		console.log(champ.pointsChange === 'NaN');
-		console.log(champ.pointsChangeDirection);
-		console.log("");
 		//handle NaN
 		champ.pointsChange = champ.pointsChange === 'NaN' ? champ.points : champ.pointsChange;
 
@@ -266,7 +291,8 @@ function getCurrentRequest() {
 
 	//champion 1's circle animation
 	function champ1Circle() {
-		if ($scope.topChampions[0].currentAverage > $scope.topChampions[0].masteryAverage) {
+		if (($scope.topChampions[0].currentAverage > $scope.topChampions[0].masteryAverage) ||
+			$scope.topChampions[0].currentAverage > 100) {
 			return;
 		}
 			$scope.topChampions[0].currentAverage++;
@@ -276,7 +302,8 @@ function getCurrentRequest() {
 
 	//champion 2's circle animation
 	function champ2Circle() {
-		if ($scope.topChampions[1].currentAverage > $scope.topChampions[1].masteryAverage) {
+		if (($scope.topChampions[1].currentAverage > $scope.topChampions[1].masteryAverage) ||
+			$scope.topChampions[1].currentAverage > 100) {
 			return;
 		}
 			$scope.topChampions[1].currentAverage++;
@@ -285,7 +312,8 @@ function getCurrentRequest() {
 
 	//champion 3's circle animation
 	function champ3Circle() {
-		if ($scope.topChampions[2].currentAverage > $scope.topChampions[2].masteryAverage) {
+		if (($scope.topChampions[2].currentAverage > $scope.topChampions[2].masteryAverage) ||
+			$scope.topChampions[2].currentAverage > 100) {
 			return;
 		}
 			$scope.topChampions[2].currentAverage++;
@@ -302,6 +330,24 @@ function getCurrentRequest() {
 	$scope.getProfileIconUrl = function(id) {
 		return PROFILEICONURL + id + ".png";
 	}
+
+	$scope.getMasteryIcon = function(level) {
+		switch(level)  {
+    		case 1:
+    		    return 'http://i.imgur.com/vPzKnGf.png';
+    		case 2:
+    		    return 'http://i.imgur.com/fEpnvCZ.png';
+    		case 3:
+    		    return 'http://i.imgur.com/Cd90pem.png';
+    		case 4:
+    		    return 'http://i.imgur.com/p2Dekzi.png';
+    		case 5:
+    		    return 'http://i.imgur.com/bLhZdEB.png';
+    		default:
+    		    return 'http://i.imgur.com/vPzKnGf.png';
+		}
+	}
+
 	//selecting a champion/summoner should generically path to a new url.
 	//will trigger a new query when the controller re-loads.
 	$scope.goto = function(champ) {
@@ -358,7 +404,6 @@ function getCurrentRequest() {
 			runSummonerView(result);
 		})
 		.catch(function(result) {
-			console.log('alarm');
 			soundTheAlarm('Could not find summoner!');
 		});
 	}
@@ -371,7 +416,6 @@ function getCurrentRequest() {
 			runChampionView(result);
 		})
 		.catch(function(result) {
-			console.log('alarm');
 			soundTheAlarm('Could not find champion!');
 		});
 	}

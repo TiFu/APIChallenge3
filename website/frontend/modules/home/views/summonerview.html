@@ -1,25 +1,26 @@
 
-<div layout="column" class="layout-container padding-top" layout-align="start center" ng-cloak>
-    <div class="row" flex>
+<div layout="column" flex class="layout-container padding-top" layout-align="start center" ng-cloak>
+    <div class="row full-width" flex="nogrow">
     <div class="col-sm-6">
         <div class="panel panel-default">
 	<div class="row">
             	<div class="col-xs-6">
           		<div class="champion-container-relative">
-          		    <img ng-src="{{getProfileIconUrl(summonerData.profile_icon)}}" ng-cloak>
-          		    <div class="summoner-name">{{summonerData.name}}</div>
+          		    <img ng-src="{{::getProfileIconUrl(summonerData.profile_icon)}}" ng-cloak>
+          		    <div class="summoner-name">{{::summonerData.name}}</div>
           			</div>
         		</div>
         	<div class="col-xs-6">
 
-        <div class="summoner-stats">Weekly Ranking: <strong>{{summonerData.globalrank[0].rank}}</strong></div>
-        <div class="summoner-stats">Games: <strong>{{summonerData.globalrank[0].games}}</strong></div>
-        <div class="summoner-stats">Game Average: <strong>{{summonerData.globalrank[0].avg_gain}}</strong></div>
+        <div class="summoner-stats">Weekly Ranking: <strong>{{::summonerData.globalrank[0].rank}}</strong></div>
+        <div class="summoner-stats">Games: <strong>{{::summonerData.globalrank[0].games}}</strong></div>
+        <div class="summoner-stats">Game Average: <strong>{{::summonerData.globalrank[0].avg_gain}}</strong></div>
 	</div>
 	</div>
         </div>
 
         <div class="row pie-chart-container" ng-if="lotsGraphReady">
+
           <div class="col-xs-6" ng-controller="gradeGraphController">
             <label>Grades Achieved</label>
               <canvas id="pie" class="chart chart-pie"
@@ -28,36 +29,21 @@
               </canvas> 
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
+
           <div class="col-xs-6" ng-controller="levelGraphController">
             <label>Levels Achieved</label>
               <canvas id="pie" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="150" width="150" chart-legend="true"  colours="colours"
+                  chart-data="data" chart-labels="labels" height="150" width="150"
                   ng-if="data.length">
+                  <!-- chart-legend="true"  colours="colours" -->
               </canvas> 
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
 
-              
-<!--               <canvas id="pie" class="chart chart-pie"
-                  chart-data="summonerData.gradeGraph.data" chart-labels="summonerData.gradeGraph.labels">
-              </canvas> --> 
-          
-<!--             <div ng-controller="tempController" ng-cloak> -->
-<!--               <h3>Comparatif des lots en volume</h3>
-              <canvas id="pie2" class="chart chart-pie"
-                  chart-data="data" chart-labels="labels" height="100px" 
-                      chart-legend="legend">
-              </canvas>  -->
-<!--               <canvas id="doughnut" class="chart chart-doughnut"
-                      chart-data="data" chart-labels="labels" height="100px" 
-                      chart-legend="legend">
-              </canvas>  -->          
-<!--             </div> -->
-          
         </div>
     </div>
     <div class="col-sm-6">
-	  <h2 class="no-margin-top">Last Games</h2>
+	  <h2 class="no-margin-top">Games This Week</h2>
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
             <tr>
@@ -75,18 +61,37 @@
           <tbody class="table-listings">
             <tr ng-repeat="champ in summonerData.lastgames" class="selectable-row" ng-click="goto(champ.champion_name)">
               <td colspan="4">
-                  {{champ.game_timestamp}}
+                  {{::champ.game_timestamp}}
               </td>
               <td colspan="6" scope="row"><img ng-src="{{getImgUrl(champ.champion_name)}}">
-              {{champ.champion_name}}</td>
+              {{::champ.champion_name}}</td>
               <td colspan="4" class="relative-container">
                   <div class="arrow-up"></div>
-                  {{champ.pts_gained === null ? 'no data yet' : champ.pts_gained}}
+                  {{::champ.pts_gained === null ? 'no data yet' : champ.pts_gained}}
               </td>
             </tr>
+            <tr ng-if="!summonerData.lastgames.length">
+            <td col-span="10">
+                <div class="alert alert-warning">No Data</div>
+            </td>
+          </tr>
           </tbody>
         </table>
     </div>
+    </div>
+    <div class="row">
+        <h2>Mastery Progression</h2>
+    </div>
+    <div class="row bottom-padding" flex="grow">
+      <div class="col-md-2 col-sm-3 col-xs-6" ng-repeat="champ in summonerData.top10Champions">
+          <div class="summoner-champion-mastery-icons champion-container" ng-click="goto(champ.name)">
+            <md-progress-circular md-diameter="150" md-mode="determinate" value="{{::champ.currentPointCircle}}">
+            </md-progress-circular>
+            <img ng-src="{{::getMasteryIcon(champ.mastery_level)}}" class="mastery-icon">
+            <img ng-src="{{::getImgUrl(champ.name)}}" class="champion-glow">
+            <div class="total-points-to-go">{{::champ.pts_total}}</div>
+          </div>
+      </div>
     </div>
 </div>
 
@@ -101,12 +106,11 @@
 <md-progress-linear md-mode="indeterminate" ng-if="loadingTable"></md-progress-linear>
 </div>
 </div>
-
-
-<section layout="row" layout-sm="column" layout-align="center center" class="footer-height" layout-wrap>
-  <md-button class="md-primary"
-             ng-click="loadMore()"
-             ng-disabled="championCount === champList.length">
+-->
+<div class="footer-height floating-footer" ng-hide="disableLoader">
+  <md-button class="md-raised"
+             ng-click="disableLoader = true; loadMoreChampionMasteries()"
+             ng-disabled="disableLoader">
     Load More Champions
   </md-button>
-</section> -->
+</div>

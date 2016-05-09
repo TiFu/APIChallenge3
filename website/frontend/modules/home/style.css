@@ -1,10 +1,18 @@
-.champion-container img {
+.champion-container .champion-glow {
+  border-style: solid;
   -webkit-border-radius: 100px;
   -moz-border-radius: 100px;
   border-radius: 100px;
   position: absolute;
   padding: 15px;
   background-color: gray;
+      left: 25%;
+      top:0;
+}
+
+.champion-container {
+      min-height: 150px;
+      position: relative;
 }
 
 .champion-container-relative {
@@ -23,6 +31,56 @@
   padding-top: 15px;
 }
 
+.image-spinner {
+  display: -moz-box;
+}
+
+.image-spinner-md-progress-circular {
+  position: absolute !important;
+      left: 25%;
+      top: 0;
+}
+
+.summoner-champion-mastery-icons {
+    position: relative;
+    width: 200px;
+    height: 200px;
+        margin-left: -45px;
+}
+
+.summoner-champion-mastery-icons .champion-glow, .summoner-champion-mastery-icons md-progress-circular {
+   position: absolute !important;
+   left: 25%;
+   top:0;
+}
+
+.mastery-icon {
+    position: absolute;
+    bottom: -19px;
+    left: 25%;
+    width: 150px;
+    z-index: 3;
+}
+
+.total-points-to-go {
+    position: absolute;
+    bottom: 19px;
+    z-index: 3;
+       left: 95px;
+    background: rgba(0,0,0,0.70);
+    padding: 1px 5px;
+    border-radius: 5px;
+    border: solid 1px gold;
+    color: limegreen;
+        width: 60px;
+        text-align: center;
+}
+
+.summoner-champion-mastery-icons {
+
+}
+
+
 .footer-height {
   min-height: 50px;
 }
@@ -35,6 +93,7 @@
   max-height: 170px;
   padding-top: 10px;
   padding-bottom: 10px;
+
 }
 
 table tr td {
@@ -211,7 +270,8 @@ thead, tbody tr {
 }*/
 
 .sort-up:after {
- content: '(up)';
+  font-size:12px;
+ content: '(asc)';
  color: black;
 }
 
@@ -221,7 +281,7 @@ thead, tbody tr {
 
 .sort-down:after {
   font-size:12px;
- content: '(down)';
+ content: '(desc)';
  color: black;
 }
 

@@ -1,21 +1,21 @@
 
-<div layout="column" class="layout-container padding-top" layout-align="start center" ng-cloak>
-    <div class="row full-width" flex="grow">
+<div layout="column" flex class="layout-container padding-top" layout-align="start center" ng-cloak>
+    <div class="row full-width" flex="nogrow">
     <div class="col-sm-6">
         <div class="panel panel-default">
             <div class="row">
             	<div class="col-xs-6">
           		<div class="champion-container-relative">
-          		    <img ng-src="{{getImgUrl(championData.data.name)}}" ng-cloak>
-          		    <div>{{championData.data.name}}</div>
+          		    <img ng-src="{{::getImgUrl(championData.data.name)}}" ng-cloak>
+          		    <div>{{::championData.data.name}}</div>
           			</div>
         		</div>
         	<div class="col-xs-6">
-        	        <div class="summoner-stats">Weekly Ranking: <strong>{{championData.rank.rank}}</strong></div>
-        		<div class="summoner-stats">Game Average: <strong>{{championData.rank.avg_gain}}</strong></div>
-        		<div class="summoner-stats">Average played: <strong>{{championData.stats.avg_games_summoner}}</strong></div>
-        		<div class="summoner-stats">#Summoners: <strong>{{championData.stats.summoners_played}}</strong></div>
-       			<div class="summoner-stats">#Games: <strong>{{championData.stats.games_played}}</strong></div>
+        	        <div class="summoner-stats">Weekly Ranking: <strong>{{::championData.rank.rank}}</strong></div>
+        		<div class="summoner-stats">Game Average: <strong>{{::championData.rank.avg_gain}}</strong></div>
+        		<div class="summoner-stats">Average played: <strong>{{::championData.stats.avg_games_summoner}}</strong></div>
+        		<div class="summoner-stats">#Summoners: <strong>{{::championData.stats.summoners_played}}</strong></div>
+       			<div class="summoner-stats">#Games: <strong>{{::championData.stats.games_played}}</strong></div>
                 </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
     </div>
     </div>
     <div class="row" flex="grow">
-        <div class="col-sm-6 padding-top">
+      <div flex class="col-sm-6 padding-top">
 	  <h2 class="no-margin-top">Total Champion Mastery</h2>
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
@@ -63,19 +63,24 @@
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10HighestMastery" class="selectable-row" ng-click="goto(champ.summoner_name)">
 	      <td colspan="6">
-                  {{champ.summoner_name}}
+                  {{::champ.summoner_name}}
 	      </td>
               <td colspan="3">
-                  {{champ.mastery_level}}
+                  {{::champ.mastery_level}}
               </td>
               <td colspan="3">
-                  {{champ.pts_total}}
+                  {{::champ.pts_total}}
               </td>
             </tr>
+            <tr ng-if="!championData.top10HighestMastery.length">
+            <td col-span="10">
+                <div class="alert alert-warning">No Data</div>
+            </td>
+          </tr>
           </tbody>
         </table>
     </div>
-        <div class="col-sm-6 padding-top">
+        <div flex class="col-sm-6 padding-top">
 	  <h2 class="no-margin-top">Average Gains Last Week</h2>
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
@@ -94,18 +99,23 @@
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10Players.data" class="selectable-row championview-row" ng-click="goto(champ.name)">
               <td colspan="2" class="relative-container">
-                 <div ng-class="{'arrow-up' : champ.rankChangeDirection === 'up' || champ.rankChangeDirection === 'upNew',
+                 <div ng-class="::{'arrow-up' : champ.rankChangeDirection === 'up' || champ.rankChangeDirection === 'upNew',
                                  'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
-                 {{champ.rank}}
-                 (<span class="{{champ.rankChangeDirection}}">{{champ.rankChange}}</span>)
+                 {{::champ.rank}}
+                 (<span class="{{champ.rankChangeDirection}}">{{::champ.rankChange}}</span>)
               </td>
               <td colspan="4" scope="row">
-              {{champ.name}}</td>
+              {{::champ.name}}</td>
               <td colspan="4">
-                  {{champ.points}}
-                 (<span class="{{champ.pointsChangeDirection}}">{{champ.pointsChange}}</span>)
+                  {{::champ.points}}
+                 (<span class="{{::champ.pointsChangeDirection}}">{{::champ.pointsChange}}</span>)
               </td>
             </tr>
+            <tr ng-if="!championData.top10Players.data.length">
+            <td col-span="10">
+                <div class="alert alert-warning">No Data</div>
+            </td>
+          </tr>
           </tbody>
         </table>
     </div>
