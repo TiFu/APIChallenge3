@@ -33,7 +33,7 @@ exports.init = function(mainApp) {
 
 function getSummonerByName(req, res, next, connection) {
   var name = urlencode.decode(req.params.summonerName);
-  connection.query("SELECT summoner_id FROM summoners WHERE LOWER(REPLACE(summoner_name, ' ', '')) = ?", [name.toLowerCase().replace(" ", "")]).then((result) => {
+  connection.query("SELECT summoner_id FROM summoners WHERE LOWER(REPLACE(summoner_name, ' ', '')) = ?", [name.toLowerCase().replace(/ /g, "")]).then((result) => {
     if (result.length == 0) {
       var ourCounter = counter++;
       addedSummoners["" + ourCounter] = {req: req, res: res, next: next, connection: connection};

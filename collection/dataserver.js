@@ -90,7 +90,11 @@ exports.handleNewSummoner = (input) => {
     })
 
     err = "" + err;
-    process.send({workerId: input.workerId, token: input.token, success: false, summonerExists: err.indexOf("404 Not Found") === -1});
+    if (err.indexOf("ER_DUP_ENTRY") !== -1) {
+      process.send({workerId: input.workerId, summoner_id: summonerId, token: input.token, success: true});
+    } else {
+      process.send({workerId: input.workerId, token: input.token, success: false, summonerExists: err.indexOf("404 Not Found") === -1});
+    }
   });
 }
 
