@@ -18,5 +18,8 @@ exports.init = function(log, config) {
       password: password
     });
   exports.POOL = exports.CONNECTION;
+  exports.POOL.on('connection', function (connection) {
+    connection.query('use ' + config.get("database.name"))
+  });
   return Promise.resolve(true);
 }
