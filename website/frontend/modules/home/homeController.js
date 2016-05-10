@@ -33,6 +33,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 
 			loadingDataStart();
 			_.each(champions.data, function(champ) {
+				champ.display_name = champ.name;
 				champ.name = champ.name.toLowerCase();
 			})
 
@@ -328,14 +329,14 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 				}, 500);
 				$scope.lotsGraphReady = true;
 				$scope.championAndSummonerData = [{
-					champion_name: $scope.globalChamp.name.toLowerCase()
+					champion_name: $scope.globalChamp.name.toLowerCase(),
+					champion_display_name: $scope.globalChamp.display_name
 				}];
 				loadingDataEnd();
 				return;
 			}
 			loadingDataStart();
 			$scope.championList = champions.data;
-			$scope.championList = _.orderBy($scope.championList, 'name');
 
 
 			$scope.championAndSummonerData = data;

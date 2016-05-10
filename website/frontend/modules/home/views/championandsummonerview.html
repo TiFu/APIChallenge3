@@ -11,14 +11,14 @@
     </div>
   </div>
 
-  <div class="alert alert-warning" ng-if="championAndSummonerData.length <= 1"><strong>{{globalPlayerName}}</strong> does not have enough data for <strong>{{globalChamp.name}}</strong> yet, please check back later!
+  <div class="alert alert-warning" ng-if="championAndSummonerData.length <= 1"><strong>{{globalPlayerName}}</strong> does not have enough data for <strong>{{championAndSummonerData[0].champion_display_name}}</strong> yet, please check back later!
   </div>
-
+  <div>{{summonerData.summoner_icon}}<h2>{{globalPlayerName}}</h2></div>
   <div class="row" flex="noshrink">
     <div layout="row" flex class="padding-top champion-list-horizontal">
       <span ng-repeat="champ in championList">
       <img ng-src="{{::getImgUrl(champ.name)}}" class="champion-glow" ng-class="{'champion-faded' : champ.name
-        !== championAndSummonerData[0].champion_name }" ng-click="gotoChampionSummoner(champ.name)" title="{{champ.name}}">
+        !== championAndSummonerData[0].champion_name }" ng-click="gotoChampionSummoner(champ.name)" title="{{champ.display_name}}">
       </span>
     </div>
   </div>
