@@ -13,7 +13,6 @@
 
   <div class="alert alert-warning" ng-if="championAndSummonerData.length <= 1"><strong>{{globalPlayerName}}</strong> does not have enough data for <strong>{{championAndSummonerData[0].champion_display_name}}</strong> yet, please check back later!
   </div>
-  <div>{{summonerData.summoner_icon}}<h2>{{globalPlayerName}}</h2></div>
   <div class="row" flex="noshrink">
     <div layout="row" flex class="padding-top champion-list-horizontal">
       <span ng-repeat="champ in championList">
