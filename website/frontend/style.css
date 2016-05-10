@@ -23,6 +23,12 @@
   margin: auto;
 }
 
+.navbar-brand i {
+  display: block;
+  font-size: 12px;
+  text-align: center;
+}
+
 .navbar-brand > div {
 /*  margin: auto;
   height:50px;
