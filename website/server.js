@@ -96,7 +96,6 @@ function loadModules() {
     });
     // init logger for module
     var moduleCtx = new WinstonContext(winston, "[Module " + modul.name +"]");
-    serverLogger.info("Initialized Winston Context with name: " + modul.name);
     var localMainObject = { releaseConnection: releaseConnection, logger: moduleCtx, addEndpoint: addEndpoint,
         config: config,
         addGetEndpoint: addGetEndpoint};
