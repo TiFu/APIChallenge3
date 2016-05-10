@@ -30,4 +30,4 @@ The current mastery module updates mastery scores for each summoner each day so 
 ## Website
 
 The website hosts the actual page visible to people visiting our site.
-It is based on a REST-API in the backend (which is documented in [Endpoints](endpoints.md). The frontend is based on angular and uses chart.j to visualize our statistics.
+It is based on a REST-API in the backend (which is documented in [Endpoints](Endpoints.md). The frontend is based on angular and uses chart.j to visualize our statistics.
