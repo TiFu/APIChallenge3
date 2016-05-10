@@ -20,15 +20,6 @@ This information includes Mastery Progression (average gains per game and total 
 * [Top10 Champions](http://championmastery-apichallenge3.rhcloud.com/#/)
 * [Progression](http://championmastery-apichallenge3.rhcloud.com/#/home/Katarina/Thalies)
 
-
-# Requirements
-
-* MySQL (recommended: v.5.6.28)
-* Node (recommended: v5.7.1)
-* AngularJS
-* Angular Materials
-* ChartJS
-
 # Documentation
 
 * [Structure](docs/Structure.md): Contains information about the structure and interaction of the different modules
@@ -36,10 +27,13 @@ This information includes Mastery Progression (average gains per game and total 
 
 # Installation
 
-## Prerequisites
+## Requirements
 
-* Install Node, v5.7.1 is highly recommended
-* Install mysql: 14.14 Distrib5.6.28
+* MySQL (recommended: v.5.6.28)
+* Node (recommended: v5.7.1)
+* AngularJS
+* Angular Materials
+* ChartJS
 
 ## Install
 
