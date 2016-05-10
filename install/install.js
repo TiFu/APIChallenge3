@@ -12,15 +12,19 @@ mysql.createConnection({
       multipleStatements: true
     }).then((conn) => {
         connection = conn;
-        return connection.query("DROP DATABASE " + config.get("database.name"));
-    }).catch((err) => {
-        console.log(err);
+        // no errors for drop table
+        return connection.query("DROP DATABASE " + config.get("database.name")).catch((err) => true);
     }).then(function() {
       return connection.query("CREATE DATABASE IF NOT EXISTS " + config.get("database.name"));
     }).then(() => {
       return connection.query("USE " + config.get("database.name"));
     }).then(() => {
-      var exampleDB = fs.readFileSync("exampleDatabase.sql", "utf8");
+        var exampleDB = null;
+        if (process.argv[2] === "example") {
+            exampleDB = fs.readFileSync("exampleDatabase.sql", "utf8");
+        } else {
+            exampleDB = fs.readFileSync("structure.sql", "utf8");
+        }
       return connection.query(exampleDB);
     }).then((res) => {
       console.log("Finished importing sql. Your install is now ready.");
