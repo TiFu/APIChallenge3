@@ -11,7 +11,7 @@ exports.init = function(mainApp) {
 
 
 function getTop10Players(req,res, next, connection) {
-  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM gains g, summoners s where s.summoner_id = g.summoner_id and g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day group by g.summoner_id order by avg desc", undefined, connection), res, req, connection)
+  sendTop10(transformWithLast2Weeks("SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg FROM summoners s LEFT JOIN gains g on s.summoner_id = g.summoner_id where g.game_timestamp > now() - interval (3*?+3) day and g.game_timestamp < now() - interval (3*?) day or pts_gained is null group by g.summoner_id order by avg desc", undefined, connection), res, req, connection)
 }
 
 function getTop10Champions(req, res, next, connection) {

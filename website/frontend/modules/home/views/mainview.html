@@ -1,6 +1,5 @@
       <div layout="row" flex="noshrink" class="layout-container champion-container-height">
         <div layout="row" layout-align="center center" flex="33" class="champion-container" ng-repeat="champ in topChampions"  ng-click="goto(champ.name)">
-          
               <md-progress-circular md-diameter="150" md-mode="determinate" value="{{champ.currentAverage}}" class="image-spinner-md-progress-circular">
               </md-progress-circular>
               <img class="image-spinner champion-glow" ng-src="{{::getImgUrl(champ.name)}}">
