@@ -158,6 +158,7 @@ function runSummonerView(data) {
 	}
 	loadingDataStart();
 	$scope.summonerData = data;
+	$scope.globalPlayerName = $scope.summonerData.name;
 	$scope.champList = data.top10champions;
 	//updateChampionSpinners(21333);
 

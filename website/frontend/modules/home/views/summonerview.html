@@ -87,10 +87,11 @@
     </div>
     <div class="row">
         <h2>Mastery Progression</h2>
+        <h5><i>Select a champion for timeline progression</i></h5>
     </div>
     <div class="row bottom-padding" flex="grow">
       <div class="col-md-2 col-sm-3 col-xs-6" ng-repeat="champ in summonerData.top10Champions">
-          <div class="summoner-champion-mastery-icons champion-container" ng-click="goto(champ.name)">
+          <div class="summoner-champion-mastery-icons champion-container" ng-click="gotoChampionSummoner(champ.name)">
             <md-progress-circular md-diameter="150" md-mode="determinate" value="{{::champ.currentPointCircle}}">
             </md-progress-circular>
             <img ng-src="{{::getMasteryIcon(champ.mastery_level)}}" class="mastery-icon">

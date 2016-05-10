@@ -1,15 +1,15 @@
 
 <div layout="column" flex class="layout-container padding-top" layout-align="start stretch" ng-cloak>
+         <h2 class="no-margin-top">Mastery Progression</h2>
     <div class="row full-width padding-top" flex="grow" ng-if="lotsGraphReady && data.length"  ng-controller="progressionController">
  
-        <h2 class="no-margin-top">Mastery Progression</h2>
         <div flex="100" layout-align="center">
             <canvas id="line" class="chart chart-line"  chart-data="data" chart-labels="labels" chart-series="series" ng-if="data.length" >
             </canvas>   
     </div>
     
               </div>
-              <div class="alert alert-warning" ng-if="!data.length">No Data for {{globalChamp.name}} yet, please check back later!</div>
+              <div class="alert alert-warning" ng-if="!data.length">No data for {{globalChamp.name}} yet, please check back later!</div>
     <div class="row" flex="noshrink">
         <div layout="row" flex class="padding-top champion-list-horizontal">
           <span ng-repeat="champ in championList">
