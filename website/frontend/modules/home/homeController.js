@@ -70,15 +70,13 @@ function(
 
 
 	loadingDataStart();
-<<<<<<< Updated upstream
+	_.each(champions.data, function(champ) { champ.name = champ.name.toLowerCase(); })
+
 	if (mode.length === 1 && mode[0] === "player") {
 		$scope.viewMode = 'Top10Player';
 		loadTop10Summoners();
 	} else if (mode.length === 1) {
-=======
-	_.each(champions.data, function(champ) { champ.name = champ.name.toLowerCase(); })
-	if (mode.length === 1) {
->>>>>>> Stashed changes
+
 		$scope.viewMode = 'Main';
 		runMainView(mode, results);
 	} else if (mode.length === 2) {
