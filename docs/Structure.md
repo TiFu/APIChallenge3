@@ -2,8 +2,6 @@
 
 Our server spawns one process for data server and another instance for delivering the website and running the API.
 
-![Server](images/server.png)
-
 ## Data Server
 
 Data Server consists of four modules, each fulfilling one step of the analysis process.
