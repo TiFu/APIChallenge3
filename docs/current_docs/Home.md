@@ -1,6 +1,6 @@
 # Welcome to Make Champion Mastery Great Again!
 
-This is a project completed within one week for the [3rd Riot Games API Challenge](https://developer.riotgames.com/discussion/announcements/show/eoq3tZd1).
+This project was completed within one week for the [3rd Riot Games API Challenge](https://developer.riotgames.com/discussion/announcements/show/eoq3tZd1).
 For a demo of this project head over to [http://championmastery-apichallenge3.rhcloud.com](http://championmastery-apichallenge3.rhcloud.com).
 
 In this project we show, how you can visualize champion mastery statistics and how to gather mastery points gains per game.
