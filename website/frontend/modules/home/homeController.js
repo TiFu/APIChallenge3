@@ -356,11 +356,11 @@ function runChampionAndSummonerView(data) {
 			$scope.championAndSummonerData.timeStamps.push(cna.game_timestamp);
 		});
 
-  		$scope.championAndSummonerData.data = [$scope.championAndSummonerData.matchPointsData,$scope.championAndSummonerData.totalPointsData];
   		$scope.championAndSummonerData.series = ['Match Points', 'Total Points'];
 
     	//push graph data onto graphMaster
-    	graphMaster.progressionData = $scope.championAndSummonerData.data;
+    	graphMaster.progressionDataPerGame = $scope.championAndSummonerData.matchPointsData;
+    	graphMaster.progressionDataTotal = $scope.championAndSummonerData.totalPointsData;
     	graphMaster.progressionSeries = $scope.championAndSummonerData.series;
     	graphMaster.progressionTimestamps = $scope.championAndSummonerData.timeStamps;
 
@@ -578,6 +578,10 @@ $scope.loadMorePlayers = function() {
 		});
 	}
 
+	function sendHome() {
+		$location.path('/home')
+	}
+
 	//smooth scroll to bottom of the main table
 	function scrollToBottom() {
 			var targetDiv = $('.table-listings');
@@ -613,13 +617,16 @@ $scope.loadMorePlayers = function() {
 						})
 						.catch(function(result) {
 							soundTheAlarm('Could not find summoner!');
+							sendHome();
 						});
 					} else {
 						soundTheAlarm('Could not find summoner!');
+						sendHome();
 					}
 				})
 				.catch(function(err) {
 					soundTheAlarm('Could not find summoner!');
+					sendHome();
 				});
   }
 
@@ -631,6 +638,7 @@ $scope.loadMorePlayers = function() {
 		})
 		.catch(function(result) {
 			soundTheAlarm('Could not find summoner!');
+			sendHome();
 		});
 	}
 
@@ -729,7 +737,19 @@ $scope.loadMorePlayers = function() {
 		$scope.graphColors = graphMaster.graphColors;
 
 		$scope.labels= graphMaster.progressionTimestamps;
-		$scope.data= graphMaster.progressionData.slice(0,1);
-		$scope.series = graphMaster.progressionSeries.slice(0,1);
+		$scope.data= [graphMaster.progressionDataTotal];
+		$scope.series = ['Total Points'];
+
+		console.log($scope.data);
+
+		$scope.perGame = function() {
+			$scope.data= [graphMaster.progressionDataPerGame];
+			$scope.series = ['Match Points'];
+		}
+
+		$scope.total = function() {
+			$scope.$applyAsync($scope.data= [graphMaster.progressionDataTotal]);
+			$scope.series = ['Total Points'];
+		}
     }
 }]);

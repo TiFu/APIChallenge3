@@ -191,3 +191,7 @@ height: 75px;
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
 }
+
+.progression-canvas .line-legend li {
+   font-size:30px;
+}
