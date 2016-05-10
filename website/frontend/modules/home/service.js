@@ -33,7 +33,7 @@ angular.module('Home')
   }
 
   service.getChampionAndPlayerInfo = function(summonerid, championid) {
-  	return $http.post('/player/progression/'+summonerid+'/'+championid);
+  	return $http.post('api/player/progression/'+championid+'/'+summonerid);
   }
 
   return service;

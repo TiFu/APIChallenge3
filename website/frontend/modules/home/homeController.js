@@ -1,7 +1,25 @@
 'use strict';
 
 angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
-.constant('graphMaster', {})
+.constant('graphMaster', {
+	graphColors: [
+		'#cc0000',
+		'#808000',
+		'#000080',
+		'#008000',
+		'#008080',
+		'#00FFFF',
+		'#0000FF',
+		'#800080',
+		'#ffa500',
+		'#00cc00',
+		'#FF00FF',
+		'#C0C0C0',
+		'#808080',
+		'#FF0000',
+		'#000080'
+    ]
+})
 
 .controller('HomeController', [
 	'$scope',
@@ -52,38 +70,47 @@ function(
 
 
 	loadingDataStart();
+<<<<<<< Updated upstream
 	if (mode.length === 1 && mode[0] === "player") {
 		$scope.viewMode = 'Top10Player';
 		loadTop10Summoners();
 	} else if (mode.length === 1) {
+=======
+	_.each(champions.data, function(champ) { champ.name = champ.name.toLowerCase(); })
+	if (mode.length === 1) {
+>>>>>>> Stashed changes
 		$scope.viewMode = 'Main';
 		runMainView(mode, results);
 	} else if (mode.length === 2) {
-	       if(_.find(champions.data, { 'name': mode[1]})) {
+	       if(_.find(champions.data, { 'name': mode[1].toLowerCase()})) {
 				$scope.viewMode = 'Champion';
-				var id = _.find(champions.data, { 'name': mode[1]}).id;
+				var id = _.find(champions.data, { 'name': mode[1].toLowerCase()}).id;
 				searchForChampion(id);
 			} else {
 				$scope.viewMode = 'Summoner';
 				searchForPlayer(mode[1]);
 			}
 			} else if (mode.length === 3 || (mode.length === 4 && mode[3] === '')) {
-				$scope.viewMode = 'Summoner & Champion';
-				var champ = _.filter(champions.data, { 'name': mode[1]}) ? _.filter(champions.data, { 'name': mode[1]})
-				                                                         : _.filter(champions.data, { 'name': mode[2]});
-				if (_.isUndefined(champ)) {
+				$scope.viewMode = 'ChampionAndSummoner';
+				var champ = _.find(champions.data, { 'name': mode[1].toLowerCase()});
+				var champ2 =  _.find(champions.data, { 'name': mode[2].toLowerCase()});
+				if (_.isUndefined(champ) && _.isUndefined(champ2)) {
 					//no champion specified
 					$location.path('/home');
 					return;
 				} else {
-					if (_.get(champ, '[0].id')) {
+					if (_.get(champ, 'id')) {
 					    console.log('champ',mode[1]);
 						console.log('player',mode[2]);
-						searchForChampionAndPlayer(mode[1].id,mode[2]);
+						$scope.globalChamp = champ;
+						$scope.globalPlayerName = mode[2];
+						searchForChampionAndPlayer(champ.id,mode[2]);
 					} else {
 						console.log('champ',mode[2]);
 						console.log('player',mode[1]);
-						searchForChampionAndPlayer(mode[2].id,mode[1]);
+						$scope.globalChamp = champ2;
+						$scope.globalPlayerName = mode[1];
+						searchForChampionAndPlayer(champ2.id,mode[1]);
 					}
 				}
 
@@ -293,12 +320,67 @@ function runMainView(mode, results) {
 
 function runChampionAndSummonerView(data) {
 	if (_.isEmpty(data)) {
-		loadingDataEnd();
-		executeOrder66();
-		return;
+			$scope.championList = champions.data;
+		$scope.championList = _.orderBy($scope.championList, 'name');
+
+			var champposition = _.findIndex($scope.championList, ['name', $scope.globalChamp.name.toLowerCase(0)]);
+	champposition = (champposition / $scope.championList.length);
+
+		$timeout(function() {
+			var targetDiv = $('.champion-list-horizontal');
+			var height = targetDiv[0].scrollWidth;
+			height = Math.ceil(height*champposition);
+  			targetDiv.animate({scrollLeft:height});
+  			console.log('scrolling');
+  		},500);
+  		$scope.lotsGraphReady = true;
+  		$scope.championAndSummonerData = [{
+  			champion_name: $scope.globalChamp.name.toLowerCase()
+  		}];
+  		loadingDataEnd();
+  		return;
 	}
 	loadingDataStart();
-	console.log('data', data);
+		$scope.championList = champions.data;
+		$scope.championList = _.orderBy($scope.championList, 'name');
+
+
+		$scope.championAndSummonerData = data;
+		$scope.championAndSummonerData[0].champion_name = $scope.championAndSummonerData[0].champion_name.toLowerCase();
+		$scope.championAndSummonerData.totalPointsData = [];
+		$scope.championAndSummonerData.matchPointsData = [];
+		$scope.championAndSummonerData.timeStamps = [];
+
+		_.each($scope.championAndSummonerData, function(cna) {
+			$scope.championAndSummonerData.totalPointsData.push(cna.pts_total);
+			$scope.championAndSummonerData.matchPointsData.push(cna.pts_gained);
+			$scope.championAndSummonerData.timeStamps.push(cna.game_timestamp);
+		});
+
+  		$scope.championAndSummonerData.data = [$scope.championAndSummonerData.matchPointsData,$scope.championAndSummonerData.totalPointsData];
+  		$scope.championAndSummonerData.series = ['Match Points', 'Total Points'];
+
+    	//push graph data onto graphMaster
+    	graphMaster.progressionData = $scope.championAndSummonerData.data;
+    	graphMaster.progressionSeries = $scope.championAndSummonerData.series;
+    	graphMaster.progressionTimestamps = $scope.championAndSummonerData.timeStamps;
+
+
+	$scope.lotsGraphReady = true;
+
+	var champposition = _.findIndex($scope.championList, ['name', $scope.globalChamp.name.toLowerCase(0)]);
+	champposition = (champposition / $scope.championList.length);
+
+		$timeout(function() {
+			var targetDiv = $('.champion-list-horizontal');
+			var height = targetDiv[0].scrollWidth;
+			height = Math.ceil(height*champposition);
+  			targetDiv.animate({scrollLeft:height});
+  			console.log('scrolling');
+  		},500);
+
+
+	loadingDataEnd();
 }
 
 function mapChampData(champ) {
@@ -430,7 +512,7 @@ function getCurrentRequest() {
 		if (_.isEmpty(champions.data) || _.isUndefined(name)) {
 			return;
 		}
-		return IMGURL + _.find(champions.data, {name: name}).full;
+		return IMGURL + _.find(champions.data, {name: name.toLowerCase()}).full;
 	}
 
 	$scope.getProfileIconUrl = function(id) {
@@ -458,6 +540,10 @@ function getCurrentRequest() {
 	//will trigger a new query when the controller re-loads.
 	$scope.goto = function(champ) {
 		$location.path('/home/'+champ);
+	}
+
+	$scope.gotoChampionSummoner = function(champ) {
+		$location.path('/home/'+champ+'/'+$scope.globalPlayerName);
 	}
 
 	$scope.retryNoData = function() {
@@ -521,13 +607,17 @@ $scope.loadMorePlayers = function() {
 		MainService.getPlayerInfo(SummonerName)
 				.then(function(result) {
 					//Find Summoner And Champion
-       				MainService.getChampionAndPlayerInfo(champID,SummonerName)
+					if (result.data.success) {
+					   MainService.getChampionAndPlayerInfo(champID, result.data.summoner_id)
 						.success(function(result) {
-							runChampionAndSummonerView(champID, result.data.id);
+							runChampionAndSummonerView(result);
 						})
 						.catch(function(result) {
 							soundTheAlarm('Could not find summoner!');
 						});
+					} else {
+						soundTheAlarm('Could not find summoner!');
+					}
 				})
 				.catch(function(err) {
 					soundTheAlarm('Could not find summoner!');
@@ -594,17 +684,7 @@ $scope.loadMorePlayers = function() {
 .controller('levelGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.graphColors = [
-		  '#5DA5DA',
-		  '#FAA43A',
-		  '#60BD68',
-		  '#F17CB0',
-		  '#B2912F',
-		  '#B276B2',
-		  '#DECF3F',
-		  '#F15854',
-		  '#4D4D4D'
-    	];
+		$scope.graphColors = graphMaster.graphColors;
 		$scope.labels= graphMaster.levelGraphLabel;
 		$scope.data= graphMaster.levelGraphData;
     }
@@ -612,17 +692,7 @@ $scope.loadMorePlayers = function() {
 .controller('gradeGraphController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.graphColors = [
-		  '#5DA5DA',
-		  '#FAA43A',
-		  '#60BD68',
-		  '#F17CB0',
-		  '#B2912F',
-		  '#B276B2',
-		  '#DECF3F',
-		  '#F15854',
-		  '#4D4D4D'
-    	];
+		$scope.graphColors = graphMaster.graphColors;
 		$scope.labels= graphMaster.gradeGraphLabel;
 		$scope.data= graphMaster.gradeGraphData;
 
@@ -631,17 +701,7 @@ $scope.loadMorePlayers = function() {
 .controller('levelGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.graphColors = [
-		  '#5DA5DA',
-		  '#FAA43A',
-		  '#60BD68',
-		  '#F17CB0',
-		  '#B2912F',
-		  '#B276B2',
-		  '#DECF3F',
-		  '#F15854',
-		  '#4D4D4D'
-    	];
+		$scope.graphColors = graphMaster.graphColors;
 		$scope.labels= graphMaster.levelGraphLabelC;
 		$scope.data= graphMaster.levelGraphDataC;
 		$scope.options = {
@@ -659,18 +719,18 @@ $scope.loadMorePlayers = function() {
 .controller('gradeGraphControllerC', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
 	activate();
 	function activate() {
-		$scope.graphColors = [
-		  '#5DA5DA',
-		  '#FAA43A',
-		  '#60BD68',
-		  '#F17CB0',
-		  '#B2912F',
-		  '#B276B2',
-		  '#DECF3F',
-		  '#F15854',
-		  '#4D4D4D'
-    	];
+		$scope.graphColors = graphMaster.graphColors;
 		$scope.labels= graphMaster.gradeGraphLabelC;
 		$scope.data= graphMaster.gradeGraphDataC;
+    }
+}])
+.controller('progressionController', ['$scope', '$timeout', 'graphMaster', function($scope, $timeout, graphMaster) {
+	activate();
+	function activate() {
+		$scope.graphColors = graphMaster.graphColors;
+
+		$scope.labels= graphMaster.progressionTimestamps;
+		$scope.data= graphMaster.progressionData.slice(0,1);
+		$scope.series = graphMaster.progressionSeries.slice(0,1);
     }
 }]);

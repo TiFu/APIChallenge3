@@ -174,3 +174,20 @@ margin-top: -3px;
 .bottom-padding {
   padding-bottom: 50px
 }
+
+.grow-chart .chart-container {
+  width: 100%;
+}
+
+.champion-list-horizontal {
+  overflow-x: auto;
+}
+
+.champion-list-horizontal img {
+height: 75px;
+}
+
+.champion-faded {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}

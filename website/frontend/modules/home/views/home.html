@@ -10,7 +10,7 @@
   </md-progress-circular>
   <md-input-container>
     <label>Summoner Name</label>
-      <input ng-model="globalSearch">
+      <input ng-model="globalSearch" ng-keyup="$event.keyCode == 13 && globalSearch.length && searchForPlayerChampion()">
   </md-input-container>
   <md-button class="md-raised md-primary"
              ng-disabled="searchingGlobally || !globalSearch"
@@ -84,6 +84,15 @@
      ng-cloak
      ng-include="'/modules/home/views/championview.html'"
      ng-if="viewMode === 'Champion' && !loadingData">
+</div>
+
+<div layout="column" 
+     flex="grow" 
+     class="global-container" 
+     ng-hide="noDataError"
+     ng-cloak
+     ng-include="'/modules/home/views/championandsummonerview.html'" 
+     ng-if="viewMode === 'ChampionAndSummoner' && !loadingData">
 </div>
 
 
