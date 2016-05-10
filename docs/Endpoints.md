@@ -20,7 +20,7 @@ Returns a ranking of all or the top10 champions in the last week. Ranking is don
 
 **Output**
 
-Returns an Top10-Object containing the following fields:
+Returns an [Top10-Object](top10-object) containing the following fields:
 
 ### top10/players/:all?
 
@@ -32,7 +32,7 @@ Returns a ranking of all/top10 players using the average gains per game for the 
 
 **Output**
 
-Top10-Object
+[Top10-Object](top10-object)
 
 ### top10/players/champion/:championId/:all?
 
@@ -45,7 +45,7 @@ Limits the top10 search of top10/players to one specific champion with the ranki
 
 **Output**
 
-Top10-Object
+[Top10-Object](top10-object)
 
 
 ## Static
@@ -62,7 +62,7 @@ Returns all the info given by the other two endpoints in this category for all c
 
 **Output**
 
-Returns an Array<Champion>
+Returns an Array<[Champion](champion)>
 
 ### [GET] static/champions/:id
 
@@ -74,7 +74,7 @@ Returns information about a champion by id.
 
 **Output**
 
-Returns a Champion-Object.
+Returns a [Champion-Object](champion).
 
 ### [GET] static/champions/by-name/:name
 
@@ -87,7 +87,7 @@ An invalid name leads to undefined behavior.
 
 **Output**
 
-Returns a Champion-Object
+Returns a [Champion-Object](champion)
 
 
 ## Player
@@ -102,7 +102,7 @@ This endpoint returns a lits of all registered summoners.
 
 **Output**
 
-Returns an Array<Summoner>
+Returns an Array<[Summoner](summoner)>
 
 
 ### player/info/:summonerId
@@ -115,7 +115,7 @@ Returns infos regarding mastery statistics for the given summoner.
 
 **Output**
 
-Returns a SummonerInfo-Object.
+Returns a [SummonerInfo-Object](summonerinfo).
 
 ### player/info/by-name/:summonerName
 
@@ -128,7 +128,7 @@ If the summoner does not exist in the db yet he's added to the summoner list and
 
 **Output**
 
-Returns a SummonerInfo-Object
+Returns a [SummonerInfo-Object](summonerinfo)
 
 ### player/progression/:summonerId/:championId
 
@@ -142,7 +142,7 @@ If no data is available an empty array is returned.
 
 **Output**
 
-Array<LastGame>
+Array<[LastGame](lastgame)>
 
 ## Champion
 
@@ -156,15 +156,15 @@ Array<LastGame>
 
 | Name | Type     | Description |
 | :------------- | :------------- | :---- |
-| data      | Champion | |
-| stats      | ChampionStats | |
-| masterydistribution      | MasteryDistribution | |
-| gradedistribution      | Array<HighestGrade> | |
-| percent_chest_granted      | PercentChestGranted | |
-| top10players      | Top10 | without icon property in Change |
-| rank | ChampionRank |
-| totalptsstats | ChampionPtsStats | contains information like max number of total points etc. |
-| top10HighestMastery      | HighestMasterySummoner | |
+| data      | [Champion](champion) | |
+| stats      | [ChampionStats](championstats) | |
+| masterydistribution      | [MasteryDistribution](masterydistribution) | |
+| gradedistribution      | Array<[HighestGrade](highestgrade)> | |
+| percent_chest_granted      | [PercentChestGranted](percentchestgranted) | |
+| top10players      | [Top10](top10-object) | without icon property in Change |
+| rank | [ChampionRank](championrank) |
+| totalptsstats | [ChampionPtsStats](championptsstats) | contains information like max number of total points etc. |
+| top10HighestMastery      | [HighestMasterySummoner](highestmasterysummoner) | |
 
 
 ## Top10-Object
@@ -200,6 +200,15 @@ Array<LastGame>
 | full      | string    | full image name |
 | sprite      | string | sprite image name |
 
+## ChampionStats
+
+| Name | Type     | Description |
+| :------------- | :------------- | :---- |
+| avg_gains       | double     |  |
+| games_played       | int     | total number of games played and recorded |
+| avg_games_summoner       | double     | average games played per summoner |
+| summoners_played       | int     | number of summoners who played this champion |
+
 ## Summoner
 
 | Name | Type     | Description |
@@ -214,13 +223,13 @@ Array<LastGame>
 | name       | string |  |
 | summoner_id | int |  |
 | profile_icon       | int |  |
-| masterydistribution| Masterydistribution | Description of a summoners mastery distribution |
-| champions       | Array<TotalMasteryChampion> | Returns all champions sorted by total mastery points  |
-| lastgames       | Array<LastGame> | Overview over the last played games including mastery points gain if available |
-| highestgradedistribution       | Array<HighestGrade> | Distribution of the highest grade achieved this season  |
-| top10gainslastweek       | Array<Top10Gains> | Top10 Gains over the last weeks |
-| globalRank       | GlobalRank | Global Rank including information used to calculate that rank |
-| percent_chest_granted       | PercentChestGranted | Shows the percentages for granted chests |
+| masterydistribution| [Masterydistribution](masterydistribution) | Description of a summoners mastery distribution |
+| champions       | Array<[TotalMasteryChampion](totalmasterychampion)> | Returns all champions sorted by total mastery points  |
+| lastgames       | Array<[LastGame](lastgame)> | Overview over the last played games including mastery points gain if available |
+| highestgradedistribution       | Array<[HighestGrade](highestgrade)> | Distribution of the highest grade achieved this season  |
+| top10gainslastweek       | Array<[Top10Gains](top10gains)> | Top10 Gains over the last weeks |
+| globalRank       | [GlobalRank](globalrank) | Global Rank including information used to calculate that rank |
+| percent_chest_granted       | [PercentChestGranted](percentchestgranted) | Shows the percentages for granted chests |
 | success       | boolean | true if no error appeared (e. g. false if a new summoner could not be found)  |
 
 
@@ -284,24 +293,6 @@ Array<LastGame>
 | :------------- | :------------- | :---- |
 | yes       | int | champion count for which a chest was already granted |
 | no      | int | |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## ChampionRank
 | Name | Type     | Description |
