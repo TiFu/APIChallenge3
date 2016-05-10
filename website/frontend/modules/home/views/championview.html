@@ -1,28 +1,31 @@
 
 <div layout="column" flex class="layout-container padding-top" layout-align="start center" ng-cloak>
-    <div class="row full-width" flex="nogrow">
+  <div class="row full-width" flex="nogrow">
     <div class="col-sm-6">
-        <div class="panel panel-default">
-            <div class="row">
-            	<div class="col-xs-6">
-          		<div class="champion-container-relative">
-          		    <img ng-src="{{::getImgUrl(championData.data.name)}}" ng-cloak>
-          		    <div>{{::championData.data.name}}</div>
-          			</div>
-        		</div>
-        	<div class="col-xs-6">
-        	        <div class="summoner-stats">Weekly Ranking: <strong>{{::championData.rank.rank}}</strong></div>
-        		<div class="summoner-stats">Game Average: <strong>{{::championData.rank.avg_gain}}</strong></div>
-        		<div class="summoner-stats">Average played: <strong>{{::championData.stats.avg_games_summoner}}</strong></div>
-        		<div class="summoner-stats">#Summoners: <strong>{{::championData.stats.summoners_played}}</strong></div>
-       			<div class="summoner-stats">#Games: <strong>{{::championData.stats.games_played}}</strong></div>
-                </div>
+      <div class="panel panel-default">
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="champion-container-relative">
+                <img ng-src="{{::getImgUrl(championData.data.name)}}" ng-cloak>
+                <div>{{::championData.data.name}}</div>
+              </div>
           </div>
-        </div>
 
+          <div class="col-xs-6">
+            <div class="summoner-stats">Weekly Ranking: <strong>{{::championData.rank.rank}}</strong></div>
+            <div class="summoner-stats">Game Average: <strong>{{::championData.rank.avg_gain}}</strong></div>
+            <div class="summoner-stats">Average played: <strong>{{::championData.stats.avg_games_summoner}}</strong></div>
+            <div class="summoner-stats">#Summoners: <strong>{{::championData.stats.summoners_played}}</strong></div>
+            <div class="summoner-stats">#Games: <strong>{{::championData.stats.games_played}}</strong></div>
+          </div>
+
+        </div>
+      </div>
     </div>
+
     <div class="col-sm-6">
         <div class="row pie-chart-container" ng-if="lotsGraphReady">
+
           <div class="col-xs-6" ng-controller="gradeGraphControllerC">
             <label>Grades Achieved</label>
               <canvas id="pie" class="chart chart-pie"
@@ -34,6 +37,7 @@
                 </div>
               <div class="alert alert-warning" ng-if="!data.length">No Data</div>
           </div>
+
           <div class="col-xs-6" ng-controller="levelGraphControllerC">
             <label>Levels Achieved</label>
               <canvas id="pie" class="chart chart-pie"
@@ -48,10 +52,11 @@
           
         </div>
     </div>
-    </div>
+  </div>
+
     <div class="row" flex="grow">
       <div flex class="col-sm-6 padding-top">
-	  <h2 class="no-margin-top">Total Champion Mastery</h2>
+        <h2 class="no-margin-top">Total Champion Mastery</h2>
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
             <tr>
@@ -66,11 +71,12 @@
               </th>
             </tr>
           </thead>
+
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10HighestMastery" class="selectable-row" ng-click="goto(champ.summoner_name)">
-	      <td colspan="6">
+              <td colspan="6">
                   {{::champ.summoner_name}}
-	      </td>
+              </td>
               <td colspan="3">
                   {{::champ.mastery_level}}
               </td>
@@ -85,14 +91,15 @@
           </tr>
           </tbody>
         </table>
-    </div>
-        <div flex class="col-sm-6 padding-top">
-	  <h2 class="no-margin-top">Average Gains Last Week</h2>
+      </div>
+
+      <div flex class="col-sm-6 padding-top">
+          <h2 class="no-margin-top">Average Gains Last Week</h2>
           <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
           <thead>
             <tr>
               <th colspan="2">
-                  Rank
+                Rank
               </th>
               <th colspan="4">
                 Name
@@ -102,6 +109,7 @@
               </th>
             </tr>
           </thead>
+
           <tbody class="table-listings">
             <tr ng-repeat="champ in championData.top10Players.data" class="selectable-row championview-row" ng-click="goto(champ.name)">
               <td colspan="2" class="relative-container">
@@ -122,8 +130,8 @@
                 <div class="alert alert-warning">No Data</div>
             </td>
           </tr>
-          </tbody>
-        </table>
+        </tbody>
+      </table>
     </div>
-    </div>
+  </div>
 </div>

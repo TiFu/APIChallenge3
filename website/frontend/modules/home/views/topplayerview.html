@@ -1,83 +1,84 @@
 <div layout="row" flex="noshrink" class="layout-container champion-container-height">
   <div layout="row" layout-align="center center" flex="33" class="champion-container" ng-repeat="player in topPlayers track by $index"  ng-click="goto(player.name)">
-        <md-progress-circular md-diameter="150" md-mode="determinate" value="{{player.currentAverage}}" class="image-spinner-md-progress-circular">
-        </md-progress-circular>
-        <img class="image-spinner champion-glow" ng-src="{{::getProfileIconUrl(player.icon)}}">
+    <md-progress-circular md-diameter="150" md-mode="determinate" value="{{player.currentAverage}}" class="image-spinner-md-progress-circular">
+    </md-progress-circular>
+    <img class="image-spinner champion-glow" ng-src="{{::getProfileIconUrl(player.icon)}}">
   </div>
 </div>
+
 <div layout="column" flex="grow" layout-align="center" class="table-height">
-<div flex="grow" layout="column" class="layout-container relative-container">
-  <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
-  <thead>
-    <tr>
-      <th colspan="4"
-          class="sortable-table-header"
-          href="#"
-          ng-click="orderByField='rank'; reverseSort = !reverseSort"
-          ng-class="{'sort-up' : !reverseSort && orderByField==='rank',
-                     'sort-down' : reverseSort && orderByField==='rank',
-                     'sort-active': orderByField==='rank'}"
-          ng-init="orderByField='rank'">
-          Rank
-      </th>
-      <th colspan="6"
-          class="sortable-table-header"
-          href="#"
-          ng-click="orderByField='name'; reverseSort = !reverseSort"
-          ng-class="{'sort-up' : !reverseSort && orderByField==='name',
-                     'sort-down' : reverseSort && orderByField==='name',
-                     'sort-active': orderByField==='name'}">
-        Champion
-      </th>
-      <th colspan="4"
-          class="sortable-table-header"
-          href="#"
-          ng-click="orderByField='points'; reverseSort = !reverseSort"
-          ng-class="{'sort-up' : !reverseSort && orderByField==='points',
-                     'sort-down' : reverseSort && orderByField==='points',
-                     'sort-active': orderByField==='points'}">
-        Average Points
-      </th>
-    </tr>
-  </thead>
-  <div class="scroll-to-top">
-    <md-button class="md-fab md-mini md-primary md-raised" aria-label="Scroll Up" ng-click="scrollToTop()">
-        <md-icon md-font-icon="fa-angle-double-up" class="fa"></md-icon>
-    </md-button>
+  <div flex="grow" layout="column" class="layout-container relative-container">
+    <table layout="column" flex="grow" class="table table-inverse table-striped table-hover">
+      <thead>
+        <tr>
+          <th colspan="4"
+            class="sortable-table-header"
+            href="#"
+            ng-click="orderByField='rank'; reverseSort = !reverseSort"
+            ng-class="{'sort-up' : !reverseSort && orderByField==='rank',
+            'sort-down' : reverseSort && orderByField==='rank',
+            'sort-active': orderByField==='rank'}"
+            ng-init="orderByField='rank'">
+            Rank
+          </th>
+          <th colspan="6"
+            class="sortable-table-header"
+            href="#"
+            ng-click="orderByField='name'; reverseSort = !reverseSort"
+            ng-class="{'sort-up' : !reverseSort && orderByField==='name',
+            'sort-down' : reverseSort && orderByField==='name',
+            'sort-active': orderByField==='name'}">
+            Champion
+          </th>
+          <th colspan="4"
+            class="sortable-table-header"
+            href="#"
+            ng-click="orderByField='points'; reverseSort = !reverseSort"
+            ng-class="{'sort-up' : !reverseSort && orderByField==='points',
+            'sort-down' : reverseSort && orderByField==='points',
+            'sort-active': orderByField==='points'}">
+            Average Points
+          </th>
+        </tr>
+      </thead>
+      <div class="scroll-to-top">
+        <md-button class="md-fab md-mini md-primary md-raised" aria-label="Scroll Up" ng-click="scrollToTop()">
+          <md-icon md-font-icon="fa-angle-double-up" class="fa"></md-icon>
+        </md-button>
+      </div>
+      <tbody class="table-listings">
+        <tr ng-repeat="champ in bestPlayers | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
+          <td colspan="4" class="relative-container">
+            <div ng-class="::{'arrow-up' : champ.rankChangeDirection === 'up',
+              'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
+            {{::champ.rank}}
+            (<span class="{{::champ.rankChangeDirection}}">{{::champ.rankChange}}</span>)
+          </td>
+          <td colspan="6" scope="row"><img ng-src="{{::getProfileIconUrl(champ.icon)}}">
+            {{::champ.name}}
+          </td>
+          <td colspan="4" class="relative-container">
+            <div ng-class="::{'arrow-up' : champ.pointsChangeDirection === 'up',
+              'arrow-down' : champ.pointsChangeDirection === 'down'}"></div>
+            {{::champ.points === 0 ? 'no data yet' : champ.points}}
+            (<span class="{{::champ.pointsChangeDirection}}">{{::champ.pointsChange}}</span>)
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <tbody class="table-listings">
-    <tr ng-repeat="champ in bestPlayers | filter:search | orderBy:orderByField:reverseSort" class="selectable-row" ng-click="goto(champ.name)">
-      <td colspan="4" class="relative-container">
-          <div ng-class="::{'arrow-up' : champ.rankChangeDirection === 'up',
-                          'arrow-down' : champ.rankChangeDirection === 'down'}"></div>
-          {{::champ.rank}}
-          (<span class="{{::champ.rankChangeDirection}}">{{::champ.rankChange}}</span>)
-      </td>
-      <td colspan="6" scope="row"><img ng-src="{{::getProfileIconUrl(champ.icon)}}">
-      {{::champ.name}}</td>
-      <td colspan="4" class="relative-container">
-          <div ng-class="::{'arrow-up' : champ.pointsChangeDirection === 'up',
-                          'arrow-down' : champ.pointsChangeDirection === 'down'}"></div>
-          {{::champ.points === 0 ? 'no data yet' : champ.points}}
-          (<span class="{{::champ.pointsChangeDirection}}">{{::champ.pointsChange}}</span>)
-      </td>
-    </tr>
-  </tbody>
-</table>
-</div>
 </div>
 
 <div layout="row" layout-align="center">
-<div flex layout="row" class="layout-container">
-<md-progress-linear md-mode="indeterminate" ng-if="loadingTable"></md-progress-linear>
+  <div flex layout="row" class="layout-container">
+    <md-progress-linear md-mode="indeterminate" ng-if="loadingTable"></md-progress-linear>
+  </div>
 </div>
-</div>
-
 
 <section layout="row" layout-sm="column" layout-align="center center" class="footer-height" layout-wrap>
   <md-button class="md-primary"
-             ng-click="disableLoader = true; loadMorePlayers()"
-             ng-disabled="disableLoader">
+    ng-click="disableLoader = true; loadMorePlayers()"
+    ng-disabled="disableLoader">
     Load More Champions
   </md-button>
 </section>

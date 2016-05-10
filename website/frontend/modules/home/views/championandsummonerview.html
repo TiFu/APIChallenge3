@@ -1,24 +1,25 @@
-
 <div layout="column" flex class="layout-container padding-top" layout-align="start stretch" ng-cloak>
-         <h2 class="no-margin-top">Mastery Progression</h2>
-    <div class="row full-width" flex="grow" ng-if="lotsGraphReady && championAndSummonerData.length > 1"  ng-controller="progressionController">
+
+  <h2 class="no-margin-top">Mastery Progression</h2>
+  <div class="row full-width" flex="grow" ng-if="lotsGraphReady && championAndSummonerData.length > 1"  ng-controller="progressionController">
     <md-button ng-init="totalflag=true" ng-click="totalflag = true; total(); pergameflag = false" class="md-raised md-primary" ng-disabled="totalflag">Total</md-button>
     <md-button ng-click="pergameflag = true; perGame(); totalflag = false" class="md-raised md-primary" ng-disabled="pergameflag">Per Game</md-button>
-        <div flex="100" class="progression-canvas" layout-align="center">
-            <canvas id="line" class="chart chart-line"  chart-data="data" chart-labels="labels" chart-series="series" chart-legend="true" >
-            </canvas> 
+    <div flex="100" class="progression-canvas" layout-align="center">
+      <canvas id="line" class="chart chart-line"  chart-data="data" chart-labels="labels" chart-series="series" chart-legend="true" >
+      </canvas>
     </div>
-    
-              </div>
-              <div class="alert alert-warning" ng-if="championAndSummonerData.length <= 1"><strong>{{globalPlayerName}}</strong> does not have enough data for <strong>{{globalChamp.name}}</strong> yet, please check back later!
-              </div>
+  </div>
 
-    <div class="row" flex="noshrink">
-        <div layout="row" flex class="padding-top champion-list-horizontal">
-          <span ng-repeat="champ in championList">
-              <img ng-src="{{::getImgUrl(champ.name)}}" class="champion-glow" ng-class="{'champion-faded' : champ.name
- !== championAndSummonerData[0].champion_name }" ng-click="gotoChampionSummoner(champ.name)" title="{{champ.name}}">
-          </span>
-        </div>
+  <div class="alert alert-warning" ng-if="championAndSummonerData.length <= 1"><strong>{{globalPlayerName}}</strong> does not have enough data for <strong>{{globalChamp.name}}</strong> yet, please check back later!
+  </div>
+
+  <div class="row" flex="noshrink">
+    <div layout="row" flex class="padding-top champion-list-horizontal">
+      <span ng-repeat="champ in championList">
+      <img ng-src="{{::getImgUrl(champ.name)}}" class="champion-glow" ng-class="{'champion-faded' : champ.name
+        !== championAndSummonerData[0].champion_name }" ng-click="gotoChampionSummoner(champ.name)" title="{{champ.name}}">
+      </span>
     </div>
+  </div>
+  
 </div>

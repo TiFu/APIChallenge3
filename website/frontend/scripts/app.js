@@ -70,12 +70,4 @@ angular.module('APIChallenge3', [
         }
     }
   });
-
-/*  .otherwise({
-    redirectTo: '/home'
-  });*/
-// $locationProvider.html5Mode({
-//   enabled: true,
-//   requireBase: false
-//   });
 }]);
