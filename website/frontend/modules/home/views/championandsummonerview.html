@@ -7,6 +7,7 @@
     <div flex="100" class="progression-canvas" layout-align="center">
       <canvas id="line" class="chart chart-line"  chart-data="data" chart-labels="labels" chart-series="series" chart-legend="true" >
       </canvas>
+      <md-button class="player-info md-raised md-primary" ng-click="goto(globalPlayerName)">View <strong>{{globalPlayerName}}</strong>'s Card</md-button>
     </div>
   </div>
 
@@ -21,5 +22,5 @@
       </span>
     </div>
   </div>
-  
+
 </div>

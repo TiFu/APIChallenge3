@@ -134,6 +134,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 			loadingDataStart();
 			$scope.summonerData = data;
 			$scope.globalPlayerName = $scope.summonerData.name;
+			$scope.globalPlayerIcon = $scope.summonerData.profile_icon;
 			$scope.champList = data.top10champions;
 			//updateChampionSpinners(21333);
 
@@ -350,6 +351,10 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 			});
 
 			$scope.championAndSummonerData.series = ['Match Points', 'Total Points'];
+
+			$scope.championAndSummonerData.matchPointsData.shift();
+			$scope.championAndSummonerData.totalPointsData.shift();
+			$scope.championAndSummonerData.timeStamps.shift();
 
 			//push graph data onto graphMaster
 			graphMaster.progressionDataPerGame = $scope.championAndSummonerData.matchPointsData;

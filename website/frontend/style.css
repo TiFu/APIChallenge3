@@ -195,3 +195,12 @@ height: 75px;
 .progression-canvas .line-legend li {
    font-size:30px;
 }
+
+.progression-canvas {
+  position: relative;
+}
+
+.progression-canvas .player-info {
+position: absolute;
+bottom: 0;
+}
