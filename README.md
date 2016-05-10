@@ -49,8 +49,7 @@ This information includes Mastery Progression (average gains per game and total 
     * this will install the example database (which does not contain many data points but it's better than nothing)
 4. Output should be something like:
   * Finished importing sql. Your install is now ready.
-  * if it says couldn't delete database additonally everything is well.
-  * if it says something different you might need to check mysql is running and your settings are correct.
+  * if it says something different you might need to check mysql and  your settings.
 5. Set your API Key and region as environment variables
   * API_KEY
   * API_REGION
@@ -59,6 +58,9 @@ This information includes Mastery Progression (average gains per game and total 
     * no-collection if you want to disable data collection
       * recommended if you just want to test the project
     * no-server if you want to disable the frontend and the API
+7. If you have no data the server will show an error.
+	* if you have installed only the structure: add summoners by either searching for them or using mysql and wait a bit for data-collection to gather data
+	* if you have installed the example database: connect to your mysql server and update game_timestamp in the gains table to a date within 3 days of the current date
 
 # Disclaimer
 
