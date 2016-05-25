@@ -174,8 +174,9 @@ function getMasteryDistribution(summoner_id, connection) {
   }
 
   function globalRankByWeek(summoner_id, connection) {
-    return connection.query("select rank, avg_gain, games, week from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games FROM (select @rank:=@rank+1 as rank, summoner_id, (to_days(now()) - to_days(game_timestamp)) DIV 3 as week, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains group by summoner_id, TO_DAYS(game_timestamp) DIV 3 having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by week asc;", [summoner_id])
-  }
+     return connection.query("select rank, avg_gain, games, week from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games FROM (select @rank:=@rank+1 as rank, summoner_id, (to_days(now()) - to_days(game_timestamp)) DIV 3 as week, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where (to_days(now()) - to_days(game_timestamp)) DIV 3 = 0  group by summoner_id, TO_DAYS(game_timestamp) DIV 3 having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by week asc;", [summoner_id])
+   }
+
 
   var mapCharGrade = {"S": 0, "A": 1, "B": 2, "C": 3, "D": 4};
   var mapSignGrade = {"+": 0, "": 1, "-":2};
