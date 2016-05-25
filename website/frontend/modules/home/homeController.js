@@ -8,7 +8,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 .controller('HomeController', ['$scope','$location','$timeout','$routeParams','$http','$route','$mdToast','MainService','top','champions','graphMaster',
 	function($scope,$location,$timeout,$routeParams,$http,$route,$mdToast,MainService,top,champions,graphMaster) {
 
-		var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/';
+		var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.10.1/img/champion/';
 		var PROFILEICONURL = './img/';
 		$scope.scrollToTop = scrollToTop;
 		$scope.searchForPlayerChampion = searchForPlayerChampion;
