@@ -81,13 +81,9 @@ exports.handleNewSummoner = (input) => {
   }).then(() => {
     serverLogger.info("Answering request to add new user.");
     process.send({workerId: input.workerId, summoner_id: summonerId, token: input.token, success: true});
+    return true;
   }).catch((err) => {
     serverLogger.warn(err);
-    connection.query("ROLLBACK").then(() => {
-      db.POOL.releaseConnection(connection);
-    }).catch((err2) => {
-      serverLogger.error(err2);
-    })
 
     err = "" + err;
     if (err.indexOf("ER_DUP_ENTRY") !== -1) {
@@ -95,6 +91,9 @@ exports.handleNewSummoner = (input) => {
     } else {
       process.send({workerId: input.workerId, token: input.token, success: false, summonerExists: err.indexOf("404 Not Found") === -1});
     }
+    return connection.query("ROLLBACK");
+  }).then(() => {
+    db.POOL.releaseConnection(connection);
   });
 }
 
