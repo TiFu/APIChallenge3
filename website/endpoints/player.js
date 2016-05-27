@@ -174,7 +174,7 @@ function getMasteryDistribution(summoner_id, connection) {
   }
 
   function globalRankByWeek(summoner_id, connection) {
-     return connection.query("select rank, avg_gain, games, week from (select @rn:=@rn+1 as rank, summoner_id, avg_gain, week, games FROM (select @rank:=@rank+1 as rank, summoner_id, (to_days(now()) - to_days(game_timestamp)) DIV 3 as week, sum(pts_gained)/count(pts_gained) as avg_gain, count(pts_gained) as games from gains where (to_days(now()) - to_days(game_timestamp)) DIV 3 = 0  group by summoner_id, TO_DAYS(game_timestamp) DIV 3 having avg_gain is not null order by avg_gain desc) t1, (select @rn:=0) t2) t3 where t3.summoner_id = ? order by week asc;", [summoner_id])
+     return connection.query("SELECT rank, avg as avg_gain, games, 0 as week FROM (SELECT @rn:=@rn+1 as rank, s1.* FROM ((SELECT s.summoner_name as name, s.summoner_id as id, s.summoner_icon as icon, SUM(pts_gained) / COUNT(pts_gained) as avg, COUNT(pts_gained) as games FROM summoners s LEFT JOIN gains g on s.summoner_id = g.summoner_id where g.game_timestamp > now() - interval (3*0+3) day and g.game_timestamp < now() - interval (3*0) day or pts_gained is null group by g.summoner_id order by avg desc) s1, (select @rn:=0) s2))s3 where id = ?;", [summoner_id])
    }
 
 
