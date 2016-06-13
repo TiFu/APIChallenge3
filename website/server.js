@@ -56,10 +56,11 @@ app.use(express.static(path.join(__dirname, '/frontend')))
 var sass = require("node-sass")
 app.get("/test", (req, res, next) => {
   var result = sass.renderSync({
-  data: ".red {  background:red; } html {  background { @extend .red; } }",
+  file: "website/frontend/modules/dashboard/starsStyle.scss",
   outputStyle: "expanded"
   });
-  res.status(200).send(result["css"].toString())
+  var cssAsString = result["css"].toString()
+  res.status(200).send(cssAsString)
 })
 
 app.use("/Chart.min.js", express.static(__dirname + '/../node_modules/Chart.js/dist/Chart.min.js'))
