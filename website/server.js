@@ -48,6 +48,20 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/frontend')))
+
+/*
+ * replace data with file and a path (string) to the sass file
+ * result["css"].toString() returns the css (@see the css at localhost:1337/test)
+*/
+var sass = require("node-sass")
+app.get("/test", (req, res, next) => {
+  var result = sass.renderSync({
+  data: ".red {  background:red; } html {  background { @extend .red; } }",
+  outputStyle: "expanded"
+  });
+  res.status(200).send(result["css"].toString())
+})
+
 app.use("/Chart.min.js", express.static(__dirname + '/../node_modules/Chart.js/dist/Chart.min.js'))
 app.use("/angular-chart.js", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.js"))
 app.use("/angular-chart.css", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.css"))
