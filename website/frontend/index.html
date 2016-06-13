@@ -32,6 +32,7 @@
   <script src="scripts/app.js"></script>
 
   <!-- Contollers (pages) -->
+  <script src="modules/dashboard/controller.dashboard.js"></script>
   <script src="modules/home/homeController.js"></script>
   <script src="modules/about/aboutController.js"></script>
 
@@ -58,7 +59,7 @@
     </div>
     <div class="navbar-brand" layout="row" layout-align-xs="start center" layout-align-gt-xs="center center">
 <!--       <img src="https://pbs.twimg.com/profile_images/378800000593026127/b77ee8bd43bb7051e3f6a0f3ca86f66e.jpeg"> -->
-    <div><a href="#/home">ChampionMastery.GG</a><i>(NA Server)</i></div>
+    <div><a href="#/home">ChampionMastery.GG</a></div>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-left">
@@ -68,7 +69,9 @@
       </ul>
     </div>
   </nav>
-  <div layout="column" class="col-xs-12" id="view" ng-view=""></div>
+  <div layout="column" class="col-xs-12" id="view" ng-view="">
+  </div>
+
 </body>
 
 </html>

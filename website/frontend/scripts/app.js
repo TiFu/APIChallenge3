@@ -2,7 +2,7 @@
 
 // declare modules
 angular.module('Home', []);
-
+angular.module('Dashboard', []);
 angular.module('About', []);
 
 angular.module('Compress', []).filter('compress', function() {
@@ -19,6 +19,7 @@ angular.module('CompressUnderline', []).filter('compressU', function() {
 angular.module('APIChallenge3', [
   'About',
   'Home',
+  'Dashboard',
   'Compress',
   'CompressUnderline',
   'ngRoute'
@@ -39,6 +40,11 @@ angular.module('APIChallenge3', [
         }
         //STORE CHAMPIONS!!
     }
+  })
+
+  .when('/dashboard', {
+    templateUrl: 'modules/dashboard/tmpl.dashboard.html',
+    controller:'DashboardController'
   })
 
   .when('/about', {
