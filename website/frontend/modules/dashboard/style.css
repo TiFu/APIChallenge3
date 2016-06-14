@@ -1,3 +1,32 @@
+.start-hidden {
+  display:none;
+}
 .progress {
   max-width: 820px;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.step-1 input {
+    border: 2px solid #337ab7;
+/*    font-size: 75px;
+    height: 110px;*/
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+}
+
+.step-1 label {
+  color: #337ab7;
+  /*font-size: 25px;*/
+}
+
+.md-input-focused {
+  border-color: gold;
+  border-width:0 0 5px 0;
+}
+
+.step-1 md-input-container > input {
+  font-size: 75px;
 }

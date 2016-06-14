@@ -5,13 +5,26 @@
 <div id="stars2"></div>
 <div id="stars3"></div>
 
-<md-content class="loader" layout="row" layout-align="center center" flex ng-show="isViewLoading">
+<md-content class="loader" layout="row" layout-align="center center" flex>
   <div id="title" flex>
-      <span>Champion Mastery is Loading...</span>
-    </div>
+      <span>{{loadingText}}</span>
+  </div>
   <div class="progress" flex>
     <div flex class="progress-bar progress-bar-striped active" flex role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax=  "100" style="width: 100%">
     </div>
   </div>
 </md-content>
 
+<md-content class="start-hidden step-1" flex>
+
+
+<div layout="row" layout-align="center center" class="full-height">
+  <md-input-container>
+    <label for="input_0">Summoner Name</label>
+      <input ng-model="user.name"
+             ng-keyup="$event.keyCode == 13 && searchForPlayerChampion()"
+             id="input_0">
+  </md-input-container>
+  <md-button class="md-raised md-primary" ng-click="beginSearch()">Search</md-button>
+  </div>
+</md-content>
