@@ -19,12 +19,15 @@
 
 
 <div layout="row" layout-align="center center" class="full-height">
-  <md-input-container>
-    <label for="input_0">Summoner Name</label>
-      <input ng-model="user.name"
-             ng-keyup="$event.keyCode == 13 && searchForPlayerChampion()"
-             id="input_0">
+	<select ng-model="user.region">
+      <option ng-repeat="region in regions" value="{{region.name}}">{{region.name}}</option>
+    </select>
+     <md-input-container>
+    		<label for="input_0">Summoner Name</label>
+      		<input ng-model="user.name"
+             			ng-keyup="$event.keyCode == 13 && search()"
+             			id="input_0">
   </md-input-container>
-  <md-button class="md-raised md-primary" ng-click="beginSearch()">Search</md-button>
-  </div>
+  <md-button class="md-raised md-primary" ng-click="search()">Search</md-button>
+</div>
 </md-content>

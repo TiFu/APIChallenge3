@@ -10,11 +10,12 @@
 }
 
 .step-1 input {
-    border: 2px solid #337ab7;
+   border-color: transparent;
 /*    font-size: 75px;
     height: 110px;*/
     background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
+    border-radius: 5px;
+    height: 50px;
 }
 
 .step-1 label {
@@ -22,11 +23,58 @@
   /*font-size: 25px;*/
 }
 
-.md-input-focused {
-  border-color: gold;
-  border-width:0 0 5px 0;
+.md-input-focused .md-input {
+  border-color: rgb(63,81,181) !important;
+  border-width:0 0 3px 0 !important;
 }
 
 .step-1 md-input-container > input {
-  font-size: 75px;
+  font-size: 50px;
+  border-top-left-radius: 	0;
+  border-bottom-left-radius: 	0;
+}
+
+.md-input-has-value input {
+	color: #337ab7;
+}
+
+.md-input-has-value label {
+	color: #FFD85F !important;
+}
+
+.step-1 button {
+	    height: 50px;
+    margin: 18px 0;
+    margin-top: -5px;
+    margin-left: -6px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.step-1 select {
+    width: 65px;
+    height: 50px;
+    margin-top: -24px;
+    margin-right: -2px;
+    font-size: 14px;
+    text-transform: uppercase;
+    padding-left: 8px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-color: transparent;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+      color: rgba(255,255,255,0.87);
+    background-color: rgb(63,81,181);
+}
+
+.step-1 select:hover {
+	cursor: pointer;
+}
+
+.step-1 select:focus {
+	outline: none;
+}
+
+.step-1 select, .step-1 option {
+	user-select: none;
 }
