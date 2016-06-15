@@ -92,11 +92,16 @@
         }
 
 
+.wrapper {
+  padding-bottom: 65px;
+  overflow: hidden;
+}
+
 .step-2 {
 	text-align: center;
 }
 
-.step-2 div {
+/*.step-2 > div {
     width: 48%;
     height: 48%;
     display: inline-block;
@@ -108,8 +113,15 @@
     -webkit-box-shadow: 0 0 20px gray;
     -moz-box-shadow: 0 0 20px gray;
     box-shadow: 0 0 5px gray;
-}
+}*/
 
-md-content {
-	    margin-bottom: 50px;
+
+.layout-row > .flex-50 {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-box-shadow: 0 0 20px gray;
+  -moz-box-shadow: 0 0 20px gray;
+  box-shadow: 0 0 5px gray;
+  margin: 5px;
 }

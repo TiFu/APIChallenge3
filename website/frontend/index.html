@@ -46,6 +46,15 @@
   <link rel="stylesheet" href="./angular-chart.css"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script src="./angular-chart.js"></script>
+
+    <!-- JQVMap -->
+    <link href="./jqvmap.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="./jquery.vmap.js"></script>
+    <script type="text/javascript" src="./jquery.vmap.world.js" charset="utf-8"></script>
+
+    <!-- HighChart -->
+    <script src="./highcharts.js"></script>
+
 </head>
 
 <body>
@@ -58,8 +67,8 @@
     <div class="side-links">Issues</div>
     </div>
   </nav>
-  <main flex layout="column" class="col-xs-12" id="view" ng-view=""></main>
-
+  <main flex layout="column" class="col-xs-12" id="view" ng-view="" layout-fill>
+  </main>
 </body>
 
 </html>

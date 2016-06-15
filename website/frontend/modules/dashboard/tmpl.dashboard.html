@@ -1,11 +1,13 @@
 <link rel="stylesheet" href="/modules/dashboard/style.css" />
 <link rel="stylesheet" href="/modules/dashboard/starsStyle.css" />
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+
+<div class="wrapper" flex layout-fill>
 <div id="stars"></div>
 <div id="stars2"></div>
 <div id="stars3"></div>
 
-<md-content class="loader" layout="column" layout-align="center center" flex>
+<md-content class="loader" layout="column" layout-align="center center" flex layout-fill>
   <div id="title">
       <span>{{loadingText}}</span>
   </div>
@@ -15,7 +17,7 @@
   </div>
 </md-content>
 
-<md-content class="start-hidden step-1" flex>
+<md-content class="start-hidden step-1" flex layout-fill>
 
 
 <div layout="row" layout-align="center center" class="full-height">
@@ -33,7 +35,7 @@
 </div>
 </md-content>
 
-<md-content class="start-hidden step-2" flex>
+<!-- <md-content class="start-hidden step-2" flex>
 
 	<div>
         content
@@ -43,12 +45,37 @@
         content
       </div>
 
-      <div>
+      <div id="vmap" style="min-width:200px;min-height:200px"></div>
+
+            <div>
         content
       </div>
 
-      <div>
-      content
-      </div>
+
+</md-content> -->
+
+<md-content class="start-hidden step-2" layout-fill>
+<div layout="column" layout-fill>
+  <div layout="row" flex>
+    <div flex="50" id="highchart"></div>
+    <div flex="50" id="div2">
+    </div>
+  </div>
+  <div layout="row" flex>
+    <div flex="50" id="div3">
+    </div>
+    <div flex="50" id="vmap" style="min-width:200px;min-height:200px"></div>
+    </div>
+  </div>
+</div>
+
 
 </md-content>
+
+
+
+</div>
+<!-- <md-content class="step-0" flex>
+      <div id="vmap"></div>
+
+</md-content> -->
