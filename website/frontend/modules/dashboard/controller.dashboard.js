@@ -36,7 +36,11 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       $scope.step1lock = true;
       $scope.loadingText = 'Searching for Summoner...';
       $('.step-1').fadeOut(1000,function(){
-        $('.loader').fadeIn(1000);
+        $('.loader').fadeIn(1000, function() {
+          $('.loader').fadeOut(1000, function() {
+            $('.step-2').fadeIn(1000);
+          })
+        });
       });
     }
 
