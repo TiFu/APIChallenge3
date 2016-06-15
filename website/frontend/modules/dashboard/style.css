@@ -30,8 +30,7 @@
 
 .step-1 md-input-container > input {
   font-size: 50px;
-  border-top-left-radius: 	0;
-  border-bottom-left-radius: 	0;
+      border-radius: 0;
 }
 
 .md-input-has-value input {
@@ -46,13 +45,13 @@
 	    height: 50px;
     margin: 18px 0;
     margin-top: -5px;
-    margin-left: -6px;
+    margin-left: -2px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 
 .step-1 select {
-    width: 65px;
+    width: 70px;
     height: 50px;
     margin-top: -24px;
     margin-right: -2px;
@@ -77,4 +76,10 @@
 
 .step-1 select, .step-1 option {
 	user-select: none;
+}
+
+.md-button.md-raised[disabled], .step-1 select[disabled] {
+	background-color: rgba(63,81,181,0.6);
+    color: gray !important;
+    cursor: disabled;
 }

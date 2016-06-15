@@ -30,6 +30,10 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     }
 
     function search() {
+      if (_.isEmpty($scope.user.name)) {
+        return;
+      }
+      $scope.step1lock = true;
       $scope.loadingText = 'Searching for Summoner...';
       $('.step-1').fadeOut(1000,function(){
         $('.loader').fadeIn(1000);
