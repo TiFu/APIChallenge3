@@ -96,17 +96,21 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       backgroundColor: '#333333',
       color: '#ffffff',
       hoverOpacity: 0.2,
-      selectedColor: '#666666',
+      hoverColor: '#337ab7',
       enableZoom: false,
       showTooltip: true,
       onLabelShow: function(event, label, code) {
-        console.log(label)
+        label[0].innerHTML = getRegionFromCountry(code);
       },
-      onRegionOver: function(element, code, region) {
-        highlightRegionOfCountry(code);
+      onRegionOver: function(event, code, region) {
+        event.preventDefault();
+        highlightRegionOfCountry(code, event);
       },
       onRegionOut: function(element, code, region) {
         unhighlightRegionOfCountry(code);
+      },
+      onRegionClick: function(event, code, region) {
+        event.preventDefault();
       }
     });
 
@@ -115,21 +119,32 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     _.forOwn(LoLRegions, function(region) {
       console.log('region: ' + region.name);
       _.each(region.countries, function(country) {
-        if (!!doesCountryExist(country)) {
+        if (_.isEmpty(doesCountryExist(country))) {
+          console.log('missing: ' + country);
+        } else {
           $('#vmap').vectorMap('set', 'colors', country, region.colors);
           console.log('colored: ' + country);
-        } else {
-          console.log('missing: ' + country);
         }
       });
     });
+    //leftovers
+    LoLRegions['noserver'].countries = COUNTRYLIST;
+    _.each(LoLRegions['noserver'].countries, function(country) {
+      if (_.isEmpty(doesCountryExist(country))) {
+          console.log('missing: ' + country);
+        } else {
+          $('#vmap').vectorMap('set', 'colors', country, LoLRegions['noserver'].colors);
+          console.log('colored: ' + country);
+        }
+      });
+
     }, 0);
   }
 
 
 
   function doesCountryExist(country) {
-    return _.find(COUNTRYLIST, function(val) {
+    return _.remove(COUNTRYLIST, function(val) {
       return val === country;
     });
   }
@@ -198,6 +213,11 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       'countries': ["kr"],
       'name': 'republic of korea',
       'colors': '#E94F64'
+    },
+    'noserver': {
+      'countries': [],
+      'name': 'noserver',
+      'colors': '#D3D3D3'
     }
   };
 
@@ -216,8 +236,34 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     return region;
   }
 
+  function getRegionFromCountry(cc) {
+    var region;
+    for (var regionKey in LoLRegions) {
+      var countries = LoLRegions[regionKey].countries;
+      _.forOwn(countries, function(key, countryIndex) {
+        if (cc == countries[countryIndex]) {
+          region = LoLRegions[regionKey];
+          return LoLRegions[regionKey];
+        }
+      });
+    }
+
+    if (!region) {
+      region = {name: 'noserver'};
+    }
+    return region.name;
+  }
+
   function highlightRegionOfCountry(cc) {
-    var countries = getCountriesInRegion(cc).countries;
+    var region = getCountriesInRegion(cc);
+    var countries = region.countries;
+
+    //no server countries
+    if (region.name === 'noserver') {
+      event.preventDefault();
+      return;
+    }
+
     _.forOwn(countries, function(key, countryIndex) {
       $('#vmap').vectorMap('highlight', countries[countryIndex]);
     });
