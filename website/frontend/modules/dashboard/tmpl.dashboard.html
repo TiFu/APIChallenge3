@@ -57,14 +57,14 @@
 <md-content class="start-hidden step-2" layout-fill>
 <div layout="column" layout-fill>
   <div layout="row" flex>
-    <div flex="50" id="highchart"></div>
+    <div flex="50" id="highchart" ng-controller="highChartController"></div>
     <div flex="50" id="div2">
     </div>
   </div>
   <div layout="row" flex>
     <div flex="50" id="div3">
     </div>
-    <div flex="50" id="vmap" style="min-width:200px;min-height:200px"></div>
+    <div flex="50" id="vmap" ng-controller="regionMapController"></div>
     </div>
   </div>
 </div>

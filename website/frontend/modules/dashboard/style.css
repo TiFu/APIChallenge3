@@ -128,4 +128,10 @@
 
 #vmap {
 	background-color: rgba(0, 0, 0, 0.5) !important;
+  min-width:200px;
+  min-height:200px;
+}
+
+#highchart svg text, #highchart .highcharts-legend-item {
+  display: none;
 }
