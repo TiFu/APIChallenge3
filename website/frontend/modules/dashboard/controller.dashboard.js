@@ -38,6 +38,8 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
         $('.loader').fadeIn(1000, function() {
           $('.loader').fadeOut(1000, function() {
             $('.step-2').fadeIn(1000, function() {
+              $(window).resize();
+              $('#highchart').highcharts().reflow();
             });
           });
         });
@@ -49,7 +51,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
 /****************
  * HIGHCHARTJS
  ***************/
-.controller('highChartController', ['$scope', function($scope) {
+.controller('highChartController', ['$scope', '$timeout', function($scope, $timeout) {
   activate();
 
   function activate() {
