@@ -7,18 +7,24 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
 
     $scope.isViewLoading = true;
     $scope.search = search;
+    
     $scope.user = {
       name: '',
       region: ''
     };
+
+    //text you see above loading bar
     $scope.loadingText = 'Champion Mastery is Loading...';
+    //dropdown list of regions on search screen
     $scope.regions = [{name: 'br'},{name: 'eune'},{name: 'euw'},{name: 'kr'},{name: 'lan'},{name: 'las'},{name: 'na'},{name: 'oce'},{name: 'ru'},{name: 'tr' }]
 
     activate();
 
+    //page loaded
     function activate() {
       showStep1();    }
 
+    //ease in search bar
     function showStep1() {
       $scope.user.region = $scope.regions[6].name;
       $timeout(function() {
@@ -28,12 +34,15 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       }, 1000);
     }
 
+    //search bar fired, ease in step 2.
     function search() {
       if (_.isEmpty($scope.user.name)) {
         return;
       }
+
       $scope.step1lock = true;
       $scope.loadingText = 'Searching for Summoner...';
+
       $('.step-1').fadeOut(1000,function(){
         $('.loader').fadeIn(1000, function() {
           $('.loader').fadeOut(1000, function() {
@@ -54,6 +63,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
 .controller('highChartController', ['$scope', '$timeout', function($scope, $timeout) {
   activate();
 
+  //example/sample
   function activate() {
       $('#highchart').highcharts({
         chart: {
@@ -85,7 +95,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
 
 
 /****************
- * JQVMAP
+ * JQVMAP - World Map
  ***************/
 .controller('regionMapController', ['$scope', '$timeout', function($scope, $timeout) {
   activate();
@@ -94,17 +104,22 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     $('#vmap').vectorMap({
       map: 'world_en',
       backgroundColor: '#333333',
-      color: '#ffffff',
-      hoverOpacity: 0.2,
+      color: '#D3D3D3',
+      hoverOpacity: 0.7,
       hoverColor: '#337ab7',
       enableZoom: false,
       showTooltip: true,
       onLabelShow: function(event, label, code) {
+        console.log(label, code);
         label[0].innerHTML = getRegionFromCountry(code);
       },
       onRegionOver: function(event, code, region) {
-        event.preventDefault();
-        highlightRegionOfCountry(code, event);
+        if (highlightRegionOfCountry(code, event)) {
+          //show highlight
+        } else {
+          //don't show highlight
+          event.preventDefault();
+        }
       },
       onRegionOut: function(element, code, region) {
         unhighlightRegionOfCountry(code);
@@ -114,7 +129,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       }
     });
 
-    //setup region colors
+    //color the regions
     $timeout(function() {
     _.forOwn(LoLRegions, function(region) {
       console.log('region: ' + region.name);
@@ -127,7 +142,8 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
         }
       });
     });
-    //leftovers
+
+    //leftovers, make remaing countries grayed out
     LoLRegions['noserver'].countries = COUNTRYLIST;
     _.each(LoLRegions['noserver'].countries, function(country) {
       if (_.isEmpty(doesCountryExist(country))) {
@@ -137,27 +153,21 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
           console.log('colored: ' + country);
         }
       });
-
     }, 0);
   }
 
-
-
+  //check if country exists in COUNTRYLIST, then remove it.
   function doesCountryExist(country) {
     return _.remove(COUNTRYLIST, function(val) {
       return val === country;
     });
   }
 
-
   //List of all current countries registered in the library
   var COUNTRYLIST = ["id", "pg", "mx", "ee", "dz", "ma", "mr", "sn", "gm", "gw", "gn", "sl", "lr", "ci", "ml", "bf", "ne", "gh", "tg", "bj", "ng", "tn", "ly", "eg", "td", "sd", "cm", "er", "dj", "et", "so", "ye", "cf", "st", "gq", "ga", "cg", "ao", "cd", "rw", "bi", "ug", "ke", "tz", "zm", "mw", "mz", "zw", "na", "bw", "sz", "ls", "za", "gl", "au", "nz", "nc", "my", "bn", "tl", "sb", "vu", "fj", "ph", "cn", "tw", "jp", "ru", "us", "mu", "re", "mg", "km", "sc", "mv", "pt", "es", "cv", "pf", "kn", "ag", "dm", "lc", "bb", "gd", "tt", "do", "ht", "fk", "is", "no", "lk", "cu", "bs", "jm", "ec", "ca", "gt", "hn", "sv", "ni", "cr", "pa", "co", "ve", "gy", "sr", "gf", "pe", "bo", "py", "uy", "ar", "cl", "br", "bz", "mn", "kp", "kr", "kz", "tm", "uz", "tj", "kg", "af", "pk", "in", "np", "bt", "bd", "mm", "th", "kh", "la", "vn", "ge", "am", "az", "ir", "tr", "om", "ae", "qa", "kw", "sa", "sy", "iq", "jo", "lb", "il", "cy", "gb", "ie", "se", "fi", "lv", "lt", "by", "pl", "it", "fr", "nl", "be", "de", "dk", "ch", "cz", "sk", "at", "hu", "si", "hr", "ba", "mt", "ua", "md", "ro", "rs", "bg", "al", "mk", "gr"];
 
 
-  //Region list - based on random in chat guy
-  //
-  // DOUBLE CHECK THIS STUFF TINO THANKS!
-  //
+  //Visual LoL Region List
   var LoLRegions = {
     'br': {
       'countries': ["br"],
@@ -221,7 +231,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     }
   };
 
-
+//get Region by Country
   function getCountriesInRegion(cc) {
     var region = { countries: '' };
     for (var regionKey in LoLRegions) {
@@ -236,6 +246,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     return region;
   }
 
+  //get Region Name by Country
   function getRegionFromCountry(cc) {
     var region;
     for (var regionKey in LoLRegions) {
@@ -248,28 +259,33 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       });
     }
 
+    //if no region, set name to noserver
     if (!region) {
       region = {name: 'noserver'};
     }
     return region.name;
   }
 
+  //when hovered over country, highlight its region
+  //return true = highlight, return false = no highlight
   function highlightRegionOfCountry(cc) {
     var region = getCountriesInRegion(cc);
     var countries = region.countries;
 
-    //no server countries
-    if (region.name === 'noserver') {
-      event.preventDefault();
-      return;
-    }
-
-    _.forOwn(countries, function(key, countryIndex) {
-      $('#vmap').vectorMap('highlight', countries[countryIndex]);
-    });
-    $('#vmap').vectorMap('highlight', cc);
+    //no server countries - dont higlight
+    if (!region.name || region.name === 'noserver') {
+      return false;
+    } else {
+      //find all countries to highlight
+     _.forOwn(countries, function(key, countryIndex) {
+        $('#vmap').vectorMap('highlight', countries[countryIndex]);
+     });
+     $('#vmap').vectorMap('highlight', cc);
+        return true;
+     }
   }
 
+  //when mouse leave, unhighlight region
   function unhighlightRegionOfCountry(cc) {
     var countries = getCountriesInRegion(cc).countries;
     _.forOwn(countries, function(key, countryIndex) {
