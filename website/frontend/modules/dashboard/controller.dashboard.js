@@ -164,7 +164,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
   }
 
   //List of all current countries registered in the library
-  var COUNTRYLIST = ["id", "pg", "mx", "ee", "dz", "ma", "mr", "sn", "gm", "gw", "gn", "sl", "lr", "ci", "ml", "bf", "ne", "gh", "tg", "bj", "ng", "tn", "ly", "eg", "td", "sd", "cm", "er", "dj", "et", "so", "ye", "cf", "st", "gq", "ga", "cg", "ao", "cd", "rw", "bi", "ug", "ke", "tz", "zm", "mw", "mz", "zw", "na", "bw", "sz", "ls", "za", "gl", "au", "nz", "nc", "my", "bn", "tl", "sb", "vu", "fj", "ph", "cn", "tw", "jp", "ru", "us", "mu", "re", "mg", "km", "sc", "mv", "pt", "es", "cv", "pf", "kn", "ag", "dm", "lc", "bb", "gd", "tt", "do", "ht", "fk", "is", "no", "lk", "cu", "bs", "jm", "ec", "ca", "gt", "hn", "sv", "ni", "cr", "pa", "co", "ve", "gy", "sr", "gf", "pe", "bo", "py", "uy", "ar", "cl", "br", "bz", "mn", "kp", "kr", "kz", "tm", "uz", "tj", "kg", "af", "pk", "in", "np", "bt", "bd", "mm", "th", "kh", "la", "vn", "ge", "am", "az", "ir", "tr", "om", "ae", "qa", "kw", "sa", "sy", "iq", "jo", "lb", "il", "cy", "gb", "ie", "se", "fi", "lv", "lt", "by", "pl", "it", "fr", "nl", "be", "de", "dk", "ch", "cz", "sk", "at", "hu", "si", "hr", "ba", "mt", "ua", "md", "ro", "rs", "bg", "al", "mk", "gr"];
+  var COUNTRYLIST = ["tm", "gr", "lu", "aw", "cw", "mq", "gu", "mp", "cr", "bh", "id", "pg", "mx", "ee", "mr", "sn", "gm", "gw", "lr", "ml", "tg", "ng","ly", "er", "dj", "et", "so", "ye", "st", "gq", "ao", "cd", "rw", "bi", "ug", "ke", "tz", "mz", "zw", "bw", "sz", "ls", "gl", "au", "nz", "nc", "my", "bn", "tl", "sb", "vu", "fj", "ph", "cn", "tw", "jp", "ru", "us", "re", "km", "mv", "pt", "es", "cv", "pf", "kn", "ag", "dm", "lc", "bb", "gd", "tt", "do", "ht", "fk", "no", "lk", "cu", "bs", "jm", "ec", "ca", "gt", "hn", "sv", "ni", "cr", "pa", "co", "ve", "gy", "sr", "gf", "pe", "bo", "py", "uy", "ar", "cl", "br", "bz", "mn", "kp", "kr", "kz", "uz", "af", "pk", "in", "np", "bt", "bd", "mm", "th", "kh", "la", "vn", "ge", "am", "az", "tr", "om", "ae", "qa", "kw", "sy", "iq", "il", "gb", "ie", "se", "fi", "lv", "lt", "by", "pl", "it", "fr", "nl", "be", "de", "dk", "ch", "cz", "sk", "at", "hu", "si", "hr", "ba", "mt", "ua", "md", "ro", "rs", "bg", "al", "mk"];
 
 
   //Visual LoL Region List
@@ -175,17 +175,17 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       'colors': '#46BCDE'
     },
     'eune': {
-      'countries': ["al", "am", "az", "bh", "by", "ba", "bg", "cr", "cy", "cz", "dk", "eg", "ee", "fo", "fi", "ge", "gr", "gr", "hu", "is", "ir", "iq", "il", "jo", "kz", "xk", "kw", "kg", "lv", "lb", "mk", "md", "me", "no", "om", "ps", "pl", "qa", "ro", "sa", "rs", "sk", "si", "sj", "se", "sy", "tj", "tm", "ua", "ae", "uz", "ye"],
+      'countries': ["hr", "lt", "al", "by", "ba", "bg", "cr", "cz", "dk", "ee", "fi", "gr", "hu", "lv", "mk", "md", "no", "pl", "ro", "rs", "sk", "si", "se", "ua"],
       'name': 'europe nordic & east',
       'colors': '#52D273'
     },
     'euw': {
-      'countries': ["dz", "ad", "at", "be", "bj", "bf", "cm", "cf", "td", "dj", "fr", "ga", "gm", "de", "gh", "gi", "gn", "ie", "it", "ci", "li", "lu", "mg", "mw", "mt", "mu", "mc", "ma", "na", "nl", "ne", "pt", "cg", "sm", "sc", "sl", "za", "es", "sd", "ss", "ch", "tg", "tn", "gb", "va", "zm"],
+        'countries': ["at", "be", "dj", "fr", "gm", "de", "ie", "it", "mt", "nl", "pt", "es", "ch", "tg", "gb"],
       'name': 'europe west',
       'colors': '#E94F64'
     },
     'lan': {
-      'countries': ["gf", "sr", "gy", "ve", "co", "ec", "pe", "aw", "cw", "gd", "tt", "bb", "vc", "lc", "mq", "dm", "gp", "ms", "kn", "ai", "vg", "vi"],
+      'countries': ["hn", "bs", "ht", "do", "jm", "cr", "cu", "pa", "ni", "mx", "gf", "gt",  "sr", "gy", "ve", "co", "ec", "pe", "gd", "tt", "bb", "lc", "dm", "kn", "ag"],
       'name': 'latin america north',
       'colors': '#52D273'
     },
@@ -195,17 +195,17 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       'colors': '#EFC454'
     },
     'na': {
-      'countries': ["us", "ca", "mx", "gt", "ni", "cr", "pa", "cu", "do", "pr"],
+      'countries': ["us", "ca"],
       'name': 'north america',
       'colors': '#E57254'
     },
     'oce': {
-      'countries': ["au", "nz", "gu", "nc", "pf", "fj", "mp"],
+      'countries': ["au", "nz", "nc", "pf", "fj"],
       'name': 'oceania',
       'colors': '#46BCDE'
     },
     'ru': {
-      'countries': ["ru"],
+      'countries': ["ru", "kz", "uz", "tm"],
       'name': 'russia',
       'colors': '#EfC454'
     },
