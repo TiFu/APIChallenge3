@@ -98,20 +98,37 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
  * JQVMAP - World Map
  ***************/
 .controller('regionMapController', ['$scope', '$timeout', function($scope, $timeout) {
+  
+  $scope.selectedRegions = [];
+
+  function updateRegion(region) {
+    if ($scope.selectedRegions.indexOf(region) === -1) {
+        $scope.selectedRegions.push(region);
+    } else {
+      _.pull($scope.selectedRegions, region);
+    }
+  }
+
   activate();
 
   function activate() {
     $('#vmap').vectorMap({
       map: 'world_en',
       backgroundColor: '#333333',
+      multiSelectRegion: true,
+      selectedColor: '#00FFFF',
       color: '#D3D3D3',
       hoverOpacity: 0.7,
       hoverColor: '#337ab7',
       enableZoom: false,
       showTooltip: true,
       onLabelShow: function(event, label, code) {
-        console.log(label, code);
-        label[0].innerHTML = getRegionFromCountry(code);
+        var regionLabel = getRegionFromCountry(code).name;
+        if (regionLabel === 'noserver') {
+          event.preventDefault();
+        } else {
+          label[0].innerHTML = regionLabel;
+        }
       },
       onRegionOver: function(event, code, region) {
         if (highlightRegionOfCountry(code, event)) {
@@ -126,19 +143,19 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       },
       onRegionClick: function(event, code, region) {
         event.preventDefault();
+        var selectRegion = getRegionFromCountry(code);
+        updateRegion(selectRegion);
+        $('#vmap').vectorMap("set", "selectedRegion", selectRegion.countries);
       }
     });
 
     //color the regions
     $timeout(function() {
     _.forOwn(LoLRegions, function(region) {
-      console.log('region: ' + region.name);
       _.each(region.countries, function(country) {
         if (_.isEmpty(doesCountryExist(country))) {
-          console.log('missing: ' + country);
         } else {
           $('#vmap').vectorMap('set', 'colors', country, region.colors);
-          console.log('colored: ' + country);
         }
       });
     });
@@ -147,10 +164,8 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     LoLRegions['noserver'].countries = COUNTRYLIST;
     _.each(LoLRegions['noserver'].countries, function(country) {
       if (_.isEmpty(doesCountryExist(country))) {
-          console.log('missing: ' + country);
         } else {
           $('#vmap').vectorMap('set', 'colors', country, LoLRegions['noserver'].colors);
-          console.log('colored: ' + country);
         }
       });
     }, 0);
@@ -180,7 +195,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       'colors': '#52D273'
     },
     'euw': {
-        'countries': ["at", "be", "dj", "fr", "gm", "de", "ie", "it", "mt", "nl", "pt", "es", "ch", "gb"],
+        'countries': ["at", "be", "fr", "gm", "de", "ie", "it", "mt", "nl", "pt", "es", "ch", "gb"],
       'name': 'europe west',
       'colors': '#E94F64'
     },
@@ -263,7 +278,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
     if (!region) {
       region = {name: 'noserver'};
     }
-    return region.name;
+    return region;
   }
 
   //when hovered over country, highlight its region
