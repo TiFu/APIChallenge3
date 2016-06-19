@@ -164,7 +164,7 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
   }
 
   //List of all current countries registered in the library
-  var COUNTRYLIST = ["tm", "gr", "lu", "aw", "cw", "mq", "gu", "mp", "cr", "bh", "id", "pg", "mx", "ee", "mr", "sn", "gm", "gw", "lr", "ml", "tg", "ng","ly", "er", "dj", "et", "so", "ye", "st", "gq", "ao", "cd", "rw", "bi", "ug", "ke", "tz", "mz", "zw", "bw", "sz", "ls", "gl", "au", "nz", "nc", "my", "bn", "tl", "sb", "vu", "fj", "ph", "cn", "tw", "jp", "ru", "us", "re", "km", "mv", "pt", "es", "cv", "pf", "kn", "ag", "dm", "lc", "bb", "gd", "tt", "do", "ht", "fk", "no", "lk", "cu", "bs", "jm", "ec", "ca", "gt", "hn", "sv", "ni", "cr", "pa", "co", "ve", "gy", "sr", "gf", "pe", "bo", "py", "uy", "ar", "cl", "br", "bz", "mn", "kp", "kr", "kz", "uz", "af", "pk", "in", "np", "bt", "bd", "mm", "th", "kh", "la", "vn", "ge", "am", "az", "tr", "om", "ae", "qa", "kw", "sy", "iq", "il", "gb", "ie", "se", "fi", "lv", "lt", "by", "pl", "it", "fr", "nl", "be", "de", "dk", "ch", "cz", "sk", "at", "hu", "si", "hr", "ba", "mt", "ua", "md", "ro", "rs", "bg", "al", "mk"];
+  var COUNTRYLIST = ["tm", "gr", "lu", "aw", "cw", "mq", "gu", "mp", "cr", "bh", "id", "pg", "mx", "ee", "mr", "sn", "gm", "gw", "lr", "ml", "tg", "ng","ly", "er", "dj", "et", "so", "ye", "st", "gq", "ao", "cd", "rw", "bi", "ug", "ke", "tz", "mz", "zw", "bw", "sz", "ls", "gl", "au", "nz", "nc", "my", "bn", "tl", "sb", "vu", "fj", "ph", "cn", "tw", "jp", "ru", "us", "re", "km", "mv", "pt", "es", "cv", "pf", "kn", "ag", "dm", "lc", "bb", "gd", "tt", "do", "ht", "fk", "no", "lk", "cu", "bs", "jm", "ec", "ca", "gt", "hn", "sv", "ni", "pa", "co", "ve", "gy", "sr", "gf", "pe", "bo", "py", "uy", "ar", "cl", "br", "bz", "mn", "kp", "kr", "kz", "uz", "af", "pk", "in", "np", "bt", "bd", "mm", "th", "kh", "la", "vn", "ge", "am", "az", "tr", "om", "ae", "qa", "kw", "sy", "iq", "il", "gb", "ie", "se", "fi", "lv", "lt", "by", "pl", "it", "fr", "nl", "be", "de", "dk", "ch", "cz", "sk", "at", "hu", "si", "hr", "ba", "mt", "ua", "md", "ro", "rs", "bg", "al", "mk"];
 
 
   //Visual LoL Region List
@@ -175,12 +175,12 @@ angular.module('Dashboard', ['ngMaterial', 'ngRoute', 'chart.js'])
       'colors': '#46BCDE'
     },
     'eune': {
-      'countries': ["hr", "lt", "al", "by", "ba", "bg", "cr", "cz", "dk", "ee", "fi", "gr", "hu", "lv", "mk", "md", "no", "pl", "ro", "rs", "sk", "si", "se", "ua"],
+      'countries': ["hr", "lt", "al", "by", "ba", "bg", "cz", "dk", "ee", "fi", "gr", "hu", "lv", "mk", "md", "no", "pl", "ro", "rs", "sk", "si", "se", "ua"],
       'name': 'europe nordic & east',
       'colors': '#52D273'
     },
     'euw': {
-        'countries': ["at", "be", "dj", "fr", "gm", "de", "ie", "it", "mt", "nl", "pt", "es", "ch", "tg", "gb"],
+        'countries': ["at", "be", "dj", "fr", "gm", "de", "ie", "it", "mt", "nl", "pt", "es", "ch", "gb"],
       'name': 'europe west',
       'colors': '#E94F64'
     },
