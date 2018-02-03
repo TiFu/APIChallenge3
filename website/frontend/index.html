@@ -46,32 +46,29 @@
   <link rel="stylesheet" href="./angular-chart.css"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script src="./angular-chart.js"></script>
+
+    <!-- JQVMap -->
+    <link href="./jqvmap.css" media="screen" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="./jquery.vmap.js"></script>
+    <script type="text/javascript" src="./jquery.vmap.world.js" charset="utf-8"></script>
+
+    <!-- HighChart -->
+    <script src="./highcharts.js"></script>
+
 </head>
 
 <body>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
     <div class="navbar-header">
-<!--       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button> -->
     </div>
-    <div class="navbar-brand" layout="row" layout-align-xs="start center" layout-align-gt-xs="center center">
-<!--       <img src="https://pbs.twimg.com/profile_images/378800000593026127/b77ee8bd43bb7051e3f6a0f3ca86f66e.jpeg"> -->
+    <div class="navbar-brand" layout="row" layout-align="center center">
+    <div class="side-links">About</div>
     <div><a href="#/home">ChampionMastery.GG</a></div>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <li><a href="#/home">Top Champions</a></li>
-        <li><a href="#/player">Top Players</a></li>
-        <li><a href="#/about">About</a></li>
-      </ul>
+    <div class="side-links">Issues</div>
     </div>
   </nav>
-  <div layout="column" class="col-xs-12" id="view" ng-view="">
-  </div>
-
+  <main flex layout="column" class="col-xs-12" id="view" ng-view="" layout-fill>
+  </main>
 </body>
 
 </html>

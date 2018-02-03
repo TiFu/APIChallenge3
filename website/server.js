@@ -48,9 +48,28 @@ app.use(bodyParser.urlencoded({
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/frontend')))
+
+/*
+ * replace data with file and a path (string) to the sass file
+ * result["css"].toString() returns the css (@see the css at localhost:1337/test)
+*/
+// var sass = require("node-sass")
+// app.get("/test", (req, res, next) => {
+//   var result = sass.renderSync({
+//   file: "website/frontend/modules/dashboard/starsStyle.scss",
+//   outputStyle: "expanded"
+//   });
+//   var cssAsString = result["css"].toString()
+//   res.status(200).send(cssAsString)
+// })
+
 app.use("/Chart.min.js", express.static(__dirname + '/../node_modules/Chart.js/dist/Chart.min.js'))
 app.use("/angular-chart.js", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.js"))
 app.use("/angular-chart.css", express.static(__dirname + "/../node_modules/angular-chart.js/dist/angular-chart.css"))
+app.use("/jquery.vmap.js", express.static(__dirname + "/../node_modules/jqvmap/dist/jquery.vmap.js"))
+app.use("/jquery.vmap.world.js", express.static(__dirname + "/../node_modules/jqvmap/dist/maps/jquery.vmap.world.js"))
+app.use("/jqvmap.css", express.static(__dirname + "/../node_modules/jqvmap/dist/jqvmap.css"))
+app.use("/highcharts.js", express.static(__dirname + "/../node_modules/highcharts/highcharts.js"))
 
 // init client request stuff
 db.init(new WinstonContext(winston, "[Database]"), config).then(() => {

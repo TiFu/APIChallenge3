@@ -20,7 +20,7 @@ function updateCurrentMastery() {
     for (var i = 0; i < result.length; i++) {
       var currentSummoner = result[i].summoner_id;
       logger.info("Updating summoner: " + currentSummoner);
-      updateSummonerMastery(currentSummoner, connection);
+      exports.updateSummonerMastery(currentSummoner, connection);
     }
   }).catch((err) => {
     logger.warn(err);

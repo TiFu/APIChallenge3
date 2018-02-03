@@ -1,17 +1,84 @@
 <link rel="stylesheet" href="/modules/dashboard/style.css" />
-<link rel="stylesheet" href="/modules/dashboard/starsStyle.scss" />
+<link rel="stylesheet" href="/modules/dashboard/starsStyle.css" />
 <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+
+<div class="wrapper" flex layout-fill>
 <div id="stars"></div>
 <div id="stars2"></div>
 <div id="stars3"></div>
 
-<md-content class="loader" layout="row" layout-align="center center" flex ng-show="isViewLoading">
+<md-content class="loader" layout="column" layout-align="center center" flex layout-fill>
   <div id="title">
-      <span>Champion Mastery is Loading...</span>
-    </div>
-  <div class="progress" flex>
-    <div class="progress-bar progress-bar-striped active" flex role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax=  "100" style="width: 100%">
+      <span>{{loadingText}}</span>
+  </div>
+  <div class="progress">
+    <div flex class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax=  "100" style="width: 100%">
     </div>
   </div>
 </md-content>
 
+<md-content class="start-hidden step-1" flex layout-fill>
+
+
+<div layout="row" layout-align="center center" class="full-height">
+	<select ng-model="user.region" ng-disabled="step1lock">
+      <option ng-repeat="region in regions" value="{{region.name}}">{{region.name}}</option>
+    </select>
+     <md-input-container>
+    		<label for="input_0">Summoner Name</label>
+      		<input ng-model="user.name"
+             			ng-keyup="$event.keyCode == 13 && search()"
+             			ng-disabled="step1lock"
+             			id="input_0">
+  </md-input-container>
+  <md-button class="md-raised md-primary" ng-click="search()" ng-disabled="step1lock">Search</md-button>
+</div>
+</md-content>
+
+<!-- <md-content class="start-hidden step-2" flex>
+
+	<div>
+        content
+      </div>
+
+      <div>
+        content
+      </div>
+
+      <div id="vmap" style="min-width:200px;min-height:200px"></div>
+
+            <div>
+        content
+      </div>
+
+
+</md-content> -->
+
+<md-content class="start-hidden step-2" layout-fill>
+<div layout="column" layout-fill>
+  <div layout="row" flex>
+    <div flex="50" id="highchart" ng-controller="highChartController"></div>
+    <div flex="50" id="div2">
+    </div>
+  </div>
+  <div layout="row" flex>
+    <div flex="50" id="div3">
+    </div>
+    <div flex="50" id="vmap" ng-controller="regionMapController"></div>
+    		<div>
+    			<span ng-repeat="region in selectedRegions">{{region}}</span>
+    		</div>
+    </div>
+  </div>
+</div>
+
+
+</md-content>
+
+
+
+</div>
+<!-- <md-content class="step-0" flex>
+      <div id="vmap"></div>
+
+</md-content> -->

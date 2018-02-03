@@ -8,7 +8,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 .controller('HomeController', ['$scope','$location','$timeout','$routeParams','$http','$route','$mdToast','MainService','top','champions','graphMaster',
 	function($scope,$location,$timeout,$routeParams,$http,$route,$mdToast,MainService,top,champions,graphMaster) {
 
-		var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.9.1/img/champion/';
+		var IMGURL = 'http://ddragon.leagueoflegends.com/cdn/6.10.1/img/champion/';
 		var PROFILEICONURL = './img/';
 		$scope.scrollToTop = scrollToTop;
 		$scope.searchForPlayerChampion = searchForPlayerChampion;
@@ -185,7 +185,7 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 
 			//setup data for showing all champion masteries
 			_.each($scope.summonerData.champions, function(mastery) {
-				mastery.currentPointCircle = mastery.mastery_level === 5 ? 100 : getToGoPoints(mastery);
+				mastery.currentPointCircle = mastery.mastery_level >= 5 ? 100 : getToGoPoints(mastery);
 			});
 			$scope.summonerData.champions = _.orderBy($scope.summonerData.champions, ['mastery_level', 'currentPointCircle'], ['desc', 'desc']);
 			$scope.summonerData.top10Champions = $scope.summonerData.champions.slice(0, 6);
@@ -533,6 +533,10 @@ angular.module('Home', ['ngMaterial', 'ngRoute', 'chart.js'])
 					return 'http://i.imgur.com/p2Dekzi.png';
 				case 5:
 					return 'http://i.imgur.com/bLhZdEB.png';
+				case 6:
+					return 'http://i.imgur.com/NpqYtGM.png';
+				case 7:
+					return 'http://i.imgur.com/SQU0EGw.png';
 				default:
 					return 'http://i.imgur.com/vPzKnGf.png';
 			}
